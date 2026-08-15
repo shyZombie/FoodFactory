@@ -81,10 +81,10 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 30
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.5188679, g: 0.17150433, b: 0, a: 1}
+  m_Color: {r: 0.9811321, g: 0.97187614, b: 0.96724814, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -107,6 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FoodItem
   itemData: {fileID: 11400000, guid: a59cb77da5f6066418e8418fb93b2f15, type: 2}
+  spriteRenderer: {fileID: 997105209934826131}
 --- !u!114 &-4887362471195558868
 MonoBehaviour:
   m_ObjectHideFlags: 0

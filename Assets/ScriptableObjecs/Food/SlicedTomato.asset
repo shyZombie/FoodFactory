@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
   itemId: sliced_tomato
   itemName: Sliced Tomato
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: fde2449848c7dd84590f4557aac8aabf, type: 3}
