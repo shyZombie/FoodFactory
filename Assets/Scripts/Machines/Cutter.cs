@@ -5,7 +5,7 @@ public class Cutter : Machine
     [SerializeField] private FoodItemData inputItem;
     [SerializeField] private FoodItemData outputItem;
     [SerializeField] private GameObject foodItemPrefab;
-    [SerializeField] private Vector2 outputDirection = Vector2.right;
+    //[SerializeField] private Vector2 outputDirection = Vector2.right;
 
     private FoodItem currentFoodItem;
     private float processingTimer;
@@ -56,30 +56,85 @@ public class Cutter : Machine
 
         if (outputItem == null)
         {
-            Debug.LogError("Cutter ERROR: Output Item is NULL!");
+            Debug.LogError(
+                "Cutter ERROR: Output Item is NULL!"
+            );
+
             return;
         }
 
         if (foodItemPrefab == null)
         {
-            Debug.LogError("Cutter ERROR: Food Item Prefab is NULL!");
+            Debug.LogError(
+                "Cutter ERROR: Food Item Prefab is NULL!"
+            );
+
             return;
         }
 
         if (gridManager == null)
         {
-            Debug.LogError("Cutter ERROR: GridManager is NULL!");
+            Debug.LogError(
+                "Cutter ERROR: GridManager is NULL!"
+            );
+
             return;
         }
 
         if (currentFoodItem == null)
         {
-            Debug.LogError("Cutter ERROR: Current Food Item is NULL!");
+            Debug.LogError(
+                "Cutter ERROR: Current Food Item is NULL!"
+            );
+
+            return;
+        }
+
+        Vector2 outputDirection =
+            GetOutputDirectionVector();
+
+        Debug.Log(
+            $"Cutter output direction: {GetDirection()}"
+        );
+
+        Debug.Log(
+            $"Cutter output vector: {outputDirection}"
+        );
+
+        GridPosition machineGridPosition =
+            GridPosition;
+
+        GridPosition outputGridPosition =
+            new GridPosition(
+                machineGridPosition.x +
+                    Mathf.RoundToInt(outputDirection.x),
+
+                machineGridPosition.y +
+                    Mathf.RoundToInt(outputDirection.y)
+            );
+
+        GridObject outputGridObject =
+            gridManager.GetGridObject(
+                outputGridPosition
+            );
+
+        if (outputGridObject != null &&
+            outputGridObject is not ConveyorBelt)
+        {
+            Debug.Log(
+                $"Cutter output blocked at " +
+                $"{outputGridPosition}"
+            );
+
+            isProcessing = false;
+
             return;
         }
 
         Vector3 outputPosition =
-            transform.position + Vector3.right;
+            gridManager.GridToWorldPosition(
+                outputGridPosition
+            );
 
         GameObject outputObject = Instantiate(
             foodItemPrefab,
@@ -93,7 +148,8 @@ public class Cutter : Machine
         if (outputFoodItem == null)
         {
             Debug.LogError(
-                "Cutter ERROR: Food Item Prefab does not contain FoodItem!"
+                "Cutter ERROR: Food Item Prefab " +
+                "does not contain FoodItem!"
             );
 
             Destroy(outputObject);
@@ -108,7 +164,8 @@ public class Cutter : Machine
         if (movement == null)
         {
             Debug.LogError(
-                "Cutter ERROR: Food Item Prefab does not contain FoodItemMovement!"
+                "Cutter ERROR: Food Item Prefab " +
+                "does not contain FoodItemMovement!"
             );
 
             Destroy(outputObject);
@@ -116,6 +173,21 @@ public class Cutter : Machine
         }
 
         movement.Initialize(gridManager);
+
+        if (outputGridObject is ConveyorBelt)
+        {
+            Debug.Log(
+                $"Cutter output connected to conveyor at " +
+                $"{outputGridPosition}"
+            );
+        }
+        else
+        {
+            Debug.Log(
+                $"Cutter output waiting at " +
+                $"{outputGridPosition}"
+            );
+        }
 
         Debug.Log(
             $"Cutter finished: {inputItem.ItemName} → " +

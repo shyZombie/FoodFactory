@@ -19,12 +19,27 @@ public class BuildingPlacement : MonoBehaviour
         if (!Keyboard.current.rKey.wasPressedThisFrame)
             return;
 
-        ConveyorBelt conveyorBelt = GetConveyorUnderMouse();
+        GridObject gridObject = GetGridObjectUnderMouse();
 
-        if (conveyorBelt != null)
+        if (gridObject != null)
         {
-            conveyorBelt.RotateClockwise();
-            return;
+            ConveyorBelt conveyorBelt =
+                gridObject.GetComponent<ConveyorBelt>();
+
+            if (conveyorBelt != null)
+            {
+                conveyorBelt.RotateClockwise();
+                return;
+            }
+
+            Machine machine =
+                gridObject.GetComponent<Machine>();
+
+            if (machine != null)
+            {
+                machine.RotateClockwise();
+                return;
+            }
         }
 
         rotationSteps++;
@@ -34,10 +49,13 @@ public class BuildingPlacement : MonoBehaviour
             rotationSteps = 0;
         }
 
-        Debug.Log($"Next Building Rotation: {rotationSteps * 90} degrees");
+        Debug.Log(
+            $"Next Building Rotation: " +
+            $"{rotationSteps * 90} degrees"
+        );
     }
 
-    private ConveyorBelt GetConveyorUnderMouse()
+    private GridObject GetGridObjectUnderMouse()
     {
         Vector2 mouseScreenPosition =
             Mouse.current.position.ReadValue();
@@ -51,13 +69,14 @@ public class BuildingPlacement : MonoBehaviour
                 )
             );
 
-        Collider2D hitCollider =
-            Physics2D.OverlapPoint(mouseWorldPosition);
+        GridPosition gridPosition =
+            gridManager.WorldToGridPosition(
+                mouseWorldPosition
+            );
 
-        if (hitCollider == null)
-            return null;
-
-        return hitCollider.GetComponent<ConveyorBelt>();
+        return gridManager.GetGridObject(
+            gridPosition
+        );
     }
 
     private void HandlePlacement()
@@ -83,7 +102,9 @@ public class BuildingPlacement : MonoBehaviour
             );
 
         GridPosition gridPosition =
-            gridManager.WorldToGridPosition(mouseWorldPosition);
+            gridManager.WorldToGridPosition(
+                mouseWorldPosition
+            );
 
         if (gridManager.IsCellOccupied(gridPosition))
         {
@@ -92,7 +113,9 @@ public class BuildingPlacement : MonoBehaviour
         }
 
         Vector3 worldPosition =
-            gridManager.GridToWorldPosition(gridPosition);
+            gridManager.GridToWorldPosition(
+                gridPosition
+            );
 
         GameObject building = Instantiate(
             buildingPrefab,
@@ -106,7 +129,8 @@ public class BuildingPlacement : MonoBehaviour
         if (gridObject == null)
         {
             Debug.LogError(
-                "Building prefab does not contain a GridObject component!"
+                "Building prefab does not contain " +
+                "a GridObject component!"
             );
 
             Destroy(building);
@@ -129,6 +153,17 @@ public class BuildingPlacement : MonoBehaviour
             for (int i = 0; i < rotationSteps; i++)
             {
                 conveyorBelt.RotateClockwise();
+            }
+        }
+
+        Machine machine =
+            building.GetComponent<Machine>();
+
+        if (machine != null)
+        {
+            for (int i = 0; i < rotationSteps; i++)
+            {
+                machine.RotateClockwise();
             }
         }
     }
