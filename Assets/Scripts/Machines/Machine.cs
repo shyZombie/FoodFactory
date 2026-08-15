@@ -12,6 +12,8 @@ public class Machine : GridObject
 
     //[SerializeField] protected float processingTime = 1f;
     [SerializeField] protected Recipe recipe;
+    [SerializeField]
+    protected GameObject foodItemPrefab;
 
     public Recipe Recipe => recipe;
 
@@ -109,12 +111,174 @@ public class Machine : GridObject
 
     protected virtual void FinishProcessing()
     {
+        if (currentFoodItem == null)
+        {
+            isProcessing = false;
+            return;
+        }
+
         Debug.Log(
             $"Machine finished processing " +
             $"{currentFoodItem.ItemData.ItemName}"
         );
 
+        CreateOutput();
+
         isProcessing = false;
+    }
+
+    protected virtual void CreateOutput()
+    {
+        if (Recipe == null)
+        {
+            Debug.LogError(
+                $"{name} ERROR: Recipe is NULL!"
+            );
+
+            return;
+        }
+
+        if (Recipe.Outputs == null ||
+            Recipe.Outputs.Length == 0)
+        {
+            Debug.LogError(
+                $"{name} ERROR: Recipe has no outputs!"
+            );
+
+            return;
+        }
+
+        if (gridManager == null)
+        {
+            Debug.LogError(
+                $"{name} ERROR: GridManager is NULL!"
+            );
+
+            return;
+        }
+
+        if (currentFoodItem == null)
+        {
+            Debug.LogError(
+                $"{name} ERROR: Current Food Item is NULL!"
+            );
+
+            return;
+        }
+
+        Recipe.Result result =
+            Recipe.Outputs[0];
+
+        FoodItemData outputItem =
+            result.foodItem;
+
+        if (outputItem == null)
+        {
+            Debug.LogError(
+                $"{name} ERROR: Output FoodItemData is NULL!"
+            );
+
+            return;
+        }
+
+        Vector2 outputDirection =
+            GetOutputDirectionVector();
+
+        GridPosition machineGridPosition =
+            GridPosition;
+
+        GridPosition outputGridPosition =
+            new GridPosition(
+                machineGridPosition.x +
+                    Mathf.RoundToInt(outputDirection.x),
+
+                machineGridPosition.y +
+                    Mathf.RoundToInt(outputDirection.y)
+            );
+
+        GridObject outputGridObject =
+            gridManager.GetGridObject(
+                outputGridPosition
+            );
+
+        if (outputGridObject != null &&
+            outputGridObject is not ConveyorBelt)
+        {
+            Debug.Log(
+                $"{name} output blocked at " +
+                $"{outputGridPosition}"
+            );
+
+            return;
+        }
+
+        Vector3 outputPosition =
+            gridManager.GridToWorldPosition(
+                outputGridPosition
+            );
+
+        GameObject outputObject =
+            Instantiate(
+                foodItemPrefab,
+                outputPosition,
+                Quaternion.identity
+            );
+
+        FoodItem outputFoodItem =
+            outputObject.GetComponent<FoodItem>();
+
+        if (outputFoodItem == null)
+        {
+            Debug.LogError(
+                $"{name} ERROR: Food Item Prefab " +
+                "does not contain FoodItem!"
+            );
+
+            Destroy(outputObject);
+            return;
+        }
+
+        outputFoodItem.Initialize(outputItem);
+
+        Debug.Log(
+            $"{name} created output: " +
+            $"{outputFoodItem.ItemData.ItemName}"
+        );
+
+        FoodItemMovement movement =
+            outputObject.GetComponent<FoodItemMovement>();
+
+        if (movement == null)
+        {
+            Debug.LogError(
+                $"{name} ERROR: Food Item Prefab " +
+                "does not contain FoodItemMovement!"
+            );
+
+            Destroy(outputObject);
+            return;
+        }
+
+        movement.Initialize(gridManager);
+
+        if (outputGridObject is ConveyorBelt)
+        {
+            Debug.Log(
+                $"{name} output connected to conveyor at " +
+                $"{outputGridPosition}"
+            );
+        }
+        else
+        {
+            Debug.Log(
+                $"{name} output waiting at " +
+                $"{outputGridPosition}"
+            );
+        }
+
+        Destroy(currentFoodItem.gameObject);
+
+        currentFoodItem = null;
     }
 
     public virtual void RotateClockwise()
