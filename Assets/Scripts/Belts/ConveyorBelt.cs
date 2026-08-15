@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ConveyorBelt : MonoBehaviour
+public class ConveyorBelt : GridObject
 {
     public enum Direction
     {
@@ -17,9 +17,34 @@ public class ConveyorBelt : MonoBehaviour
         return direction;
     }
 
+    public Vector2 GetDirectionVector()
+    {
+        return direction switch
+        {
+            Direction.Up => Vector2.up,
+            Direction.Right => Vector2.right,
+            Direction.Down => Vector2.down,
+            Direction.Left => Vector2.left,
+            _ => Vector2.right
+        };
+    }
+
     public void SetDirection(Direction newDirection)
     {
         direction = newDirection;
+        UpdateVisualRotation();
+    }
+    public void RotateClockwise()
+    {
+        direction = direction switch
+        {
+            Direction.Up => Direction.Right,
+            Direction.Right => Direction.Down,
+            Direction.Down => Direction.Left,
+            Direction.Left => Direction.Up,
+            _ => Direction.Right
+        };
+
         UpdateVisualRotation();
     }
 

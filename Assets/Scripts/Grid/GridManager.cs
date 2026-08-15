@@ -5,7 +5,8 @@ public class GridManager : MonoBehaviour
 {
     [SerializeField] private float cellSize = 1f;
 
-    private HashSet<GridPosition> occupiedCells = new HashSet<GridPosition>();
+    private Dictionary<GridPosition, GridObject> gridObjects =
+        new Dictionary<GridPosition, GridObject>();
 
     public GridPosition WorldToGridPosition(Vector3 worldPosition)
     {
@@ -25,22 +26,39 @@ public class GridManager : MonoBehaviour
 
     public bool IsCellOccupied(GridPosition gridPosition)
     {
-        return occupiedCells.Contains(gridPosition);
+        return gridObjects.ContainsKey(gridPosition);
     }
 
-    public bool TryOccupyCell(GridPosition gridPosition)
+    public bool TryAddGridObject(
+        GridPosition gridPosition,
+        GridObject gridObject)
     {
         if (IsCellOccupied(gridPosition))
         {
             return false;
         }
 
-        occupiedCells.Add(gridPosition);
+        gridObjects.Add(gridPosition, gridObject);
+
+        gridObject.SetGridPosition(gridPosition);
+
         return true;
     }
 
-    public void FreeCell(GridPosition gridPosition)
+    public GridObject GetGridObject(GridPosition gridPosition)
     {
-        occupiedCells.Remove(gridPosition);
+        if (gridObjects.TryGetValue(
+                gridPosition,
+                out GridObject gridObject))
+        {
+            return gridObject;
+        }
+
+        return null;
+    }
+
+    public void RemoveGridObject(GridPosition gridPosition)
+    {
+        gridObjects.Remove(gridPosition);
     }
 }
