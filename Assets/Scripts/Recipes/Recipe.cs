@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(
@@ -34,4 +35,56 @@ public class Recipe : ScriptableObject
     public Result[] Outputs => outputs;
 
     public float ProcessingTime => processingTime;
+
+    public bool HasIngredient(
+    FoodItemData foodItemData)
+    {
+        if (foodItemData == null)
+            return false;
+
+        if (Inputs == null)
+            return false;
+
+        foreach (Ingredient ingredient in Inputs)
+        {
+            if (ingredient.foodItem == foodItemData)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public bool HasEnoughIngredients(
+    List<FoodItem> storedIngredients)
+    {
+        if (Inputs == null ||
+            Inputs.Length == 0)
+        {
+            return false;
+        }
+
+        foreach (Ingredient recipeIngredient in Inputs)
+        {
+            int count = 0;
+
+            foreach (FoodItem storedItem
+                     in storedIngredients)
+            {
+                if (storedItem.ItemData ==
+                    recipeIngredient.foodItem)
+                {
+                    count++;
+                }
+            }
+
+            if (count < recipeIngredient.quantity)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

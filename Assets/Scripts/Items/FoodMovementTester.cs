@@ -6,11 +6,17 @@ public class FoodMovementTester : MonoBehaviour
     [SerializeField] private FoodItemData foodItemData;
     [SerializeField] private GridManager gridManager;
 
+    [SerializeField] private int spawnGridX = 0;
+    [SerializeField] private int spawnGridY = 0;
+
     private void Start()
     {
         Vector3 spawnPosition =
             gridManager.GridToWorldPosition(
-                new GridPosition(0, 0)
+                new GridPosition(
+                    spawnGridX,
+                    spawnGridY
+                )
             );
 
         GameObject foodObject = Instantiate(

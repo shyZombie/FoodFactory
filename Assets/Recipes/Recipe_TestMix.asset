@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f94a7262be396354394358f8b9e56bb1, type: 3}
-  m_Name: Recipe_TestEmpty
+  m_Name: Recipe_TestMix
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   inputs:
   - foodItem: {fileID: 11400000, guid: a59cb77da5f6066418e8418fb93b2f15, type: 2}
@@ -19,5 +19,5 @@ MonoBehaviour:
     quantity: 1
   outputs:
   - foodItem: {fileID: 11400000, guid: a210536727a78dc4b9346855acd6c20a, type: 2}
-    quantity: 0
+    quantity: 1
   processingTime: 2

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Machine : GridObject
@@ -14,6 +15,8 @@ public class Machine : GridObject
     [SerializeField] protected Recipe recipe;
     [SerializeField]
     protected GameObject foodItemPrefab;
+    protected List<FoodItem> storedIngredients =
+    new List<FoodItem>();
 
     public Recipe Recipe => recipe;
 
@@ -26,6 +29,8 @@ public class Machine : GridObject
     protected FoodItem currentFoodItem;
     protected float processingTimer;
     protected bool isProcessing;
+
+
 
     public Direction GetDirection()
     {
@@ -59,38 +64,86 @@ public class Machine : GridObject
         if (foodItem == null)
             return false;
 
+        if (isProcessing)
+            return false;
+
         if (Recipe == null)
             return false;
 
-        if (Recipe.Inputs == null ||
-            Recipe.Inputs.Length == 0)
+        return Recipe.HasIngredient(
+            foodItem.ItemData
+        );
+    }
+
+    public virtual bool TryAcceptIngredient(
+    FoodItem foodItem)
+    {
+        if (!CanProcess(foodItem))
             return false;
 
-        Recipe.Ingredient ingredient =
-            Recipe.Inputs[0];
-
-        if (ingredient.foodItem == null)
+        if (storedIngredients.Contains(foodItem))
             return false;
 
-        return foodItem.ItemData ==
-               ingredient.foodItem;
+        storedIngredients.Add(foodItem);
+
+        foodItem.gameObject.SetActive(false);
+
+        Debug.Log(
+            $"{name} accepted ingredient: " +
+            $"{foodItem.ItemData.ItemName}"
+        );
+
+        return true;
     }
 
     public virtual void Process(FoodItem foodItem)
     {
-        if (!CanProcess(foodItem))
+        if (!TryAcceptIngredient(foodItem))
             return;
 
-        currentFoodItem = foodItem;
+        if (!Recipe.HasEnoughIngredients(
+            storedIngredients))
+        {
+            Debug.Log(
+                $"{name} is waiting for more ingredients."
+            );
+
+            return;
+        }
+
+        StartProcessing();
+    }
+
+    protected virtual void StartProcessing()
+    {
+        if (storedIngredients.Count == 0)
+            return;
+
+        currentFoodItem =
+            storedIngredients[0];
+
         processingTimer = 0f;
         isProcessing = true;
 
         Debug.Log(
-            $"Machine started processing " +
-            $"{foodItem.ItemData.ItemName}"
+            $"{name} started processing recipe."
         );
+    }
 
-        currentFoodItem.gameObject.SetActive(false);
+    protected virtual void ConsumeIngredients()
+    {
+        foreach (FoodItem ingredient
+                 in storedIngredients)
+        {
+            if (ingredient != null)
+            {
+                Destroy(ingredient.gameObject);
+            }
+        }
+
+        storedIngredients.Clear();
+
+        currentFoodItem = null;
     }
 
     protected virtual void Update()
@@ -276,9 +329,7 @@ public class Machine : GridObject
             );
         }
 
-        Destroy(currentFoodItem.gameObject);
-
-        currentFoodItem = null;
+        ConsumeIngredients();
     }
 
     public virtual void RotateClockwise()
