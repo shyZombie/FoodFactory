@@ -21,6 +21,10 @@ public class Machine : GridObject
 
     protected GridManager gridManager;
 
+    protected FoodItem currentFoodItem;
+    protected float processingTimer;
+    protected bool isProcessing;
+
     public Direction GetDirection()
     {
         return direction;
@@ -50,14 +54,67 @@ public class Machine : GridObject
 
     public virtual bool CanProcess(FoodItem foodItem)
     {
-        return true;
+        if (foodItem == null)
+            return false;
+
+        if (Recipe == null)
+            return false;
+
+        if (Recipe.Inputs == null ||
+            Recipe.Inputs.Length == 0)
+            return false;
+
+        Recipe.Ingredient ingredient =
+            Recipe.Inputs[0];
+
+        if (ingredient.foodItem == null)
+            return false;
+
+        return foodItem.ItemData ==
+               ingredient.foodItem;
     }
 
     public virtual void Process(FoodItem foodItem)
     {
+        if (!CanProcess(foodItem))
+            return;
+
+        currentFoodItem = foodItem;
+        processingTimer = 0f;
+        isProcessing = true;
+
         Debug.Log(
-            $"Machine processing {foodItem.ItemData.ItemName}"
+            $"Machine started processing " +
+            $"{foodItem.ItemData.ItemName}"
         );
+
+        currentFoodItem.gameObject.SetActive(false);
+    }
+
+    protected virtual void Update()
+    {
+        if (!isProcessing)
+            return;
+
+        if (Recipe == null)
+            return;
+
+        processingTimer += Time.deltaTime;
+
+        if (processingTimer >= Recipe.ProcessingTime)
+        {
+            FinishProcessing();
+        }
+    }
+
+    protected virtual void FinishProcessing()
+    {
+        Debug.Log(
+            $"Machine finished processing " +
+            $"{currentFoodItem.ItemData.ItemName}"
+        );
+
+        isProcessing = false;
     }
 
     public virtual void RotateClockwise()

@@ -570,7 +570,7 @@ PrefabInstance:
     - target: {fileID: 2651814269626809929, guid: 51074bc57f729ad4c905056b451e40ae, type: 3}
       propertyPath: recipe
       value: 
-      objectReference: {fileID: 11400000, guid: c4748f7032b2f12488e53e4af46fa5fd, type: 2}
+      objectReference: {fileID: 11400000, guid: e264743061041c546afd2fb23fa2f194, type: 2}
     - target: {fileID: 2651814269626809929, guid: 51074bc57f729ad4c905056b451e40ae, type: 3}
       propertyPath: direction
       value: 3
@@ -683,6 +683,67 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1703844759
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2167049299986331372, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
+      propertyPath: m_Name
+      value: ConveyorBelt (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3500340564067284655, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3500340564067284655, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3500340564067284655, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3500340564067284655, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3500340564067284655, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3500340564067284655, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3500340564067284655, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3500340564067284655, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3500340564067284655, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3500340564067284655, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 8917093759408790481, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
+      propertyPath: direction
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
 --- !u!1 &1852185997
 GameObject:
   m_ObjectHideFlags: 0
@@ -834,3 +895,4 @@ SceneRoots:
   - {fileID: 1852185999}
   - {fileID: 1293662067}
   - {fileID: 967786759}
+  - {fileID: 1703844759}

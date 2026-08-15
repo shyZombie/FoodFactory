@@ -95,7 +95,14 @@ public class FoodItemMovement : MonoBehaviour
             GetComponent<FoodItem>();
 
         if (!machine.CanProcess(foodItem))
+        {
+            Debug.Log(
+                $"{foodItem.ItemData.ItemName} cannot be processed by " +
+                $"{machine.name} and is waiting."
+            );
+
             return;
+        }
 
         machine.Process(foodItem);
     }

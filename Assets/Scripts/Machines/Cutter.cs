@@ -5,60 +5,15 @@ public class Cutter : Machine
     [SerializeField] private GameObject foodItemPrefab;
     //[SerializeField] private Vector2 outputDirection = Vector2.right;
 
-    private FoodItem currentFoodItem;
-    private float processingTimer;
-    private bool isProcessing;
-
     public override bool CanProcess(FoodItem foodItem)
     {
         if (isProcessing)
             return false;
 
-        if (Recipe == null)
-            return false;
-
-        if (Recipe.Inputs == null ||
-            Recipe.Inputs.Length == 0)
-            return false;
-
-        Recipe.Ingredient ingredient =
-            Recipe.Inputs[0];
-
-        return foodItem.ItemData ==
-               ingredient.foodItem;
+        return base.CanProcess(foodItem);
     }
 
-    public override void Process(FoodItem foodItem)
-    {
-        if (!CanProcess(foodItem))
-            return;
-
-        currentFoodItem = foodItem;
-        processingTimer = 0f;
-        isProcessing = true;
-
-        Debug.Log(
-            $"Cutter started processing " +
-            $"{foodItem.ItemData.ItemName}"
-        );
-
-        currentFoodItem.gameObject.SetActive(false);
-    }
-
-    private void Update()
-    {
-        if (!isProcessing)
-            return;
-
-        processingTimer += Time.deltaTime;
-
-        if (processingTimer >= Recipe.ProcessingTime)
-        {
-            FinishProcessing();
-        }
-    }
-
-    private void FinishProcessing()
+    protected override void FinishProcessing()
     {
         isProcessing = false;
 
