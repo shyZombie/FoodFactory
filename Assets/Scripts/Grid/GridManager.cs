@@ -8,25 +8,86 @@ public class GridManager : MonoBehaviour
     private Dictionary<GridPosition, GridObject> gridObjects =
         new Dictionary<GridPosition, GridObject>();
 
+    private void Awake()
+    {
+        RegisterExistingGridObjects();
+    }
+
+    private void RegisterExistingGridObjects()
+    {
+        GridObject[] existingObjects =
+            FindObjectsByType<GridObject>(
+                FindObjectsSortMode.None
+            );
+
+        foreach (GridObject gridObject in existingObjects)
+        {
+            GridPosition gridPosition =
+                WorldToGridPosition(gridObject.transform.position);
+
+            if (gridObjects.ContainsKey(gridPosition))
+            {
+                Debug.LogWarning(
+                    $"Multiple GridObjects found at {gridPosition}."
+                );
+
+                continue;
+            }
+
+            gridObjects.Add(
+                gridPosition,
+                gridObject
+            );
+
+            gridObject.SetGridPosition(gridPosition);
+
+            Machine machine =
+                gridObject.GetComponent<Machine>();
+
+            if (machine != null)
+            {
+                machine.Initialize(this);
+            }
+        }
+    }
+
     public GridPosition WorldToGridPosition(Vector3 worldPosition)
     {
-        int x = Mathf.FloorToInt(worldPosition.x / cellSize);
-        int y = Mathf.FloorToInt(worldPosition.y / cellSize);
+        int x = Mathf.FloorToInt(
+            worldPosition.x / cellSize
+        );
+
+        int y = Mathf.FloorToInt(
+            worldPosition.y / cellSize
+        );
 
         return new GridPosition(x, y);
     }
 
-    public Vector3 GridToWorldPosition(GridPosition gridPosition)
+    public Vector3 GridToWorldPosition(
+        GridPosition gridPosition)
     {
-        float x = gridPosition.x * cellSize + cellSize / 2f;
-        float y = gridPosition.y * cellSize + cellSize / 2f;
+        float x =
+            gridPosition.x * cellSize +
+            cellSize / 2f;
 
-        return new Vector3(x, y, 0f);
+        float y =
+            gridPosition.y * cellSize +
+            cellSize / 2f;
+
+        return new Vector3(
+            x,
+            y,
+            0f
+        );
     }
 
-    public bool IsCellOccupied(GridPosition gridPosition)
+    public bool IsCellOccupied(
+        GridPosition gridPosition)
     {
-        return gridObjects.ContainsKey(gridPosition);
+        return gridObjects.ContainsKey(
+            gridPosition
+        );
     }
 
     public bool TryAddGridObject(
@@ -38,14 +99,28 @@ public class GridManager : MonoBehaviour
             return false;
         }
 
-        gridObjects.Add(gridPosition, gridObject);
+        gridObjects.Add(
+            gridPosition,
+            gridObject
+        );
 
-        gridObject.SetGridPosition(gridPosition);
+        gridObject.SetGridPosition(
+            gridPosition
+        );
+
+        Machine machine =
+            gridObject.GetComponent<Machine>();
+
+        if (machine != null)
+        {
+            machine.Initialize(this);
+        }
 
         return true;
     }
 
-    public GridObject GetGridObject(GridPosition gridPosition)
+    public GridObject GetGridObject(
+        GridPosition gridPosition)
     {
         if (gridObjects.TryGetValue(
                 gridPosition,
@@ -57,8 +132,11 @@ public class GridManager : MonoBehaviour
         return null;
     }
 
-    public void RemoveGridObject(GridPosition gridPosition)
+    public void RemoveGridObject(
+        GridPosition gridPosition)
     {
-        gridObjects.Remove(gridPosition);
+        gridObjects.Remove(
+            gridPosition
+        );
     }
 }

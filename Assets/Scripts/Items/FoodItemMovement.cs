@@ -73,8 +73,6 @@ public class FoodItemMovement : MonoBehaviour
         GridObject nextGridObject =
             gridManager.GetGridObject(nextPosition);
 
-        // There is nothing in the next cell yet.
-        // Wait until something is placed there.
         if (nextGridObject == null)
         {
             return;
@@ -85,6 +83,21 @@ public class FoodItemMovement : MonoBehaviour
             targetGridPosition = nextPosition;
             isMoving = true;
         }
+        else if (nextGridObject is Machine machine)
+        {
+            TryEnterMachine(machine);
+        }
+    }
+
+    private void TryEnterMachine(Machine machine)
+    {
+        FoodItem foodItem =
+            GetComponent<FoodItem>();
+
+        if (!machine.CanProcess(foodItem))
+            return;
+
+        machine.Process(foodItem);
     }
 
     private void MoveTowardsTarget()

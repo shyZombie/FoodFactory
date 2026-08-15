@@ -4,6 +4,13 @@ public class Machine : GridObject
 {
     [SerializeField] protected float processingTime = 1f;
 
+    protected GridManager gridManager;
+
+    public void Initialize(GridManager manager)
+    {
+        gridManager = manager;
+    }
+
     public virtual bool CanProcess(FoodItem foodItem)
     {
         return true;

@@ -1,20 +1,129 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Cutter : Machine
 {
     [SerializeField] private FoodItemData inputItem;
     [SerializeField] private FoodItemData outputItem;
+    [SerializeField] private GameObject foodItemPrefab;
+    [SerializeField] private Vector2 outputDirection = Vector2.right;
+
+    private FoodItem currentFoodItem;
+    private float processingTimer;
+    private bool isProcessing;
 
     public override bool CanProcess(FoodItem foodItem)
     {
+        if (isProcessing)
+            return false;
+
         return foodItem.ItemData == inputItem;
     }
 
     public override void Process(FoodItem foodItem)
     {
+        if (!CanProcess(foodItem))
+            return;
+
+        currentFoodItem = foodItem;
+        processingTimer = 0f;
+        isProcessing = true;
+
         Debug.Log(
-            $"Cutter processed {inputItem.ItemName} " +
-            $"into {outputItem.ItemName}"
+            $"Cutter started processing {inputItem.ItemName}"
         );
+
+        currentFoodItem.gameObject.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (!isProcessing)
+            return;
+
+        processingTimer += Time.deltaTime;
+
+        if (processingTimer >= processingTime)
+        {
+            FinishProcessing();
+        }
+    }
+
+    private void FinishProcessing()
+    {
+        isProcessing = false;
+
+        Debug.Log("Cutter: FinishProcessing started.");
+
+        if (outputItem == null)
+        {
+            Debug.LogError("Cutter ERROR: Output Item is NULL!");
+            return;
+        }
+
+        if (foodItemPrefab == null)
+        {
+            Debug.LogError("Cutter ERROR: Food Item Prefab is NULL!");
+            return;
+        }
+
+        if (gridManager == null)
+        {
+            Debug.LogError("Cutter ERROR: GridManager is NULL!");
+            return;
+        }
+
+        if (currentFoodItem == null)
+        {
+            Debug.LogError("Cutter ERROR: Current Food Item is NULL!");
+            return;
+        }
+
+        Vector3 outputPosition =
+            transform.position + Vector3.right;
+
+        GameObject outputObject = Instantiate(
+            foodItemPrefab,
+            outputPosition,
+            Quaternion.identity
+        );
+
+        FoodItem outputFoodItem =
+            outputObject.GetComponent<FoodItem>();
+
+        if (outputFoodItem == null)
+        {
+            Debug.LogError(
+                "Cutter ERROR: Food Item Prefab does not contain FoodItem!"
+            );
+
+            Destroy(outputObject);
+            return;
+        }
+
+        outputFoodItem.Initialize(outputItem);
+
+        FoodItemMovement movement =
+            outputObject.GetComponent<FoodItemMovement>();
+
+        if (movement == null)
+        {
+            Debug.LogError(
+                "Cutter ERROR: Food Item Prefab does not contain FoodItemMovement!"
+            );
+
+            Destroy(outputObject);
+            return;
+        }
+
+        movement.Initialize(gridManager);
+
+        Debug.Log(
+            $"Cutter finished: {inputItem.ItemName} → " +
+            $"{outputItem.ItemName}"
+        );
+
+        Destroy(currentFoodItem.gameObject);
+
+        currentFoodItem = null;
     }
 }

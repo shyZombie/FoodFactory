@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7726067896009124232}
   - component: {fileID: 3141947497645466914}
-  - component: {fileID: 1985203947419961000}
   - component: {fileID: 2651814269626809929}
   - component: {fileID: 4825759559088261873}
   m_Layer: 0
@@ -95,19 +94,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
---- !u!114 &1985203947419961000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7700236940105369691}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9aff6bba9ddb214db0f91c775cbcba8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Machine
-  processingTime: 1
 --- !u!114 &2651814269626809929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,6 +109,8 @@ MonoBehaviour:
   processingTime: 1
   inputItem: {fileID: 11400000, guid: a59cb77da5f6066418e8418fb93b2f15, type: 2}
   outputItem: {fileID: 11400000, guid: 432eff3f2d9811744b8afb6ac56e297a, type: 2}
+  foodItemPrefab: {fileID: 3738253683363426217, guid: 28ee4dd59771da2458ec6ff886153c30, type: 3}
+  outputDirection: {x: 1, y: 0}
 --- !u!61 &4825759559088261873
 BoxCollider2D:
   m_ObjectHideFlags: 0
