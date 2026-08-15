@@ -10,7 +10,10 @@ public class Machine : GridObject
         Left
     }
 
-    [SerializeField] protected float processingTime = 1f;
+    //[SerializeField] protected float processingTime = 1f;
+    [SerializeField] protected Recipe recipe;
+
+    public Recipe Recipe => recipe;
 
     [SerializeField]
     private Direction direction =

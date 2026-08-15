@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f94a7262be396354394358f8b9e56bb1, type: 3}
+  m_Name: Recipe_TestTomato
+  m_EditorClassIdentifier: Assembly-CSharp::Recipe
+  inputs:
+  - foodItem: {fileID: 11400000, guid: 04815959552ecf140ad09f7a1a6c9cd7, type: 2}
+    quantity: 1
+  outputs:
+  - foodItem: {fileID: 11400000, guid: 99abd19acc5240243a00b36cf91399ed, type: 2}
+    quantity: 1
+  processingTime: 1

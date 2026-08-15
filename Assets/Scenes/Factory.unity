@@ -343,8 +343,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 430e36cca31653b489ab0e989abc6116, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FoodMovementTester
-  foodItemPrefab: {fileID: 3738253683363426217, guid: 28ee4dd59771da2458ec6ff886153c30, type: 3}
-  foodItemData: {fileID: 11400000, guid: a59cb77da5f6066418e8418fb93b2f15, type: 2}
+  foodItemPrefab: {fileID: 7036323676616385693, guid: dd1baedc1f0679749907b67dec7ecba3, type: 3}
+  foodItemData: {fileID: 11400000, guid: 04815959552ecf140ad09f7a1a6c9cd7, type: 2}
   gridManager: {fileID: 459680811}
 --- !u!4 &962502222
 Transform:
@@ -568,6 +568,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2651814269626809929, guid: 51074bc57f729ad4c905056b451e40ae, type: 3}
+      propertyPath: recipe
+      value: 
+      objectReference: {fileID: 11400000, guid: c4748f7032b2f12488e53e4af46fa5fd, type: 2}
+    - target: {fileID: 2651814269626809929, guid: 51074bc57f729ad4c905056b451e40ae, type: 3}
       propertyPath: direction
       value: 3
       objectReference: {fileID: 0}
@@ -575,6 +579,10 @@ PrefabInstance:
       propertyPath: gridManager
       value: 
       objectReference: {fileID: 459680811}
+    - target: {fileID: 2651814269626809929, guid: 51074bc57f729ad4c905056b451e40ae, type: 3}
+      propertyPath: foodItemPrefab
+      value: 
+      objectReference: {fileID: 7036323676616385693, guid: dd1baedc1f0679749907b67dec7ecba3, type: 3}
     - target: {fileID: 7700236940105369691, guid: 51074bc57f729ad4c905056b451e40ae, type: 3}
       propertyPath: m_Name
       value: Cutter

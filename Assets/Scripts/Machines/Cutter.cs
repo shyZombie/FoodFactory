@@ -2,8 +2,6 @@
 
 public class Cutter : Machine
 {
-    [SerializeField] private FoodItemData inputItem;
-    [SerializeField] private FoodItemData outputItem;
     [SerializeField] private GameObject foodItemPrefab;
     //[SerializeField] private Vector2 outputDirection = Vector2.right;
 
@@ -16,7 +14,18 @@ public class Cutter : Machine
         if (isProcessing)
             return false;
 
-        return foodItem.ItemData == inputItem;
+        if (Recipe == null)
+            return false;
+
+        if (Recipe.Inputs == null ||
+            Recipe.Inputs.Length == 0)
+            return false;
+
+        Recipe.Ingredient ingredient =
+            Recipe.Inputs[0];
+
+        return foodItem.ItemData ==
+               ingredient.foodItem;
     }
 
     public override void Process(FoodItem foodItem)
@@ -29,7 +38,8 @@ public class Cutter : Machine
         isProcessing = true;
 
         Debug.Log(
-            $"Cutter started processing {inputItem.ItemName}"
+            $"Cutter started processing " +
+            $"{foodItem.ItemData.ItemName}"
         );
 
         currentFoodItem.gameObject.SetActive(false);
@@ -42,7 +52,7 @@ public class Cutter : Machine
 
         processingTimer += Time.deltaTime;
 
-        if (processingTimer >= processingTime)
+        if (processingTimer >= Recipe.ProcessingTime)
         {
             FinishProcessing();
         }
@@ -51,6 +61,31 @@ public class Cutter : Machine
     private void FinishProcessing()
     {
         isProcessing = false;
+
+        if (Recipe == null)
+        {
+            Debug.LogError(
+                "Cutter ERROR: Recipe is NULL!"
+            );
+
+            return;
+        }
+
+        if (Recipe.Outputs == null ||
+            Recipe.Outputs.Length == 0)
+        {
+            Debug.LogError(
+                "Cutter ERROR: Recipe has no outputs!"
+            );
+
+            return;
+        }
+
+        Recipe.Result result =
+            Recipe.Outputs[0];
+
+        FoodItemData outputItem =
+            result.foodItem;
 
         Debug.Log("Cutter: FinishProcessing started.");
 
@@ -190,7 +225,7 @@ public class Cutter : Machine
         }
 
         Debug.Log(
-            $"Cutter finished: {inputItem.ItemName} → " +
+            $"Cutter finished: {currentFoodItem.ItemData.ItemName} → " +
             $"{outputItem.ItemName}"
         );
 
