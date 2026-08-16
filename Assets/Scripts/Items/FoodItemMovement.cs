@@ -56,6 +56,7 @@ public class FoodItemMovement : MonoBehaviour
 
         if (currentBelt == null)
         {
+            TryStartFromSpawner();
             return;
         }
 
@@ -141,6 +142,62 @@ public class FoodItemMovement : MonoBehaviour
 
             FindCurrentBelt();
         }
+    }
+
+    private bool TryStartFromSpawner()
+    {
+        GridPosition[] directions =
+        {
+        new GridPosition(1, 0),   // Right
+        new GridPosition(-1, 0),  // Left
+        new GridPosition(0, 1),   // Up
+        new GridPosition(0, -1)   // Down
+    };
+
+        ConveyorBelt foundBelt = null;
+        GridPosition foundPosition = default;
+
+        foreach (GridPosition direction in directions)
+        {
+            GridPosition checkPosition = new GridPosition(
+                currentGridPosition.x + direction.x,
+                currentGridPosition.y + direction.y
+            );
+
+            GridObject gridObject =
+                gridManager.GetGridObject(checkPosition);
+
+            if (gridObject is ConveyorBelt conveyorBelt)
+            {
+                if (foundBelt != null)
+                {
+                    Debug.LogWarning(
+                        $"{name}: Multiple conveyor belts found next to spawner. " +
+                        "Spawner output direction is ambiguous."
+                    );
+
+                    return false;
+                }
+
+                foundBelt = conveyorBelt;
+                foundPosition = checkPosition;
+            }
+        }
+
+        if (foundBelt == null)
+        {
+            return false;
+        }
+
+        if (IsCellOccupiedByFoodItem(foundPosition))
+        {
+            return false;
+        }
+
+        targetGridPosition = foundPosition;
+        isMoving = true;
+
+        return true;
     }
 
     private bool IsCellOccupiedByFoodItem(GridPosition position)
