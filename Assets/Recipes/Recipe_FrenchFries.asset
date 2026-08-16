@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f94a7262be396354394358f8b9e56bb1, type: 3}
+  m_Name: Recipe_FrenchFries
+  m_EditorClassIdentifier: Assembly-CSharp::Recipe
+  inputs:
+  - foodItem: {fileID: 11400000, guid: 432eff3f2d9811744b8afb6ac56e297a, type: 2}
+    quantity: 1
+  - foodItem: {fileID: 11400000, guid: ae98c9b690af42640b9939c557e91c0e, type: 2}
+    quantity: 1
+  outputs:
+  - foodItem: {fileID: 11400000, guid: e7782679852f8654cb4dffe6d6141794, type: 2}
+    quantity: 1
+  processingTime: 3
