@@ -80,6 +80,11 @@ public class FoodItemMovement : MonoBehaviour
 
         if (nextGridObject is ConveyorBelt)
         {
+            if (IsCellOccupiedByFoodItem(nextPosition))
+            {
+                return;
+            }
+
             targetGridPosition = nextPosition;
             isMoving = true;
         }
@@ -136,5 +141,30 @@ public class FoodItemMovement : MonoBehaviour
 
             FindCurrentBelt();
         }
+    }
+
+    private bool IsCellOccupiedByFoodItem(GridPosition position)
+    {
+        FoodItem[] foodItems =
+            FindObjectsByType<FoodItem>(FindObjectsSortMode.None);
+
+        foreach (FoodItem foodItem in foodItems)
+        {
+            if (foodItem == gameObject.GetComponent<FoodItem>())
+                continue;
+
+            GridPosition foodPosition =
+                gridManager.WorldToGridPosition(
+                    foodItem.transform.position
+                );
+
+            if (foodPosition.x == position.x &&
+                foodPosition.y == position.y)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
