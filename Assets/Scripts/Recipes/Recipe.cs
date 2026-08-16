@@ -37,7 +37,8 @@ public class Recipe : ScriptableObject
     public float ProcessingTime => processingTime;
 
     public bool HasIngredient(
-    FoodItemData foodItemData)
+        FoodItemData foodItemData,
+        List<FoodItem> storedIngredients)
     {
         if (foodItemData == null)
             return false;
@@ -47,10 +48,21 @@ public class Recipe : ScriptableObject
 
         foreach (Ingredient ingredient in Inputs)
         {
-            if (ingredient.foodItem == foodItemData)
+            if (ingredient.foodItem != foodItemData)
+                continue;
+
+            int storedCount = 0;
+
+            foreach (FoodItem storedItem in storedIngredients)
             {
-                return true;
+                if (storedItem != null &&
+                    storedItem.ItemData == foodItemData)
+                {
+                    storedCount++;
+                }
             }
+
+            return storedCount < ingredient.quantity;
         }
 
         return false;

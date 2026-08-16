@@ -71,7 +71,8 @@ public class Machine : GridObject
             return false;
 
         return Recipe.HasIngredient(
-            foodItem.ItemData
+            foodItem.ItemData,
+            storedIngredients
         );
     }
 
@@ -90,7 +91,8 @@ public class Machine : GridObject
 
         Debug.Log(
             $"{name} accepted ingredient: " +
-            $"{foodItem.ItemData.ItemName}"
+            $"{foodItem.ItemData.ItemName}" +
+            $" | Stored ingredients: {storedIngredients.Count}"
         );
 
         return true;
