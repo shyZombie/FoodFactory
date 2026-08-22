@@ -6,6 +6,7 @@ public class FoodSpawner : MonoBehaviour
     [SerializeField] private GameObject foodItemPrefab;
     [SerializeField] private FoodItemData foodItemData;
     [SerializeField] private GridManager gridManager;
+    [SerializeField] private Extractor extractor;
 
     [SerializeField] private int spawnGridX = 0;
     [SerializeField] private int spawnGridY = 0;
@@ -27,6 +28,16 @@ public class FoodSpawner : MonoBehaviour
 
     private void TrySpawnFood()
     {
+        if (extractor == null)
+        {
+            return;
+        }
+
+        if (!extractor.HasActiveExtractionSlots())
+        {
+            return;
+        }
+
         RemoveInactiveFoodObjects();
 
         if (spawnedFoodObjects.Count >= maxItems)

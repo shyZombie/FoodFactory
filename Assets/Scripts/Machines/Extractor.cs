@@ -134,6 +134,10 @@ public class Extractor : MonoBehaviour
     {
         return GetActiveExtractionSlots();
     }
+    public bool HasActiveExtractionSlots()
+    {
+        return GetActiveExtractionSlots().Count > 0;
+    }
 
     public List<GridPosition> GetExtractionSlots()
     {
