@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Extractor : MonoBehaviour
@@ -6,7 +6,7 @@ public class Extractor : MonoBehaviour
     [SerializeField] private GridManager gridManager;
     [SerializeField] private FoodSpawner foodSpawner;
 
-    private GridPosition extractorGridPosition;
+    private GridPosition extractorCenterPosition;
 
     private List<GridPosition> extractionSlots =
         new List<GridPosition>();
@@ -22,7 +22,7 @@ public class Extractor : MonoBehaviour
             return;
         }
 
-        extractorGridPosition =
+        extractorCenterPosition =
             gridManager.WorldToGridPosition(
                 transform.position
             );
@@ -30,98 +30,74 @@ public class Extractor : MonoBehaviour
         GenerateExtractionSlots();
     }
 
+    private void Start()
+    {
+        List<GridPosition> activeSlots =
+            GetActiveExtractionSlots();
+
+        foreach (GridPosition slot in activeSlots)
+        {
+            Debug.Log(
+                $"Active extraction slot: ({slot.x}, {slot.y})"
+            );
+        }
+    }
+
     private void GenerateExtractionSlots()
     {
         extractionSlots.Clear();
 
+        int minX = extractorCenterPosition.x - 1;
+        int maxX = extractorCenterPosition.x + 1;
+
+        int minY = extractorCenterPosition.y - 1;
+        int maxY = extractorCenterPosition.y + 1;
+
         // Right
-        extractionSlots.Add(
-            new GridPosition(
-                extractorGridPosition.x + 1,
-                extractorGridPosition.y
-            )
-        );
-
-        extractionSlots.Add(
-            new GridPosition(
-                extractorGridPosition.x + 1,
-                extractorGridPosition.y + 1
-            )
-        );
-
-        extractionSlots.Add(
-            new GridPosition(
-                extractorGridPosition.x + 1,
-                extractorGridPosition.y + 2
-            )
-        );
+        for (int y = minY; y <= maxY; y++)
+        {
+            extractionSlots.Add(
+                new GridPosition(
+                    maxX + 1,
+                    y
+                )
+            );
+        }
 
         // Left
-        extractionSlots.Add(
-            new GridPosition(
-                extractorGridPosition.x - 1,
-                extractorGridPosition.y
-            )
-        );
-
-        extractionSlots.Add(
-            new GridPosition(
-                extractorGridPosition.x - 1,
-                extractorGridPosition.y + 1
-            )
-        );
-
-        extractionSlots.Add(
-            new GridPosition(
-                extractorGridPosition.x - 1,
-                extractorGridPosition.y + 2
-            )
-        );
+        for (int y = minY; y <= maxY; y++)
+        {
+            extractionSlots.Add(
+                new GridPosition(
+                    minX - 1,
+                    y
+                )
+            );
+        }
 
         // Up
-        extractionSlots.Add(
-            new GridPosition(
-                extractorGridPosition.x,
-                extractorGridPosition.y + 1
-            )
-        );
-
-        extractionSlots.Add(
-            new GridPosition(
-                extractorGridPosition.x + 1,
-                extractorGridPosition.y + 1
-            )
-        );
-
-        extractionSlots.Add(
-            new GridPosition(
-                extractorGridPosition.x + 2,
-                extractorGridPosition.y + 1
-            )
-        );
+        for (int x = minX; x <= maxX; x++)
+        {
+            extractionSlots.Add(
+                new GridPosition(
+                    x,
+                    maxY + 1
+                )
+            );
+        }
 
         // Down
-        extractionSlots.Add(
-            new GridPosition(
-                extractorGridPosition.x,
-                extractorGridPosition.y - 1
-            )
-        );
+        for (int x = minX; x <= maxX; x++)
+        {
+            extractionSlots.Add(
+                new GridPosition(
+                    x,
+                    minY - 1
+                )
+            );
+        }
 
-        extractionSlots.Add(
-            new GridPosition(
-                extractorGridPosition.x + 1,
-                extractorGridPosition.y - 1
-            )
-        );
-
-        extractionSlots.Add(
-            new GridPosition(
-                extractorGridPosition.x + 2,
-                extractorGridPosition.y - 1
-            )
-        );
-
+        //Temporary for testing
         foreach (GridPosition slot in extractionSlots)
         {
             Debug.Log(
@@ -130,14 +106,43 @@ public class Extractor : MonoBehaviour
         }
     }
 
+    private List<GridPosition> GetActiveExtractionSlots()
+    {
+        List<GridPosition> activeSlots =
+            new List<GridPosition>();
+
+        foreach (GridPosition slot in extractionSlots)
+        {
+            GridObject gridObject =
+                gridManager.GetGridObject(slot);
+
+            Debug.Log(
+                $"Checking extractor slot ({slot.x}, {slot.y}) → " +
+                $"{(gridObject == null ? "EMPTY" : gridObject.GetType().Name)}"
+            );
+
+            if (gridObject is ConveyorBelt)
+            {
+                activeSlots.Add(slot);
+            }
+        }
+
+        return activeSlots;
+    }
+
+    public List<GridPosition> GetActiveSlots()
+    {
+        return GetActiveExtractionSlots();
+    }
+
     public List<GridPosition> GetExtractionSlots()
     {
         return extractionSlots;
     }
 
-    public GridPosition GetExtractorGridPosition()
+    public GridPosition GetExtractorCenterPosition()
     {
-        return extractorGridPosition;
+        return extractorCenterPosition;
     }
 
     public FoodSpawner GetFoodSpawner()
