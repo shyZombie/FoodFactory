@@ -17,6 +17,9 @@ public class Machine : GridObject
     protected GameObject foodItemPrefab;
     protected List<FoodItem> storedIngredients =
     new List<FoodItem>();
+    protected Queue<FoodItemData> pendingOutputs =
+        new Queue<FoodItemData>();
+
 
     public Recipe Recipe => recipe;
 
@@ -150,18 +153,22 @@ public class Machine : GridObject
 
     protected virtual void Update()
     {
-        if (!isProcessing)
-            return;
-
-        if (Recipe == null)
-            return;
-
-        processingTimer += Time.deltaTime;
-
-        if (processingTimer >= Recipe.ProcessingTime)
+        if (isProcessing)
         {
-            FinishProcessing();
+            if (Recipe == null)
+                return;
+
+            processingTimer += Time.deltaTime;
+
+            if (processingTimer >= Recipe.ProcessingTime)
+            {
+                FinishProcessing();
+            }
+
+            return;
         }
+
+        TryCreateNextOutput();
     }
 
     protected virtual void FinishProcessing()
@@ -177,9 +184,154 @@ public class Machine : GridObject
             $"{currentFoodItem.ItemData.ItemName}"
         );
 
-        CreateOutput();
+        QueueRecipeOutputs();
 
         isProcessing = false;
+
+        TryCreateNextOutput();
+    }
+
+    protected virtual void QueueRecipeOutputs()
+    {
+        if (Recipe == null)
+            return;
+
+        if (Recipe.Outputs == null)
+            return;
+
+        foreach (Recipe.Result result in Recipe.Outputs)
+        {
+            if (result == null)
+                continue;
+
+            if (result.foodItem == null)
+            {
+                Debug.LogError(
+                    $"{name} ERROR: Output FoodItemData is NULL!"
+                );
+
+                continue;
+            }
+
+            for (int i = 0;
+                 i < result.quantity;
+                 i++)
+            {
+                pendingOutputs.Enqueue(
+                    result.foodItem
+                );
+            }
+        }
+    }
+
+    protected virtual void TryCreateNextOutput()
+    {
+        if (pendingOutputs.Count == 0)
+            return;
+
+        if (gridManager == null)
+            return;
+
+        if (foodItemPrefab == null)
+            return;
+
+        Vector2 outputDirection =
+            GetOutputDirectionVector();
+
+        GridPosition machineGridPosition =
+            GridPosition;
+
+        GridPosition outputGridPosition =
+            new GridPosition(
+                machineGridPosition.x +
+                    Mathf.RoundToInt(outputDirection.x),
+
+                machineGridPosition.y +
+                    Mathf.RoundToInt(outputDirection.y)
+            );
+
+        GridObject outputGridObject =
+            gridManager.GetGridObject(
+                outputGridPosition
+            );
+
+        if (outputGridObject != null &&
+            outputGridObject is not ConveyorBelt)
+        {
+            Debug.Log(
+                $"{name} output blocked at " +
+                $"{outputGridPosition}"
+            );
+
+            return;
+        }
+
+        if (IsOutputPositionOccupied(
+            outputGridPosition))
+        {
+            Debug.Log(
+                $"{name} output blocked by FoodItem at " +
+                $"{outputGridPosition}"
+            );
+
+            return;
+        }
+
+        FoodItemData outputItem =
+            pendingOutputs.Dequeue();
+
+        Vector3 outputPosition =
+            gridManager.GridToWorldPosition(
+                outputGridPosition
+            );
+
+        GameObject outputObject =
+            Instantiate(
+                foodItemPrefab,
+                outputPosition,
+                Quaternion.identity
+            );
+
+        FoodItem outputFoodItem =
+            outputObject.GetComponent<FoodItem>();
+
+        if (outputFoodItem == null)
+        {
+            Debug.LogError(
+                $"{name} ERROR: Food Item Prefab " +
+                "does not contain FoodItem!"
+            );
+
+            Destroy(outputObject);
+
+            return;
+        }
+
+        outputFoodItem.Initialize(
+            outputItem
+        );
+
+        FoodItemMovement movement =
+            outputObject.GetComponent<FoodItemMovement>();
+
+        if (movement == null)
+        {
+            Debug.LogError(
+                $"{name} ERROR: Food Item Prefab " +
+                "does not contain FoodItemMovement!"
+            );
+
+            Destroy(outputObject);
+
+            return;
+        }
+
+        movement.Initialize(gridManager);
+
+        Debug.Log(
+            $"{name} created output: " +
+            $"{outputFoodItem.ItemData.ItemName}"
+        );
     }
 
     protected virtual void CreateOutput()
