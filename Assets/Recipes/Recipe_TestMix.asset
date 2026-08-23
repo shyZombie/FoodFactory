@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Recipe_TestMix
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   inputs:
-  - foodItem: {fileID: 11400000, guid: e7782679852f8654cb4dffe6d6141794, type: 2}
-    quantity: 1
+  - foodItem: {fileID: 11400000, guid: 432eff3f2d9811744b8afb6ac56e297a, type: 2}
+    quantity: 2
   - foodItem: {fileID: 11400000, guid: 04815959552ecf140ad09f7a1a6c9cd7, type: 2}
     quantity: 1
   outputs:

@@ -663,8 +663,8 @@ MonoBehaviour:
   foodItemPrefab: {fileID: 7036323676616385693, guid: dd1baedc1f0679749907b67dec7ecba3, type: 3}
   foodItemData: {fileID: 11400000, guid: 04815959552ecf140ad09f7a1a6c9cd7, type: 2}
   gridManager: {fileID: 459680811}
-  spawnGridX: -4
-  spawnGridY: -4
+  spawnGridX: -2
+  spawnGridY: -2
 --- !u!4 &962502222
 Transform:
   m_ObjectHideFlags: 0
@@ -674,7 +674,7 @@ Transform:
   m_GameObject: {fileID: 962502220}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.5, y: -3.5, z: 0}
+  m_LocalPosition: {x: -1.5, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -907,7 +907,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2167049299986331372, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3500340564067284655, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1094,7 +1094,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 101331661808375410, guid: 4bf9e6127e410fd429e220fb29fe2489, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 976993797981865290, guid: 4bf9e6127e410fd429e220fb29fe2489, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1467,7 +1467,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1388619872590149845, guid: cc195e4036c41ef4d99f25a312a6e54c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.5
+      value: -1.5
       objectReference: {fileID: 0}
     - target: {fileID: 1388619872590149845, guid: cc195e4036c41ef4d99f25a312a6e54c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2129,7 +2129,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2060734029
 MonoBehaviour:
   m_ObjectHideFlags: 0
