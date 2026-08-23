@@ -99,4 +99,92 @@ public class Recipe : ScriptableObject
 
         return true;
     }
+
+    public bool IsValid()
+    {
+        return string.IsNullOrEmpty(
+            GetValidationError()
+        );
+    }
+
+    public string GetValidationError()
+    {
+        if (Inputs == null ||
+            Inputs.Length == 0)
+        {
+            return "Recipe has no inputs.";
+        }
+
+        for (int i = 0; i < Inputs.Length; i++)
+        {
+            Ingredient ingredient = Inputs[i];
+
+            if (ingredient == null)
+            {
+                return $"Input {i} is NULL.";
+            }
+
+            if (ingredient.foodItem == null)
+            {
+                return $"Input {i} has no FoodItemData.";
+            }
+
+            if (ingredient.quantity <= 0)
+            {
+                return $"Input {i} has invalid quantity: " +
+                       $"{ingredient.quantity}.";
+            }
+        }
+
+        if (Outputs == null ||
+            Outputs.Length == 0)
+        {
+            return "Recipe has no outputs.";
+        }
+
+        for (int i = 0; i < Outputs.Length; i++)
+        {
+            Result result = Outputs[i];
+
+            if (result == null)
+            {
+                return $"Output {i} is NULL.";
+            }
+
+            if (result.foodItem == null)
+            {
+                return $"Output {i} has no FoodItemData.";
+            }
+
+            if (result.quantity <= 0)
+            {
+                return $"Output {i} has invalid quantity: " +
+                       $"{result.quantity}.";
+            }
+        }
+
+        if (ProcessingTime <= 0f)
+        {
+            return $"Processing time is invalid: " +
+                   $"{ProcessingTime}.";
+        }
+
+        return string.Empty;
+    }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        string validationError = GetValidationError();
+
+        if (!string.IsNullOrEmpty(validationError))
+        {
+            Debug.LogWarning(
+                $"Recipe '{name}' is invalid. " +
+                $"Reason: {validationError}",
+                this
+            );
+        }
+    }
+#endif
 }

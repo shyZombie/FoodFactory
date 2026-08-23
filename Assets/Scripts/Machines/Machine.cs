@@ -552,6 +552,25 @@ public class Machine : GridObject
 
     protected virtual void Start()
     {
+        if (Recipe == null)
+        {
+            Debug.LogError(
+                $"{name} ERROR: Recipe is NULL!"
+            );
+
+            return;
+        }
+
+        if (!Recipe.IsValid())
+        {
+            Debug.LogError(
+                $"{name} ERROR: Assigned Recipe is invalid. " +
+                $"Reason: {Recipe.GetValidationError()}"
+            );
+
+            return;
+        }
+
         UpdateVisualRotation();
     }
 
