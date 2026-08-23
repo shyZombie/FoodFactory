@@ -586,7 +586,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &962502221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -599,8 +599,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 430e36cca31653b489ab0e989abc6116, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FoodMovementTester
-  foodItemPrefab: {fileID: 7036323676616385693, guid: dd1baedc1f0679749907b67dec7ecba3, type: 3}
-  foodItemData: {fileID: 11400000, guid: 04815959552ecf140ad09f7a1a6c9cd7, type: 2}
+  foodItemPrefab: {fileID: 3738253683363426217, guid: 28ee4dd59771da2458ec6ff886153c30, type: 3}
+  foodItemData: {fileID: 11400000, guid: a59cb77da5f6066418e8418fb93b2f15, type: 2}
   gridManager: {fileID: 459680811}
   spawnGridX: -2
   spawnGridY: -2

@@ -15,3 +15,4 @@ MonoBehaviour:
   itemId: french_fries
   itemName: French Fries
   icon: {fileID: 21300000, guid: 66853c16a010a1b4dac6612f97f3da19, type: 3}
+  categories: 
