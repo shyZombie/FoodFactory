@@ -19,7 +19,7 @@ MonoBehaviour:
     quantity: 1
   outputs:
   - foodItem: {fileID: 11400000, guid: e7782679852f8654cb4dffe6d6141794, type: 2}
-    quantity: 1
+    quantity: 2
   - foodItem: {fileID: 11400000, guid: 7ac5cec2ec24e2344bde7966c158c5e8, type: 2}
     quantity: 1
   processingTime: 2

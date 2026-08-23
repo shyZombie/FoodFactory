@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Machine : GridObject
 {
+    public static event System.Action<FoodItemData> OnFoodItemProduced;
     public enum Direction
     {
         Up,
@@ -312,6 +313,8 @@ public class Machine : GridObject
         outputFoodItem.Initialize(
             outputItem
         );
+
+        OnFoodItemProduced?.Invoke(outputItem);
 
         FoodItemMovement movement =
             outputObject.GetComponent<FoodItemMovement>();
