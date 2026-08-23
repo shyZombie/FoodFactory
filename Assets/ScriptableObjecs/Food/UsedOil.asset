@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dab5a729741e0944fb6b6432bab4103f, type: 3}
-  m_Name: FrenchFries
+  m_Name: UsedOil
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
-  itemId: french_fries
-  itemName: French Fries
-  icon: {fileID: 21300000, guid: 66853c16a010a1b4dac6612f97f3da19, type: 3}
-  categories: 0000000001000000
+  itemId: used_oil
+  itemName: Used Oil
+  icon: {fileID: -7078911908298887805, guid: d868732944e22074b9f8207996430c1c, type: 3}
+  categories: 00000000

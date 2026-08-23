@@ -324,6 +324,69 @@ public class Recipe : ScriptableObject
         return string.Empty;
     }
 
+    public bool HasOutputCategory(FoodCategory category)
+    {
+        if (Outputs == null)
+            return false;
+
+        foreach (Result result in Outputs)
+        {
+            if (result == null ||
+                result.foodItem == null)
+            {
+                continue;
+            }
+
+            if (result.foodItem.HasCategory(category))
+                return true;
+        }
+
+        return false;
+    }
+
+    public bool HasAnyOutputCategory(
+    params FoodCategory[] requestedCategories)
+    {
+        if (Outputs == null ||
+            requestedCategories == null ||
+            requestedCategories.Length == 0)
+        {
+            return false;
+        }
+
+        foreach (FoodCategory requestedCategory in requestedCategories)
+        {
+            if (HasOutputCategory(requestedCategory))
+                return true;
+        }
+
+        return false;
+    }
+    public int GetOutputCountForCategory(
+    FoodCategory category)
+    {
+        if (Outputs == null)
+            return 0;
+
+        int total = 0;
+
+        foreach (Result result in Outputs)
+        {
+            if (result == null ||
+                result.foodItem == null)
+            {
+                continue;
+            }
+
+            if (result.foodItem.HasCategory(category))
+            {
+                total += result.quantity;
+            }
+        }
+
+        return total;
+    }
+
 #if UNITY_EDITOR
     private void OnValidate()
     {

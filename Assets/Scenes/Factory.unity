@@ -972,7 +972,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2167049299986331372, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3500340564067284655, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1033,7 +1033,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 101331661808375410, guid: 4bf9e6127e410fd429e220fb29fe2489, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 976993797981865290, guid: 4bf9e6127e410fd429e220fb29fe2489, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1078,7 +1078,7 @@ PrefabInstance:
     - target: {fileID: 5904067629154925336, guid: 4bf9e6127e410fd429e220fb29fe2489, type: 3}
       propertyPath: recipe
       value: 
-      objectReference: {fileID: 11400000, guid: 91fcd04bfe32e6946be279ad0c214f62, type: 2}
+      objectReference: {fileID: 11400000, guid: d7640490f5125214c882872c2cb74dcb, type: 2}
     - target: {fileID: 5904067629154925336, guid: 4bf9e6127e410fd429e220fb29fe2489, type: 3}
       propertyPath: direction
       value: 2
@@ -1463,7 +1463,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2167049299986331372, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3500340564067284655, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2011,7 +2011,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2060734029
 MonoBehaviour:
   m_ObjectHideFlags: 0
