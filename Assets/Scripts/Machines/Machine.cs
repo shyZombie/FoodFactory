@@ -221,21 +221,6 @@ public class Machine : GridObject
             return;
         }
 
-        Recipe.Result result =
-            Recipe.Outputs[0];
-
-        FoodItemData outputItem =
-            result.foodItem;
-
-        if (outputItem == null)
-        {
-            Debug.LogError(
-                $"{name} ERROR: Output FoodItemData is NULL!"
-            );
-
-            return;
-        }
-
         Vector2 outputDirection =
             GetOutputDirectionVector();
 
@@ -256,6 +241,16 @@ public class Machine : GridObject
                 outputGridPosition
             );
 
+        if (IsOutputPositionOccupied(outputGridPosition))
+        {
+            Debug.Log(
+                $"{name} output blocked by FoodItem at " +
+                $"{outputGridPosition}"
+            );
+
+            return;
+        }
+
         if (outputGridObject != null &&
             outputGridObject is not ConveyorBelt)
         {
@@ -272,66 +267,117 @@ public class Machine : GridObject
                 outputGridPosition
             );
 
-        GameObject outputObject =
-            Instantiate(
-                foodItemPrefab,
-                outputPosition,
-                Quaternion.identity
-            );
-
-        FoodItem outputFoodItem =
-            outputObject.GetComponent<FoodItem>();
-
-        if (outputFoodItem == null)
+        foreach (Recipe.Result result in Recipe.Outputs)
         {
-            Debug.LogError(
-                $"{name} ERROR: Food Item Prefab " +
-                "does not contain FoodItem!"
-            );
+            if (result == null)
+                continue;
 
-            Destroy(outputObject);
-            return;
-        }
+            if (result.foodItem == null)
+            {
+                Debug.LogError(
+                    $"{name} ERROR: Output FoodItemData is NULL!"
+                );
 
-        outputFoodItem.Initialize(outputItem);
+                continue;
+            }
 
-        Debug.Log(
-            $"{name} created output: " +
-            $"{outputFoodItem.ItemData.ItemName}"
-        );
+            for (int i = 0;
+                 i < result.quantity;
+                 i++)
+            {
+                GameObject outputObject =
+                    Instantiate(
+                        foodItemPrefab,
+                        outputPosition,
+                        Quaternion.identity
+                    );
 
-        FoodItemMovement movement =
-            outputObject.GetComponent<FoodItemMovement>();
+                FoodItem outputFoodItem =
+                    outputObject.GetComponent<FoodItem>();
 
-        if (movement == null)
-        {
-            Debug.LogError(
-                $"{name} ERROR: Food Item Prefab " +
-                "does not contain FoodItemMovement!"
-            );
+                if (outputFoodItem == null)
+                {
+                    Debug.LogError(
+                        $"{name} ERROR: Food Item Prefab " +
+                        "does not contain FoodItem!"
+                    );
 
-            Destroy(outputObject);
-            return;
-        }
+                    Destroy(outputObject);
+                    continue;
+                }
 
-        movement.Initialize(gridManager);
+                outputFoodItem.Initialize(
+                    result.foodItem
+                );
 
-        if (outputGridObject is ConveyorBelt)
-        {
-            Debug.Log(
-                $"{name} output connected to conveyor at " +
-                $"{outputGridPosition}"
-            );
-        }
-        else
-        {
-            Debug.Log(
-                $"{name} output waiting at " +
-                $"{outputGridPosition}"
-            );
+                Debug.Log(
+                    $"{name} created output: " +
+                    $"{outputFoodItem.ItemData.ItemName}"
+                );
+
+                FoodItemMovement movement =
+                    outputObject.GetComponent<FoodItemMovement>();
+
+                if (movement == null)
+                {
+                    Debug.LogError(
+                        $"{name} ERROR: Food Item Prefab " +
+                        "does not contain FoodItemMovement!"
+                    );
+
+                    Destroy(outputObject);
+                    continue;
+                }
+
+                movement.Initialize(gridManager);
+
+                if (outputGridObject is ConveyorBelt)
+                {
+                    Debug.Log(
+                        $"{name} output connected to conveyor at " +
+                        $"{outputGridPosition}"
+                    );
+                }
+                else
+                {
+                    Debug.Log(
+                        $"{name} output waiting at " +
+                        $"{outputGridPosition}"
+                    );
+                }
+            }
         }
 
         ConsumeIngredients();
+    }
+
+    private bool IsOutputPositionOccupied(
+    GridPosition position
+)
+    {
+        FoodItem[] foodItems =
+            FindObjectsByType<FoodItem>(
+                FindObjectsSortMode.None
+            );
+
+        foreach (FoodItem foodItem in foodItems)
+        {
+            if (foodItem == null)
+                continue;
+
+            GridPosition foodPosition =
+                gridManager.WorldToGridPosition(
+                    foodItem.transform.position
+                );
+
+            if (foodPosition.x == position.x &&
+                foodPosition.y == position.y)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public virtual void RotateClockwise()
