@@ -31,11 +31,6 @@ public class FoodSpawner : MonoBehaviour
             return;
         }
 
-        if (!extractor.HasActiveExtractionSlots())
-        {
-            return;
-        }
-
         GridPosition spawnPosition;
 
         if (!extractor.TryGetAvailableExtractionSlot(

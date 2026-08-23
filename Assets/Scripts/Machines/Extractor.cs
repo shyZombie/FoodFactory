@@ -93,7 +93,7 @@ public class Extractor : MonoBehaviour
         }
     }
 
-    private List<GridPosition> GetActiveExtractionSlots()
+    public List<GridPosition> GetActiveExtractionSlots()
     {
         List<GridPosition> activeSlots =
             new List<GridPosition>();
