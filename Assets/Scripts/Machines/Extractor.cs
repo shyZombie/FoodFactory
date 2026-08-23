@@ -38,9 +38,12 @@ public class Extractor : MonoBehaviour
         foreach (GridPosition slot in activeSlots)
         {
             Debug.Log(
-                $"Active extraction slot: ({slot.x}, {slot.y})"
+                $"Active extraction slot: " +
+                $"({slot.x}, {slot.y})"
             );
         }
+
+        TestAvailableSlot();
     }
 
     private void GenerateExtractionSlots()
@@ -128,6 +131,71 @@ public class Extractor : MonoBehaviour
         }
 
         return activeSlots;
+    }
+
+    public bool TryGetAvailableExtractionSlot(
+    out GridPosition availableSlot
+)
+    {
+        List<GridPosition> activeSlots =
+            GetActiveExtractionSlots();
+
+        foreach (GridPosition slot in activeSlots)
+        {
+            if (!IsExtractionSlotOccupied(slot))
+            {
+                availableSlot = slot;
+                return true;
+            }
+        }
+
+        availableSlot = default;
+        return false;
+    }
+
+    private bool IsExtractionSlotOccupied(
+    GridPosition slot
+)
+    {
+        FoodItem[] foodItems =
+            FindObjectsByType<FoodItem>(
+                FindObjectsSortMode.None
+            );
+
+        foreach (FoodItem foodItem in foodItems)
+        {
+            GridPosition foodPosition =
+                gridManager.WorldToGridPosition(
+                    foodItem.transform.position
+                );
+
+            if (foodPosition.x == slot.x &&
+                foodPosition.y == slot.y)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    //Temporary for testing
+    private void TestAvailableSlot()
+    {
+        if (TryGetAvailableExtractionSlot(
+            out GridPosition slot))
+        {
+            Debug.Log(
+                $"Extractor available slot: " +
+                $"({slot.x}, {slot.y})"
+            );
+        }
+        else
+        {
+            Debug.Log(
+                "Extractor has no available extraction slot."
+            );
+        }
     }
 
     public List<GridPosition> GetActiveSlots()

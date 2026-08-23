@@ -13,6 +13,7 @@ public class FoodSpawner : MonoBehaviour
 
     [SerializeField] private float spawnInterval = 3f;
     [SerializeField] private int maxItems = 5;
+    private GameObject currentFoodObject;
 
     private List<GameObject> spawnedFoodObjects =
         new List<GameObject>();
@@ -38,6 +39,14 @@ public class FoodSpawner : MonoBehaviour
             return;
         }
 
+        GridPosition spawnPosition;
+
+        if (!extractor.TryGetAvailableExtractionSlot(
+            out spawnPosition))
+        {
+            return;
+        }
+
         RemoveInactiveFoodObjects();
 
         if (spawnedFoodObjects.Count >= maxItems)
@@ -45,12 +54,12 @@ public class FoodSpawner : MonoBehaviour
             return;
         }
 
-        if (IsSpawnCellOccupied())
+        if (IsSpawnCellOccupied(spawnPosition))
         {
             return;
         }
 
-        SpawnFood();
+        SpawnFood(spawnPosition);
     }
 
     private void RemoveInactiveFoodObjects()
@@ -62,27 +71,26 @@ public class FoodSpawner : MonoBehaviour
         );
     }
 
-    private bool IsSpawnCellOccupied()
+    private bool IsSpawnCellOccupied(
+        GridPosition spawnGridPosition
+    )
     {
         Vector3 spawnPosition =
             gridManager.GridToWorldPosition(
-                new GridPosition(
-                    spawnGridX,
-                    spawnGridY
-                )
+                spawnGridPosition
             );
 
-        foreach (GameObject foodObject in spawnedFoodObjects)
-        {
-            if (foodObject == null ||
-                !foodObject.activeSelf)
-            {
-                continue;
-            }
+        FoodItem[] foodItems =
+            FindObjectsByType<FoodItem>(
+                FindObjectsSortMode.None
+            );
 
+        foreach (FoodItem foodItem in foodItems)
+        {
             if (Vector3.Distance(
-                    foodObject.transform.position,
-                    spawnPosition) < 0.01f)
+                    foodItem.transform.position,
+                    spawnPosition
+                ) < 0.1f)
             {
                 return true;
             }
@@ -91,31 +99,28 @@ public class FoodSpawner : MonoBehaviour
         return false;
     }
 
-    private void SpawnFood()
+    private void SpawnFood(
+        GridPosition spawnGridPosition
+    )
     {
-        Vector3 spawnPosition =
+        Vector3 spawnWorldPosition =
             gridManager.GridToWorldPosition(
-                new GridPosition(
-                    spawnGridX,
-                    spawnGridY
-                )
+                spawnGridPosition
             );
 
-        GameObject foodObject = Instantiate(
+        currentFoodObject = Instantiate(
             foodItemPrefab,
-            spawnPosition,
+            spawnWorldPosition,
             Quaternion.identity
         );
 
-        spawnedFoodObjects.Add(foodObject);
-
         FoodItem foodItem =
-            foodObject.GetComponent<FoodItem>();
+            currentFoodObject.GetComponent<FoodItem>();
 
         foodItem.Initialize(foodItemData);
 
         FoodItemMovement movement =
-            foodObject.GetComponent<FoodItemMovement>();
+            currentFoodObject.GetComponent<FoodItemMovement>();
 
         movement.Initialize(gridManager);
     }
