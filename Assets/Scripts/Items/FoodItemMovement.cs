@@ -100,6 +100,11 @@ public class FoodItemMovement : MonoBehaviour
         FoodItem foodItem =
             GetComponent<FoodItem>();
 
+        Debug.Log(
+            $"{foodItem.ItemData.ItemName} attempting to enter " +
+            $"{machine.name}"
+        );
+
         if (!machine.CanProcess(foodItem))
         {
             Debug.Log(

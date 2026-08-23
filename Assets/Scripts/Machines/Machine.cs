@@ -186,6 +186,8 @@ public class Machine : GridObject
 
         QueueRecipeOutputs();
 
+        ConsumeIngredients();
+
         isProcessing = false;
 
         TryCreateNextOutput();
