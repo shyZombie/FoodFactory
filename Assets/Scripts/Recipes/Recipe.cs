@@ -136,6 +136,15 @@ public class Recipe : ScriptableObject
             }
         }
 
+        string duplicateInputError =
+            GetDuplicateInputError();
+
+        if (!string.IsNullOrEmpty(
+            duplicateInputError))
+        {
+            return duplicateInputError;
+        }
+
         if (Outputs == null ||
             Outputs.Length == 0)
         {
@@ -163,10 +172,153 @@ public class Recipe : ScriptableObject
             }
         }
 
+        string duplicateOutputError =
+            GetDuplicateOutputError();
+
+        if (!string.IsNullOrEmpty(
+            duplicateOutputError))
+        {
+            return duplicateOutputError;
+        }
+
         if (ProcessingTime <= 0f)
         {
             return $"Processing time is invalid: " +
                    $"{ProcessingTime}.";
+        }
+
+        return string.Empty;
+    }
+
+    private bool ContainsDuplicateInputs()
+    {
+        if (Inputs == null)
+            return false;
+
+        for (int i = 0; i < Inputs.Length; i++)
+        {
+            if (Inputs[i] == null ||
+                Inputs[i].foodItem == null)
+            {
+                continue;
+            }
+
+            for (int j = i + 1; j < Inputs.Length; j++)
+            {
+                if (Inputs[j] == null ||
+                    Inputs[j].foodItem == null)
+                {
+                    continue;
+                }
+
+                if (Inputs[i].foodItem ==
+                    Inputs[j].foodItem)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private bool ContainsDuplicateOutputs()
+    {
+        if (Outputs == null)
+            return false;
+
+        for (int i = 0; i < Outputs.Length; i++)
+        {
+            if (Outputs[i] == null ||
+                Outputs[i].foodItem == null)
+            {
+                continue;
+            }
+
+            for (int j = i + 1; j < Outputs.Length; j++)
+            {
+                if (Outputs[j] == null ||
+                    Outputs[j].foodItem == null)
+                {
+                    continue;
+                }
+
+                if (Outputs[i].foodItem ==
+                    Outputs[j].foodItem)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private string GetDuplicateInputError()
+    {
+        if (Inputs == null)
+            return string.Empty;
+
+        for (int i = 0; i < Inputs.Length; i++)
+        {
+            if (Inputs[i] == null ||
+                Inputs[i].foodItem == null)
+            {
+                continue;
+            }
+
+            for (int j = i + 1; j < Inputs.Length; j++)
+            {
+                if (Inputs[j] == null ||
+                    Inputs[j].foodItem == null)
+                {
+                    continue;
+                }
+
+                if (Inputs[i].foodItem ==
+                    Inputs[j].foodItem)
+                {
+                    return
+                        $"Input {i} and Input {j} " +
+                        $"use the same FoodItemData: " +
+                        $"{Inputs[i].foodItem.name}.";
+                }
+            }
+        }
+
+        return string.Empty;
+    }
+
+    private string GetDuplicateOutputError()
+    {
+        if (Outputs == null)
+            return string.Empty;
+
+        for (int i = 0; i < Outputs.Length; i++)
+        {
+            if (Outputs[i] == null ||
+                Outputs[i].foodItem == null)
+            {
+                continue;
+            }
+
+            for (int j = i + 1; j < Outputs.Length; j++)
+            {
+                if (Outputs[j] == null ||
+                    Outputs[j].foodItem == null)
+                {
+                    continue;
+                }
+
+                if (Outputs[i].foodItem ==
+                    Outputs[j].foodItem)
+                {
+                    return
+                        $"Output {i} and Output {j} " +
+                        $"use the same FoodItemData: " +
+                        $"{Outputs[i].foodItem.name}.";
+                }
+            }
         }
 
         return string.Empty;

@@ -14,12 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   inputs:
   - foodItem: {fileID: 11400000, guid: a59cb77da5f6066418e8418fb93b2f15, type: 2}
-    quantity: 1
-  - foodItem: {fileID: 11400000, guid: a59cb77da5f6066418e8418fb93b2f15, type: 2}
-    quantity: 1
-  outputs:
-  - foodItem: {fileID: 11400000, guid: 432eff3f2d9811744b8afb6ac56e297a, type: 2}
     quantity: 2
-  - foodItem: {fileID: 11400000, guid: 99abd19acc5240243a00b36cf91399ed, type: 2}
-    quantity: 1
+  outputs:
+  - foodItem: {fileID: 11400000, guid: a59cb77da5f6066418e8418fb93b2f15, type: 2}
+    quantity: 2
   processingTime: 2
