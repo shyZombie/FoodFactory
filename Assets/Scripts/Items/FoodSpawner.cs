@@ -8,9 +8,6 @@ public class FoodSpawner : MonoBehaviour
     [SerializeField] private GridManager gridManager;
     [SerializeField] private Extractor extractor;
 
-    [SerializeField] private int spawnGridX = 0;
-    [SerializeField] private int spawnGridY = 0;
-
     [SerializeField] private float spawnInterval = 3f;
     [SerializeField] private int maxItems = 5;
     private GameObject currentFoodObject;

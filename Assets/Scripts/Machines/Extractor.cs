@@ -30,22 +30,6 @@ public class Extractor : MonoBehaviour
         GenerateExtractionSlots();
     }
 
-    private void Start()
-    {
-        List<GridPosition> activeSlots =
-            GetActiveExtractionSlots();
-
-        foreach (GridPosition slot in activeSlots)
-        {
-            Debug.Log(
-                $"Active extraction slot: " +
-                $"({slot.x}, {slot.y})"
-            );
-        }
-
-        TestAvailableSlot();
-    }
-
     private void GenerateExtractionSlots()
     {
         extractionSlots.Clear();
@@ -119,11 +103,6 @@ public class Extractor : MonoBehaviour
             GridObject gridObject =
                 gridManager.GetGridObject(slot);
 
-            Debug.Log(
-                $"Checking extractor slot ({slot.x}, {slot.y}) → " +
-                $"{(gridObject == null ? "EMPTY" : gridObject.GetType().Name)}"
-            );
-
             if (gridObject is ConveyorBelt)
             {
                 activeSlots.Add(slot);
@@ -177,25 +156,6 @@ public class Extractor : MonoBehaviour
         }
 
         return false;
-    }
-
-    //Temporary for testing
-    private void TestAvailableSlot()
-    {
-        if (TryGetAvailableExtractionSlot(
-            out GridPosition slot))
-        {
-            Debug.Log(
-                $"Extractor available slot: " +
-                $"({slot.x}, {slot.y})"
-            );
-        }
-        else
-        {
-            Debug.Log(
-                "Extractor has no available extraction slot."
-            );
-        }
     }
 
     public List<GridPosition> GetActiveSlots()
