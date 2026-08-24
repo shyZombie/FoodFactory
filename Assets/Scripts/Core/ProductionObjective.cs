@@ -18,6 +18,17 @@ public class ProductionObjective : MonoBehaviour
     {
         ProductionTracker.OnCategoryCountChanged +=
             HandleCategoryCountChanged;
+
+        ProductionTracker tracker =
+            FindFirstObjectByType<ProductionTracker>();
+
+        if (tracker != null)
+        {
+            currentProgress = Mathf.Min(
+                tracker.GetCategoryCount(targetCategory),
+                requiredQuantity
+            );
+        }
     }
 
     private void OnDisable()
