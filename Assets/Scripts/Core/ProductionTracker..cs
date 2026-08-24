@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class ProductionTracker : MonoBehaviour
 {
+    public static event System.Action<FoodCategory, int> OnCategoryCountChanged;
     private Dictionary<FoodCategory, int> categoryCounts =
         new Dictionary<FoodCategory, int>();
 
@@ -33,6 +34,11 @@ public class ProductionTracker : MonoBehaviour
                 }
 
                 categoryCounts[category]++;
+
+                OnCategoryCountChanged?.Invoke(
+                    category,
+                    categoryCounts[category]
+                );
             }
         }
     }
