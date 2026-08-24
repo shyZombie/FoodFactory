@@ -2,22 +2,32 @@ using UnityEngine;
 
 public class ProductionObjective : MonoBehaviour
 {
-    [SerializeField] private FoodCategory targetCategory;
-    [SerializeField] private int requiredQuantity = 1;
+    [SerializeField]
+    private ProductionObjectiveData objectiveData;
 
     private int currentProgress;
 
-    public FoodCategory TargetCategory => targetCategory;
-    public int RequiredQuantity => requiredQuantity;
+    public FoodCategory TargetCategory =>
+        objectiveData != null
+            ? objectiveData.TargetCategory
+            : default;
+
+    public int RequiredQuantity =>
+        objectiveData != null
+            ? objectiveData.RequiredQuantity
+            : 0;
     public int CurrentProgress => currentProgress;
 
     public bool IsCompleted =>
-        currentProgress >= requiredQuantity;
+        currentProgress >= RequiredQuantity;
 
     private void OnEnable()
     {
         ProductionTracker.OnCategoryCountChanged +=
             HandleCategoryCountChanged;
+
+        if (objectiveData == null)
+            return;
 
         ProductionTracker tracker =
             FindFirstObjectByType<ProductionTracker>();
@@ -25,8 +35,10 @@ public class ProductionObjective : MonoBehaviour
         if (tracker != null)
         {
             currentProgress = Mathf.Min(
-                tracker.GetCategoryCount(targetCategory),
-                requiredQuantity
+                tracker.GetCategoryCount(
+                    objectiveData.TargetCategory
+                ),
+                objectiveData.RequiredQuantity
             );
         }
     }
@@ -42,12 +54,15 @@ public class ProductionObjective : MonoBehaviour
         int count)
     {
 
-        if (category != targetCategory)
+        if (objectiveData == null)
+            return;
+
+        if (category != objectiveData.TargetCategory)
             return;
 
         currentProgress = Mathf.Min(
             count,
-            requiredQuantity
+            RequiredQuantity
         );
     }
 }

@@ -785,8 +785,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32175cb6dbd04f24ba797e57edfa7705, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProductionObjective
-  targetCategory: 0
-  requiredQuantity: 10
+  objectiveData: {fileID: 11400000, guid: 8dbc601266398b843bbeef35a266baea, type: 2}
 --- !u!4 &383643033
 Transform:
   m_ObjectHideFlags: 0
