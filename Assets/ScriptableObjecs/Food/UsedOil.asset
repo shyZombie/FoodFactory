@@ -15,4 +15,4 @@ MonoBehaviour:
   itemId: used_oil
   itemName: Used Oil
   icon: {fileID: -7078911908298887805, guid: d868732944e22074b9f8207996430c1c, type: 3}
-  categories: 00000000
+  categories: 

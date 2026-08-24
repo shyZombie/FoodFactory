@@ -15,4 +15,4 @@ MonoBehaviour:
   itemId: potato
   itemName: Potato
   icon: {fileID: 21300000, guid: f86998453d6213c4d9756c7816144a6c, type: 3}
-  categories: 0000000001000000
+  categories: 00000000
