@@ -23,6 +23,9 @@ public class ProductionTracker : MonoBehaviour
         if (foodItemData == null)
             return;
 
+        List<FoodCategory> changedCategories =
+            new List<FoodCategory>();
+
         foreach (FoodCategory category in
                  System.Enum.GetValues(typeof(FoodCategory)))
         {
@@ -35,11 +38,16 @@ public class ProductionTracker : MonoBehaviour
 
                 categoryCounts[category]++;
 
-                OnCategoryCountChanged?.Invoke(
-                    category,
-                    categoryCounts[category]
-                );
+                changedCategories.Add(category);
             }
+        }
+
+        foreach (FoodCategory category in changedCategories)
+        {
+            OnCategoryCountChanged?.Invoke(
+                category,
+                categoryCounts[category]
+            );
         }
     }
 

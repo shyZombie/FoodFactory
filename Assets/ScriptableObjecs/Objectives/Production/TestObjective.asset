@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e36a50f039377684785e0c5e6fe9cb54, type: 3}
-  m_Name: Objective_Bread_20
+  m_Name: TestObjective
   m_EditorClassIdentifier: Assembly-CSharp::ProductionObjectiveData
-  targetCategory: 2
-  requiredQuantity: 5
+  targetCategory: 1
+  requiredQuantity: 3

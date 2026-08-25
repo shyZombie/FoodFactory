@@ -2,10 +2,13 @@ using UnityEngine;
 
 public class ProductionObjective : MonoBehaviour
 {
+    public event System.Action<ProductionObjective> OnCompleted;
     [SerializeField]
     private ProductionObjectiveData objectiveData;
 
     private int currentProgress;
+    private int startingProductionCount;
+    private bool completionEventRaised;
 
     public FoodCategory TargetCategory =>
         objectiveData != null
@@ -25,22 +28,6 @@ public class ProductionObjective : MonoBehaviour
     {
         ProductionTracker.OnCategoryCountChanged +=
             HandleCategoryCountChanged;
-
-        if (objectiveData == null)
-            return;
-
-        ProductionTracker tracker =
-            FindFirstObjectByType<ProductionTracker>();
-
-        if (tracker != null)
-        {
-            currentProgress = Mathf.Min(
-                tracker.GetCategoryCount(
-                    objectiveData.TargetCategory
-                ),
-                objectiveData.RequiredQuantity
-            );
-        }
     }
 
     private void OnDisable()
@@ -60,9 +47,40 @@ public class ProductionObjective : MonoBehaviour
         if (category != objectiveData.TargetCategory)
             return;
 
-        currentProgress = Mathf.Min(
-            count,
+        currentProgress = Mathf.Clamp(
+            count - startingProductionCount,
+            0,
             RequiredQuantity
+        );
+
+        if (IsCompleted && !completionEventRaised)
+        {
+            completionEventRaised = true;
+            OnCompleted?.Invoke(this);
+        }
+    }
+
+    public void Initialize(
+        ProductionObjectiveData data)
+    {
+        objectiveData = data;
+
+        currentProgress = 0;
+        startingProductionCount = 0;
+
+        ProductionTracker tracker =
+            FindFirstObjectByType<ProductionTracker>();
+
+        if (tracker != null)
+        {
+            startingProductionCount =
+                tracker.GetCategoryCount(
+                    objectiveData.TargetCategory
+                );
+        }
+        Debug.Log(
+            $"Objective initialized: {objectiveData.TargetCategory} " +
+            $"| Starting Production Count: {startingProductionCount}"
         );
     }
 }
