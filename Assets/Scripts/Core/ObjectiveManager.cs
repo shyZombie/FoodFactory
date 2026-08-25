@@ -62,8 +62,8 @@ public class ObjectiveManager : MonoBehaviour
         ProductionObjective objective)
     {
         Debug.Log(
-            $"OBJECTIVE COMPLETED → {objective.TargetCategory} " +
-            $"({objective.CurrentProgress}/{objective.RequiredQuantity})"
+            $"OBJECTIVE COMPLETED → " +
+            $"{objective.ObjectiveData.name}"
         );
 
         if (objective != currentObjective)

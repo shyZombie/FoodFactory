@@ -1,28 +1,83 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ProductionObjective : MonoBehaviour
 {
     public event System.Action<ProductionObjective> OnCompleted;
+
     [SerializeField]
     private ProductionObjectiveData objectiveData;
 
-    private int currentProgress;
-    private int startingProductionCount;
+    private Dictionary<FoodCategory, int> startingProductionCounts =
+        new Dictionary<FoodCategory, int>();
+
+    private Dictionary<FoodCategory, int> currentProgress =
+        new Dictionary<FoodCategory, int>();
+
     private bool completionEventRaised;
 
-    public FoodCategory TargetCategory =>
-        objectiveData != null
-            ? objectiveData.TargetCategory
-            : default;
+    public ProductionObjectiveData ObjectiveData =>
+        objectiveData;
 
-    public int RequiredQuantity =>
-        objectiveData != null
-            ? objectiveData.RequiredQuantity
-            : 0;
-    public int CurrentProgress => currentProgress;
+    public bool IsCompleted
+    {
+        get
+        {
+            if (objectiveData == null ||
+                objectiveData.Requirements == null ||
+                objectiveData.Requirements.Length == 0)
+            {
+                return false;
+            }
 
-    public bool IsCompleted =>
-        currentProgress >= RequiredQuantity;
+            foreach (ProductionObjectiveRequirement requirement
+                     in objectiveData.Requirements)
+            {
+                if (!currentProgress.ContainsKey(requirement.Category))
+                    return false;
+
+                if (currentProgress[requirement.Category] <
+                    requirement.RequiredQuantity)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+    public int GetCurrentProgress(
+        FoodCategory category)
+    {
+        if (currentProgress.TryGetValue(
+                category,
+                out int progress))
+        {
+            return progress;
+        }
+
+        return 0;
+    }
+
+    public int GetRequiredQuantity(
+        FoodCategory category)
+    {
+        if (objectiveData == null ||
+            objectiveData.Requirements == null)
+        {
+            return 0;
+        }
+
+        foreach (ProductionObjectiveRequirement requirement
+                 in objectiveData.Requirements)
+        {
+            if (requirement.Category == category)
+                return requirement.RequiredQuantity;
+        }
+
+        return 0;
+    }
 
     private void OnEnable()
     {
@@ -40,18 +95,38 @@ public class ProductionObjective : MonoBehaviour
         FoodCategory category,
         int count)
     {
-
-        if (objectiveData == null)
+        if (objectiveData == null ||
+            objectiveData.Requirements == null)
+        {
             return;
+        }
 
-        if (category != objectiveData.TargetCategory)
+        bool isRequiredCategory = false;
+
+        foreach (ProductionObjectiveRequirement requirement
+                 in objectiveData.Requirements)
+        {
+            if (requirement.Category != category)
+                continue;
+
+            isRequiredCategory = true;
+
+            int baseline =
+                startingProductionCounts.ContainsKey(category)
+                    ? startingProductionCounts[category]
+                    : 0;
+
+            int progress = Mathf.Clamp(
+                count - baseline,
+                0,
+                requirement.RequiredQuantity
+            );
+
+            currentProgress[category] = progress;
+        }
+
+        if (!isRequiredCategory)
             return;
-
-        currentProgress = Mathf.Clamp(
-            count - startingProductionCount,
-            0,
-            RequiredQuantity
-        );
 
         if (IsCompleted && !completionEventRaised)
         {
@@ -65,22 +140,40 @@ public class ProductionObjective : MonoBehaviour
     {
         objectiveData = data;
 
-        currentProgress = 0;
-        startingProductionCount = 0;
+        startingProductionCounts.Clear();
+        currentProgress.Clear();
+
+        completionEventRaised = false;
+
+        if (objectiveData == null ||
+            objectiveData.Requirements == null)
+        {
+            return;
+        }
 
         ProductionTracker tracker =
             FindFirstObjectByType<ProductionTracker>();
 
-        if (tracker != null)
+        foreach (ProductionObjectiveRequirement requirement
+                 in objectiveData.Requirements)
         {
-            startingProductionCount =
-                tracker.GetCategoryCount(
-                    objectiveData.TargetCategory
-                );
+            int startingCount = 0;
+
+            if (tracker != null)
+            {
+                startingCount =
+                    tracker.GetCategoryCount(
+                        requirement.Category
+                    );
+            }
+
+            startingProductionCounts[
+                requirement.Category
+            ] = startingCount;
+
+            currentProgress[
+                requirement.Category
+            ] = 0;
         }
-        Debug.Log(
-            $"Objective initialized: {objectiveData.TargetCategory} " +
-            $"| Starting Production Count: {startingProductionCount}"
-        );
     }
 }

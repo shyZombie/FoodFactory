@@ -6,13 +6,9 @@ using UnityEngine;
 )]
 public class ProductionObjectiveData : ScriptableObject
 {
-    [SerializeField] private FoodCategory targetCategory;
+    [SerializeField]
+    private ProductionObjectiveRequirement[] requirements;
 
-    [SerializeField] private int requiredQuantity = 1;
-
-    public FoodCategory TargetCategory =>
-        targetCategory;
-
-    public int RequiredQuantity =>
-        requiredQuantity;
+    public ProductionObjectiveRequirement[] Requirements =>
+        requirements;
 }
