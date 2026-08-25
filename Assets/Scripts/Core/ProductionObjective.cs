@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ProductionObjective : MonoBehaviour
@@ -15,6 +15,12 @@ public class ProductionObjective : MonoBehaviour
         new Dictionary<FoodCategory, int>();
 
     private bool completionEventRaised;
+
+    private ProductionObjectiveState state =
+    ProductionObjectiveState.NotStarted;
+
+    public ProductionObjectiveState State =>
+        state;
 
     public ProductionObjectiveData ObjectiveData =>
         objectiveData;
@@ -95,6 +101,9 @@ public class ProductionObjective : MonoBehaviour
         FoodCategory category,
         int count)
     {
+        if (state == ProductionObjectiveState.Completed)
+            return;
+
         if (objectiveData == null ||
             objectiveData.Requirements == null)
         {
@@ -130,6 +139,8 @@ public class ProductionObjective : MonoBehaviour
 
         if (IsCompleted && !completionEventRaised)
         {
+            state = ProductionObjectiveState.Completed;
+
             completionEventRaised = true;
             OnCompleted?.Invoke(this);
         }
@@ -138,6 +149,16 @@ public class ProductionObjective : MonoBehaviour
     public void Initialize(
         ProductionObjectiveData data)
     {
+        if (state == ProductionObjectiveState.Completed)
+        {
+            Debug.LogWarning(
+                $"Cannot initialize completed objective " +
+                $"'{name}'."
+            );
+
+            return;
+        }
+
         objectiveData = data;
 
         startingProductionCounts.Clear();
@@ -150,6 +171,36 @@ public class ProductionObjective : MonoBehaviour
         {
             return;
         }
+
+        if (objectiveData == null ||
+            objectiveData.Requirements == null ||
+            objectiveData.Requirements.Length == 0)
+        {
+            Debug.LogError(
+                "Cannot initialize ProductionObjective: " +
+                "ObjectiveData is null or contains no requirements.",
+                this
+            );
+
+            return;
+        }
+
+        foreach (ProductionObjectiveRequirement requirement
+         in objectiveData.Requirements)
+        {
+            if (requirement == null)
+            {
+                Debug.LogError(
+                    "Cannot initialize ProductionObjective: " +
+                    "A requirement is null.",
+                    this
+                );
+
+                return;
+            }
+        }
+
+        state = ProductionObjectiveState.Active;
 
         ProductionTracker tracker =
             FindFirstObjectByType<ProductionTracker>();

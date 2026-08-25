@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e36a50f039377684785e0c5e6fe9cb54, type: 3}
   m_Name: TestObjective
   m_EditorClassIdentifier: Assembly-CSharp::ProductionObjectiveData
-  targetCategory: 1
-  requiredQuantity: 3
+  requirements:
+  - category: 0
+    requiredQuantity: 1

@@ -518,9 +518,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf58a8d6a7f52014fa86330cafbd4cce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectiveManager
-  startingObjective: {fileID: 11400000, guid: 89685debd10a86c4887626f9dc826801, type: 2}
+  startingObjective: {fileID: 11400000, guid: fbb3659b9e65cf444aed789618725818, type: 2}
   objectives:
-  - {fileID: 11400000, guid: fbb3659b9e65cf444aed789618725818, type: 2}
+  - {fileID: 11400000, guid: e397b478c0f02cc429178b48e13a8da5, type: 2}
 --- !u!4 &129745438
 Transform:
   m_ObjectHideFlags: 0
