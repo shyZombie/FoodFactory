@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class ProductionObjectiveUI : MonoBehaviour
 {
     [SerializeField]
     private Transform requirementsContainer;
+    [SerializeField]
+    private TMP_Text objectiveStatusText;
 
     [SerializeField]
     private ProductionObjectiveRequirementUI requirementPrefab;
@@ -88,6 +91,8 @@ public class ProductionObjectiveUI : MonoBehaviour
         if (objective == null)
             return;
 
+        UpdateObjectiveStatus();
+
         List<ProductionObjectiveProgress> progress =
             objective.GetProgressSnapshot();
 
@@ -125,6 +130,26 @@ public class ProductionObjectiveUI : MonoBehaviour
             requirementUIRows.RemoveAt(lastIndex);
 
             Destroy(requirementUI.gameObject);
+        }
+    }
+
+    private void UpdateObjectiveStatus()
+    {
+        if (objectiveStatusText == null)
+            return;
+
+        bool isCompleted =
+            objective.State ==
+            ProductionObjectiveState.Completed;
+
+        objectiveStatusText.gameObject.SetActive(
+            isCompleted
+        );
+
+        if (isCompleted)
+        {
+            objectiveStatusText.text =
+                "OBJECTIVE COMPLETED";
         }
     }
 

@@ -1,4 +1,4 @@
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 public class ProductionObjectiveRequirementUI : MonoBehaviour
@@ -20,21 +20,12 @@ public class ProductionObjectiveRequirementUI : MonoBehaviour
 
         if (progressText != null)
         {
+            string completionMarker =
+                progress.IsCompleted ? " ✓" : "";
+
             progressText.text =
-                $"{progress.Current}/{progress.Required}";
+                $"{progress.Current}/{progress.Required}" +
+                completionMarker;
         }
-    }
-
-    [ContextMenu("TEST - Set Vegetable 2/3")]
-    private void TestSetProgress()
-    {
-        ProductionObjectiveProgress testProgress =
-            new ProductionObjectiveProgress(
-                FoodCategory.Vegetable,
-                2,
-                3
-            );
-
-        SetProgress(testProgress);
     }
 }
