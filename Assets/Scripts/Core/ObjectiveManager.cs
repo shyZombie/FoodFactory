@@ -6,6 +6,8 @@ public class ObjectiveManager : MonoBehaviour
     private ProductionObjectiveData startingObjective;
     [SerializeField]
     private ProductionObjectiveData[] objectives;
+    [SerializeField]
+    private ProductionObjectiveUI objectiveUI;
 
     private ProductionObjective currentObjective;
     private int currentObjectiveIndex = -1;
@@ -56,6 +58,11 @@ public class ObjectiveManager : MonoBehaviour
             HandleObjectiveCompleted;
 
         currentObjective.Initialize(objectiveData);
+
+        if (objectiveUI != null)
+        {
+            objectiveUI.Bind(currentObjective);
+        }
     }
 
     private void HandleObjectiveCompleted(

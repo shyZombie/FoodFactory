@@ -4,6 +4,7 @@ using UnityEngine;
 public class ProductionObjective : MonoBehaviour
 {
     public event System.Action<ProductionObjective> OnCompleted;
+    public event System.Action<ProductionObjective> OnProgressChanged;
 
     [SerializeField]
     private ProductionObjectiveData objectiveData;
@@ -84,6 +85,35 @@ public class ProductionObjective : MonoBehaviour
 
         return 0;
     }
+    public List<ProductionObjectiveProgress>
+    GetProgressSnapshot()
+    {
+        List<ProductionObjectiveProgress> progress =
+            new List<ProductionObjectiveProgress>();
+
+        if (objectiveData == null ||
+            objectiveData.Requirements == null)
+        {
+            return progress;
+        }
+
+        foreach (ProductionObjectiveRequirement requirement
+                 in objectiveData.Requirements)
+        {
+            int current =
+                GetCurrentProgress(requirement.Category);
+
+            progress.Add(
+                new ProductionObjectiveProgress(
+                    requirement.Category,
+                    current,
+                    requirement.RequiredQuantity
+                )
+            );
+        }
+
+        return progress;
+    }
 
     private void OnEnable()
     {
@@ -131,7 +161,17 @@ public class ProductionObjective : MonoBehaviour
                 requirement.RequiredQuantity
             );
 
+            int previousProgress =
+                currentProgress.ContainsKey(category)
+                    ? currentProgress[category]
+                    : 0;
+
             currentProgress[category] = progress;
+
+            if (currentProgress[category] != previousProgress)
+            {
+                OnProgressChanged?.Invoke(this);
+            }
         }
 
         if (!isRequiredCategory)
@@ -147,84 +187,85 @@ public class ProductionObjective : MonoBehaviour
     }
 
     public void Initialize(
-        ProductionObjectiveData data)
-    {
-        if (state == ProductionObjectiveState.Completed)
+            ProductionObjectiveData data)
         {
-            Debug.LogWarning(
-                $"Cannot initialize completed objective " +
-                $"'{name}'."
-            );
+            if (state == ProductionObjectiveState.Completed)
+            {
+                Debug.LogWarning(
+                    $"Cannot initialize completed objective " +
+                    $"'{name}'."
+                );
 
-            return;
-        }
+                return;
+            }
 
-        objectiveData = data;
+            objectiveData = data;
 
-        startingProductionCounts.Clear();
-        currentProgress.Clear();
+            startingProductionCounts.Clear();
+            currentProgress.Clear();
 
-        completionEventRaised = false;
+            completionEventRaised = false;
 
-        if (objectiveData == null ||
-            objectiveData.Requirements == null)
-        {
-            return;
-        }
+            if (objectiveData == null ||
+                objectiveData.Requirements == null)
+            {
+                return;
+            }
 
-        if (objectiveData == null ||
-            objectiveData.Requirements == null ||
-            objectiveData.Requirements.Length == 0)
-        {
-            Debug.LogError(
-                "Cannot initialize ProductionObjective: " +
-                "ObjectiveData is null or contains no requirements.",
-                this
-            );
-
-            return;
-        }
-
-        foreach (ProductionObjectiveRequirement requirement
-         in objectiveData.Requirements)
-        {
-            if (requirement == null)
+            if (objectiveData == null ||
+                objectiveData.Requirements == null ||
+                objectiveData.Requirements.Length == 0)
             {
                 Debug.LogError(
                     "Cannot initialize ProductionObjective: " +
-                    "A requirement is null.",
+                    "ObjectiveData is null or contains no requirements.",
                     this
                 );
 
                 return;
             }
-        }
 
-        state = ProductionObjectiveState.Active;
-
-        ProductionTracker tracker =
-            FindFirstObjectByType<ProductionTracker>();
-
-        foreach (ProductionObjectiveRequirement requirement
-                 in objectiveData.Requirements)
-        {
-            int startingCount = 0;
-
-            if (tracker != null)
+            foreach (ProductionObjectiveRequirement requirement
+             in objectiveData.Requirements)
             {
-                startingCount =
-                    tracker.GetCategoryCount(
-                        requirement.Category
+                if (requirement == null)
+                {
+                    Debug.LogError(
+                        "Cannot initialize ProductionObjective: " +
+                        "A requirement is null.",
+                        this
                     );
+
+                    return;
+                }
             }
 
-            startingProductionCounts[
-                requirement.Category
-            ] = startingCount;
+            state = ProductionObjectiveState.Active;
 
-            currentProgress[
-                requirement.Category
-            ] = 0;
+            ProductionTracker tracker =
+                FindFirstObjectByType<ProductionTracker>();
+
+            foreach (ProductionObjectiveRequirement requirement
+                     in objectiveData.Requirements)
+            {
+                int startingCount = 0;
+
+                if (tracker != null)
+                {
+                    startingCount =
+                        tracker.GetCategoryCount(
+                            requirement.Category
+                        );
+                }
+
+                startingProductionCounts[
+                    requirement.Category
+                ] = startingCount;
+
+                currentProgress[
+                    requirement.Category
+                ] = 0;
+            }
         }
-    }
-}
+
+ }    
