@@ -9,6 +9,9 @@ public class ProductionObjectiveUI : MonoBehaviour
     [SerializeField]
     private ProductionObjectiveRequirementUI requirementPrefab;
     private ProductionObjective objective;
+    private List<ProductionObjectiveRequirementUI>
+    requirementUIRows =
+        new List<ProductionObjectiveRequirementUI>();
 
     public void Bind(ProductionObjective objective)
     {
@@ -38,16 +41,34 @@ public class ProductionObjectiveUI : MonoBehaviour
 
     private void Unbind()
     {
-        if (objective == null)
-            return;
+        if (objective != null)
+        {
+            objective.OnProgressChanged -=
+                HandleProgressChanged;
 
-        objective.OnProgressChanged -=
-            HandleProgressChanged;
+            objective.OnCompleted -=
+                HandleObjectiveCompleted;
 
-        objective.OnCompleted -=
-            HandleObjectiveCompleted;
+            objective = null;
+        }
 
-        objective = null;
+        ClearRequirementRows();
+    }
+    private void ClearRequirementRows()
+    {
+        for (int i = requirementUIRows.Count - 1;
+             i >= 0;
+             i--)
+        {
+            if (requirementUIRows[i] != null)
+            {
+                Destroy(
+                    requirementUIRows[i].gameObject
+                );
+            }
+        }
+
+        requirementUIRows.Clear();
     }
 
     private void HandleProgressChanged(
@@ -67,13 +88,22 @@ public class ProductionObjectiveUI : MonoBehaviour
         if (objective == null)
             return;
 
-        ClearRequirements();
-
         List<ProductionObjectiveProgress> progress =
             objective.GetProgressSnapshot();
 
-        foreach (ProductionObjectiveProgress item
-                 in progress)
+        EnsureRequirementRows(progress.Count);
+
+        for (int i = 0; i < progress.Count; i++)
+        {
+            requirementUIRows[i].SetProgress(
+                progress[i]
+            );
+        }
+    }
+
+    private void EnsureRequirementRows(int requiredCount)
+    {
+        while (requirementUIRows.Count < requiredCount)
         {
             ProductionObjectiveRequirementUI requirementUI =
                 Instantiate(
@@ -81,22 +111,20 @@ public class ProductionObjectiveUI : MonoBehaviour
                     requirementsContainer
                 );
 
-            requirementUI.SetProgress(item);
+            requirementUIRows.Add(requirementUI);
         }
-    }
 
-    private void ClearRequirements()
-    {
-        if (requirementsContainer == null)
-            return;
-
-        for (int i = requirementsContainer.childCount - 1;
-             i >= 0;
-             i--)
+        while (requirementUIRows.Count > requiredCount)
         {
-            Destroy(
-                requirementsContainer.GetChild(i).gameObject
-            );
+            int lastIndex =
+                requirementUIRows.Count - 1;
+
+            ProductionObjectiveRequirementUI requirementUI =
+                requirementUIRows[lastIndex];
+
+            requirementUIRows.RemoveAt(lastIndex);
+
+            Destroy(requirementUI.gameObject);
         }
     }
 
