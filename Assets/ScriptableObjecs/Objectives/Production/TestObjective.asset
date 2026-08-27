@@ -14,6 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProductionObjectiveData
   requirements:
   - category: 1
-    requiredQuantity: 4
+    requiredQuantity: 1
+  - category: 0
+    requiredQuantity: 2
+  - category: 2
+    requiredQuantity: 3
   title: Produce Test
   description: Produce 4 test items.

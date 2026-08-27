@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d856f49ed5a744747b5ceef36f4fc83a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProductionObjectiveUI
-  requirementsContainer: {fileID: 0}
-  objectiveStatusText: {fileID: 0}
-  objectiveTitleText: {fileID: 0}
-  objectiveDescriptionText: {fileID: 0}
+  requirementsContainer: {fileID: 2460147219842263345, guid: 504ed6bb5044c6d46b93a317fdf2a4df, type: 3}
+  objectiveStatusText: {fileID: 9032453303478390504, guid: e75fff380a7ec174caeb5763c9271e84, type: 3}
+  objectiveTitleText: {fileID: 5317029399762648660, guid: 6438fdaa0ac9dfe419e8067e3284b6f4, type: 3}
+  objectiveDescriptionText: {fileID: 4488624689257552346, guid: 8eca2b5e43ec6f94ba74406771afdc81, type: 3}
   requirementPrefab: {fileID: 3968556781226232390, guid: 781113fcd8c3ce64185d97b24ae8a341, type: 3}

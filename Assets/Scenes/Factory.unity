@@ -520,7 +520,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObjectiveManager
   startingObjective: {fileID: 11400000, guid: fbb3659b9e65cf444aed789618725818, type: 2}
   objectives:
-  - {fileID: 11400000, guid: e397b478c0f02cc429178b48e13a8da5, type: 2}
+  - {fileID: 11400000, guid: 89685debd10a86c4887626f9dc826801, type: 2}
   - {fileID: 11400000, guid: fbb3659b9e65cf444aed789618725818, type: 2}
   objectiveUI: {fileID: 1998755646}
 --- !u!4 &129745438
