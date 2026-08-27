@@ -69,13 +69,6 @@ public class ObjectiveManager : MonoBehaviour
     private void HandleObjectiveCompleted(
         ProductionObjective objective)
     {
-        /*
-        Debug.Log(
-            $"OBJECTIVE COMPLETED → " +
-            $"{objective.ObjectiveData.name}"
-        );
-        */
-
         if (objective != currentObjective)
             return;
 
