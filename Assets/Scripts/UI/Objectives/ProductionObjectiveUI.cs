@@ -8,6 +8,10 @@ public class ProductionObjectiveUI : MonoBehaviour
     private Transform requirementsContainer;
     [SerializeField]
     private TMP_Text objectiveStatusText;
+    [SerializeField]
+    private TMP_Text objectiveTitleText;
+    [SerializeField]
+    private TMP_Text objectiveDescriptionText;
 
     [SerializeField]
     private ProductionObjectiveRequirementUI requirementPrefab;
@@ -83,7 +87,40 @@ public class ProductionObjectiveUI : MonoBehaviour
     private void HandleObjectiveCompleted(
         ProductionObjective objective)
     {
-        Refresh();
+        UpdateObjectiveStatus();
+        RefreshRequirements();
+    }
+
+    private void UpdateObjectiveTitle()
+    {
+        if (objectiveTitleText == null)
+            return;
+
+        if (objective == null ||
+            objective.ObjectiveData == null)
+        {
+            objectiveTitleText.text = "";
+            return;
+        }
+
+        objectiveTitleText.text =
+            objective.ObjectiveData.Title;
+    }
+
+    private void UpdateObjectiveDescription()
+    {
+        if (objectiveDescriptionText == null)
+            return;
+
+        if (objective == null ||
+            objective.ObjectiveData == null)
+        {
+            objectiveDescriptionText.text = "";
+            return;
+        }
+
+        objectiveDescriptionText.text =
+            objective.ObjectiveData.Description;
     }
 
     private void Refresh()
@@ -92,6 +129,10 @@ public class ProductionObjectiveUI : MonoBehaviour
             return;
 
         UpdateObjectiveStatus();
+        UpdateObjectiveDescription();
+        UpdateObjectiveTitle();
+
+        RefreshRequirements();
 
         List<ProductionObjectiveProgress> progress =
             objective.GetProgressSnapshot();
@@ -150,6 +191,24 @@ public class ProductionObjectiveUI : MonoBehaviour
         {
             objectiveStatusText.text =
                 "OBJECTIVE COMPLETED";
+        }
+    }
+
+    private void RefreshRequirements()
+    {
+        if (objective == null)
+            return;
+
+        List<ProductionObjectiveProgress> progress =
+            objective.GetProgressSnapshot();
+
+        EnsureRequirementRows(progress.Count);
+
+        for (int i = 0; i < progress.Count; i++)
+        {
+            requirementUIRows[i].SetProgress(
+                progress[i]
+            );
         }
     }
 

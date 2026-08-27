@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class ObjectiveManager : MonoBehaviour
 {
@@ -68,18 +69,30 @@ public class ObjectiveManager : MonoBehaviour
     private void HandleObjectiveCompleted(
         ProductionObjective objective)
     {
+        /*
         Debug.Log(
             $"OBJECTIVE COMPLETED → " +
             $"{objective.ObjectiveData.name}"
         );
+        */
 
         if (objective != currentObjective)
             return;
 
-        int nextIndex = currentObjectiveIndex + 1;
+        StartCoroutine(
+            StartNextObjectiveNextFrame()
+        );
+    }
+
+    private IEnumerator StartNextObjectiveNextFrame()
+    {
+        yield return null;
+
+        int nextIndex =
+            currentObjectiveIndex + 1;
 
         if (nextIndex >= objectives.Length)
-            return;
+            yield break;
 
         StartObjectiveAtIndex(nextIndex);
     }

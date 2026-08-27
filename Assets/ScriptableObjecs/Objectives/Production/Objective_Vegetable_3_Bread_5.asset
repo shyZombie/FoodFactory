@@ -17,3 +17,7 @@ MonoBehaviour:
     requiredQuantity: 3
   - category: 2
     requiredQuantity: 5
+  title: Produce Vege/Bread
+  description: 'Produce 3 vegetable  items.
+
+    Produce 5 bread items.'

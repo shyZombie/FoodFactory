@@ -15,3 +15,5 @@ MonoBehaviour:
   requirements:
   - category: 0
     requiredQuantity: 10
+  title: Procude Snack
+  description: Produce 10 Snack items.

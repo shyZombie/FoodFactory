@@ -15,3 +15,5 @@ MonoBehaviour:
   requirements:
   - category: 2
     requiredQuantity: 5
+  title: Produce Bread
+  description: Produce 5 bread items.

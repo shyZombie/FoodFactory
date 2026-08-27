@@ -13,6 +13,17 @@ public class ProductionObjectiveData : ScriptableObject
     public ProductionObjectiveRequirement[] Requirements =>
         requirements;
 
+    [Header("Display")]
+    [SerializeField]
+    private string title;
+
+    [TextArea(2, 4)]
+    [SerializeField]
+    private string description;
+
+    public string Title => title;
+    public string Description => description;
+
     private void OnValidate()
     {
         if (requirements == null ||
