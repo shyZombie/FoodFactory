@@ -15,3 +15,4 @@ MonoBehaviour:
   itemId: potato_tomato_mix
   itemName: Potato Tomato MIx
   icon: {fileID: -8350468868886379192, guid: 2cefc1b25d6dfb64d9c2d27925d53c1e, type: 3}
+  categories: 00000000

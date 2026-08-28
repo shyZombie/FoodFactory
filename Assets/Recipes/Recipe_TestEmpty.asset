@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f94a7262be396354394358f8b9e56bb1, type: 3}
   m_Name: Recipe_TestEmpty
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
+  recipeId: recipe_test_empty
   inputs:
   - foodItem: {fileID: 11400000, guid: a59cb77da5f6066418e8418fb93b2f15, type: 2}
     quantity: 2

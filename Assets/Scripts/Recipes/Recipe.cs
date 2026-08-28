@@ -7,6 +7,10 @@ using UnityEngine;
 )]
 public class Recipe : ScriptableObject
 {
+    [SerializeField]
+    private string recipeId;
+    public string RecipeId => recipeId;
+
     [System.Serializable]
     public class Ingredient
     {
@@ -109,6 +113,11 @@ public class Recipe : ScriptableObject
 
     public string GetValidationError()
     {
+        if (string.IsNullOrWhiteSpace(recipeId))
+        {
+            return "Recipe ID cannot be empty.";
+        }
+
         if (Inputs == null ||
             Inputs.Length == 0)
         {
@@ -388,6 +397,135 @@ public class Recipe : ScriptableObject
     }
 
 #if UNITY_EDITOR
+    [ContextMenu("TEST - Find Recipe Assets")]
+    private void TestFindRecipeAssets()
+    {
+        string[] guids =
+            UnityEditor.AssetDatabase.FindAssets(
+                "t:Recipe",
+                new[] { "Assets/Recipes" }
+            );
+
+        Debug.Log(
+            $"Found Recipe assets: {guids.Length}",
+            this
+        );
+
+        foreach (string guid in guids)
+        {
+            string assetPath =
+                UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+
+            Recipe recipe =
+                UnityEditor.AssetDatabase.LoadAssetAtPath<Recipe>(
+                    assetPath
+                );
+
+            if (recipe != null)
+            {
+                Debug.Log(
+                    $"Recipe: {recipe.name} | ID: {recipe.RecipeId}",
+                    recipe
+                );
+            }
+        }
+    }
+
+
+    private string GetDuplicateRecipeIdError()
+    {
+        if (string.IsNullOrWhiteSpace(recipeId))
+            return string.Empty;
+
+        string[] guids =
+            UnityEditor.AssetDatabase.FindAssets(
+                "t:Recipe",
+                new[] { "Assets/Recipes" }
+            );
+
+        foreach (string guid in guids)
+        {
+            string assetPath =
+                UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+
+            Recipe otherRecipe =
+                UnityEditor.AssetDatabase.LoadAssetAtPath<Recipe>(
+                    assetPath
+                );
+
+            if (otherRecipe == null ||
+                otherRecipe == this)
+            {
+                continue;
+            }
+
+            if (otherRecipe.RecipeId == recipeId)
+            {
+                return
+                    $"Recipe ID '{recipeId}' is already used by " +
+                    $"Recipe '{otherRecipe.name}'.";
+            }
+        }
+
+        return string.Empty;
+    }
+#endif
+
+#if UNITY_EDITOR
+    [ContextMenu("TEST - Validate All Recipe IDs")]
+    private void TestValidateAllRecipeIds()
+    {
+        string[] guids =
+            UnityEditor.AssetDatabase.FindAssets(
+                "t:Recipe",
+                new[] { "Assets/Recipes" }
+            );
+
+        Dictionary<string, Recipe> recipesById =
+            new Dictionary<string, Recipe>();
+
+        foreach (string guid in guids)
+        {
+            string assetPath =
+                UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+
+            Recipe recipe =
+                UnityEditor.AssetDatabase.LoadAssetAtPath<Recipe>(
+                    assetPath
+                );
+
+            if (recipe == null ||
+                string.IsNullOrWhiteSpace(recipe.RecipeId))
+            {
+                continue;
+            }
+
+            if (recipesById.TryGetValue(
+                recipe.RecipeId,
+                out Recipe existingRecipe))
+            {
+                Debug.LogWarning(
+                    $"Duplicate Recipe ID '{recipe.RecipeId}' " +
+                    $"found on '{existingRecipe.name}' and " +
+                    $"'{recipe.name}'.",
+                    recipe
+                );
+
+                continue;
+            }
+
+            recipesById.Add(
+                recipe.RecipeId,
+                recipe
+            );
+        }
+
+        Debug.Log(
+            $"Recipe ID validation complete. " +
+            $"Checked {recipesById.Count} unique Recipe IDs.",
+            this
+        );
+    }
     private void OnValidate()
     {
         string validationError = GetValidationError();
@@ -397,6 +535,20 @@ public class Recipe : ScriptableObject
             Debug.LogWarning(
                 $"Recipe '{name}' is invalid. " +
                 $"Reason: {validationError}",
+                this
+            );
+
+            return;
+        }
+
+        string duplicateRecipeIdError =
+            GetDuplicateRecipeIdError();
+
+        if (!string.IsNullOrEmpty(duplicateRecipeIdError))
+        {
+            Debug.LogWarning(
+                $"Recipe '{name}' is invalid. " +
+                $"Reason: {duplicateRecipeIdError}",
                 this
             );
         }

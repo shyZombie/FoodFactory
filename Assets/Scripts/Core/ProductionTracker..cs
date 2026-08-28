@@ -18,6 +18,7 @@ public class ProductionTracker : MonoBehaviour
     }
 
     private void HandleFoodItemProduced(
+        Recipe recipe,
         FoodItemData foodItemData)
     {
         if (foodItemData == null)
