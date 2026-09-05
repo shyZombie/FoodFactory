@@ -15,3 +15,4 @@ MonoBehaviour:
   itemId: tomato
   itemName: Tomato
   icon: {fileID: 21300000, guid: ca3aec5ea55bf7f44aa6112ca36e922b, type: 3}
+  categories: 00000000

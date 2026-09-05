@@ -7,6 +7,7 @@ public class FoodSpawner : MonoBehaviour
     [SerializeField] private FoodItemData foodItemData;
     [SerializeField] private GridManager gridManager;
     [SerializeField] private Extractor extractor;
+    [SerializeField] private UpgradeManager upgradeManager;
 
     [SerializeField] private float spawnInterval = 3f;
     [SerializeField] private int maxItems = 5;
@@ -114,6 +115,9 @@ public class FoodSpawner : MonoBehaviour
         FoodItemMovement movement =
             currentFoodObject.GetComponent<FoodItemMovement>();
 
-        movement.Initialize(gridManager);
+        movement.Initialize(
+            gridManager,
+            upgradeManager
+        );
     }
 }

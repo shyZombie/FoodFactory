@@ -15,4 +15,4 @@ MonoBehaviour:
   itemId: sliced_potato
   itemName: Sliced Potato
   icon: {fileID: 21300000, guid: 8983fa62065bb1a488ed3ef8519150e4, type: 3}
-  categories: 0100000002000000
+  categories: 0000000001000000

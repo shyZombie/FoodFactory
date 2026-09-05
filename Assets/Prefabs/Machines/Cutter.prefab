@@ -109,6 +109,8 @@ MonoBehaviour:
   recipe: {fileID: 11400000, guid: e264743061041c546afd2fb23fa2f194, type: 2}
   foodItemPrefab: {fileID: 3738253683363426217, guid: 28ee4dd59771da2458ec6ff886153c30, type: 3}
   direction: 1
+  upgradeManager: {fileID: 0}
+  upgradeTarget: 1
 --- !u!61 &4825759559088261873
 BoxCollider2D:
   m_ObjectHideFlags: 0

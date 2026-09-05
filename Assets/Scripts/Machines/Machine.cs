@@ -28,6 +28,10 @@ public class Machine : GridObject
     [SerializeField]
     private Direction direction =
         Direction.Right;
+    [SerializeField]
+    private UpgradeManager upgradeManager;
+    [SerializeField]
+    private UpgradeTarget upgradeTarget;
 
     protected GridManager gridManager;
 
@@ -162,7 +166,7 @@ public class Machine : GridObject
 
             processingTimer += Time.deltaTime;
 
-            if (processingTimer >= Recipe.ProcessingTime)
+            if (processingTimer >= GetEffectiveProcessingTime())
             {
                 FinishProcessing();
             }
@@ -171,6 +175,32 @@ public class Machine : GridObject
         }
 
         TryCreateNextOutput();
+    }
+
+    protected virtual float GetEffectiveProcessingTime()
+    {
+        if (Recipe == null)
+        {
+            return 0f;
+        }
+
+        float speedMultiplier = 1f;
+
+        if (upgradeManager != null)
+        {
+            speedMultiplier =
+                upgradeManager.GetSpeedMultiplier(
+                    upgradeTarget
+                );
+        }
+
+        if (speedMultiplier <= 0f)
+        {
+            speedMultiplier = 1f;
+        }
+
+        return Recipe.ProcessingTime /
+               speedMultiplier;
     }
 
     protected virtual void FinishProcessing()
@@ -335,7 +365,10 @@ public class Machine : GridObject
             return;
         }
 
-        movement.Initialize(gridManager);
+        movement.Initialize(
+            gridManager,
+            upgradeManager
+        );
 
         Debug.Log(
             $"{name} created output: " +
@@ -490,7 +523,10 @@ public class Machine : GridObject
                     continue;
                 }
 
-                movement.Initialize(gridManager);
+                movement.Initialize(
+                    gridManager,
+                    upgradeManager
+                );
 
                 if (outputGridObject is ConveyorBelt)
                 {

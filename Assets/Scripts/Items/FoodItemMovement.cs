@@ -4,6 +4,11 @@ public class FoodItemMovement : MonoBehaviour
 {
     [SerializeField] private float movementSpeed = 2f;
 
+    [SerializeField]
+    private UpgradeManager upgradeManager;
+    [SerializeField]
+    private UpgradeTarget upgradeTarget = UpgradeTarget.Belt;
+
     private GridManager gridManager;
     private ConveyorBelt currentBelt;
 
@@ -12,9 +17,12 @@ public class FoodItemMovement : MonoBehaviour
 
     private bool isMoving = false;
 
-    public void Initialize(GridManager manager)
+    public void Initialize(
+        GridManager manager,
+        UpgradeManager managerUpgrade)
     {
         gridManager = manager;
+        upgradeManager = managerUpgrade;
 
         currentGridPosition =
             gridManager.WorldToGridPosition(transform.position);
@@ -118,6 +126,26 @@ public class FoodItemMovement : MonoBehaviour
         machine.Process(foodItem);
     }
 
+    private float GetEffectiveMovementSpeed()
+    {
+        float speedMultiplier = 1f;
+
+        if (upgradeManager != null)
+        {
+            speedMultiplier =
+                upgradeManager.GetSpeedMultiplier(
+                    upgradeTarget
+                );
+        }
+
+        if (speedMultiplier <= 0f)
+        {
+            speedMultiplier = 1f;
+        }
+
+        return movementSpeed * speedMultiplier;
+    }
+
     private void MoveTowardsTarget()
     {
         if (!isMoving)
@@ -131,7 +159,7 @@ public class FoodItemMovement : MonoBehaviour
         transform.position = Vector3.MoveTowards(
             transform.position,
             targetWorldPosition,
-            movementSpeed * Time.deltaTime
+            GetEffectiveMovementSpeed() * Time.deltaTime
         );
 
         if (Vector3.Distance(

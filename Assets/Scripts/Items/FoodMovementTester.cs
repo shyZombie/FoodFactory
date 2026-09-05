@@ -5,6 +5,8 @@ public class FoodMovementTester : MonoBehaviour
     [SerializeField] private GameObject foodItemPrefab;
     [SerializeField] private FoodItemData foodItemData;
     [SerializeField] private GridManager gridManager;
+    [SerializeField]
+    private UpgradeManager upgradeManager;
 
     [SerializeField] private int spawnGridX = 0;
     [SerializeField] private int spawnGridY = 0;
@@ -33,6 +35,9 @@ public class FoodMovementTester : MonoBehaviour
         FoodItemMovement movement =
             foodObject.GetComponent<FoodItemMovement>();
 
-        movement.Initialize(gridManager);
+        movement.Initialize(
+            gridManager,
+            upgradeManager
+        );
     }
 }

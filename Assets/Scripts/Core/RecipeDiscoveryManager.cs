@@ -37,7 +37,7 @@ public class RecipeDiscoveryManager : MonoBehaviour
         DiscoverRecipe(recipe);
     }
 
-    private void Start()
+    private void Awake()
     {
         LoadDiscoveryData();
     }
