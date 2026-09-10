@@ -2801,6 +2801,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1012028251}
     - target: {fileID: -5742404068820936508, guid: d1f05b68a6ef4f94bbb6ca13e33eb4ba, type: 3}
+      propertyPath: recipes.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5742404068820936508, guid: d1f05b68a6ef4f94bbb6ca13e33eb4ba, type: 3}
       propertyPath: recipeDiscoveryManager
       value: 
       objectReference: {fileID: 433593937}
@@ -3397,12 +3401,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 322271163680743840, guid: cc195e4036c41ef4d99f25a312a6e54c, type: 3}
       propertyPath: recipes.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 322271163680743840, guid: cc195e4036c41ef4d99f25a312a6e54c, type: 3}
       propertyPath: 'recipes.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: d7640490f5125214c882872c2cb74dcb, type: 2}
+      objectReference: {fileID: 11400000, guid: 4970db257557fa64aa204fb18334df32, type: 2}
     - target: {fileID: 322271163680743840, guid: cc195e4036c41ef4d99f25a312a6e54c, type: 3}
       propertyPath: 'recipes.Array.data[1]'
       value: 

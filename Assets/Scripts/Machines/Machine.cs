@@ -708,15 +708,6 @@ public class Machine : GridObject
 
     protected virtual void Start()
     {
-        if (recipes == null || recipes.Length == 0)
-        {
-            Debug.LogError(
-                $"{name} ERROR: No Recipes assigned!"
-            );
-
-            return;
-        }
-
         UpdateVisualRotation();
     }
 
