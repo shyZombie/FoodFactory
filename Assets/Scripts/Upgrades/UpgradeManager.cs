@@ -180,6 +180,12 @@ public class UpgradeManager : MonoBehaviour
             $"{GetSpeedMultiplier(UpgradeTarget.Oven)}",
             this
         );
+
+        Debug.Log(
+            $"Fryer: " +
+            $"{GetSpeedMultiplier(UpgradeTarget.Fryer)}",
+            this
+            );
     }
 
     [ContextMenu("Test All Upgrade Targets")]

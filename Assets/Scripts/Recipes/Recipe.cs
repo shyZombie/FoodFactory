@@ -72,6 +72,61 @@ public class Recipe : ScriptableObject
         return false;
     }
 
+    public bool MatchesIngredients(List<FoodItem> ingredients)
+    {
+        if (ingredients == null || ingredients.Count == 0)
+            return false;
+
+        if (Inputs == null || Inputs.Length == 0)
+            return false;
+
+        foreach (FoodItem ingredient in ingredients)
+        {
+            if (ingredient == null || ingredient.ItemData == null)
+                return false;
+
+            bool foundInput = false;
+
+            foreach (Ingredient recipeIngredient in Inputs)
+            {
+                if (recipeIngredient != null &&
+                    recipeIngredient.foodItem == ingredient.ItemData)
+                {
+                    foundInput = true;
+                    break;
+                }
+            }
+
+            if (!foundInput)
+                return false;
+        }
+
+        foreach (Ingredient recipeIngredient in Inputs)
+        {
+            if (recipeIngredient == null ||
+                recipeIngredient.foodItem == null)
+            {
+                return false;
+            }
+
+            int storedCount = 0;
+
+            foreach (FoodItem ingredient in ingredients)
+            {
+                if (ingredient != null &&
+                    ingredient.ItemData == recipeIngredient.foodItem)
+                {
+                    storedCount++;
+                }
+            }
+
+            if (storedCount > recipeIngredient.quantity)
+                return false;
+        }
+
+        return true;
+    }
+
     public bool HasEnoughIngredients(
     List<FoodItem> storedIngredients)
     {

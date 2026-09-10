@@ -20,23 +20,6 @@ public class RecipeDiscoveryManager : MonoBehaviour
     [SerializeField]
     private RecipeRegistry recipeRegistry;
 
-    private void OnEnable()
-    {
-        Machine.OnFoodItemProduced += HandleFoodItemProduced;
-    }
-
-    private void OnDisable()
-    {
-        Machine.OnFoodItemProduced -= HandleFoodItemProduced;
-    }
-
-    private void HandleFoodItemProduced(
-    Recipe recipe,
-    FoodItemData foodItemData)
-    {
-        DiscoverRecipe(recipe);
-    }
-
     private void Awake()
     {
         LoadDiscoveryData();
@@ -74,13 +57,13 @@ public class RecipeDiscoveryManager : MonoBehaviour
         bool wasDiscovered =
             discoveredRecipes.Add(recipe);
 
-        if (wasDiscovered)
-        {
-            RecipeDiscovered?.Invoke(recipe);
-        }
+        if (!wasDiscovered)
+            return false;
 
+        RecipeDiscovered?.Invoke(recipe);
         SaveDiscoveryData();
-        return wasDiscovered;
+
+        return true;
     }
 
     public int GetDiscoveredRecipeCountByCategory(

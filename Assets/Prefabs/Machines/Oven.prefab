@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 976993797981865290}
   - component: {fileID: 1573326070488150647}
-  - component: {fileID: 5904067629154925336}
   - component: {fileID: 8960017351648716985}
+  - component: {fileID: -5742404068820936508}
   m_Layer: 0
-  m_Name: Fryer
+  m_Name: Oven
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,24 +94,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
---- !u!114 &5904067629154925336
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 101331661808375410}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f961d8221543bc64b9301810b8fe62a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Fryer
-  recipes:
-  - {fileID: 11400000, guid: d7640490f5125214c882872c2cb74dcb, type: 2}
-  foodItemPrefab: {fileID: 3738253683363426217, guid: 28ee4dd59771da2458ec6ff886153c30, type: 3}
-  direction: 1
-  upgradeManager: {fileID: 9188748472319351492, guid: 2868315de2b32ea4e86def0b861a4e21, type: 3}
-  upgradeTarget: 3
 --- !u!61 &8960017351648716985
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -158,3 +140,21 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &-5742404068820936508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101331661808375410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09028866eaf96264081bbd441fd861c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Oven
+  recipes:
+  - {fileID: 11400000, guid: 4970db257557fa64aa204fb18334df32, type: 2}
+  foodItemPrefab: {fileID: 7036323676616385693, guid: dd1baedc1f0679749907b67dec7ecba3, type: 3}
+  direction: 1
+  upgradeManager: {fileID: 9188748472319351492, guid: 2868315de2b32ea4e86def0b861a4e21, type: 3}
+  upgradeTarget: 2

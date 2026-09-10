@@ -106,10 +106,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37f9cf797d13d1642b1f695c53daefa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assembler
-  recipe: {fileID: 11400000, guid: 4970db257557fa64aa204fb18334df32, type: 2}
+  recipes:
+  - {fileID: 11400000, guid: 4970db257557fa64aa204fb18334df32, type: 2}
   foodItemPrefab: {fileID: 3738253683363426217, guid: 28ee4dd59771da2458ec6ff886153c30, type: 3}
   direction: 1
-  upgradeManager: {fileID: 0}
+  upgradeManager: {fileID: 9188748472319351492, guid: 2868315de2b32ea4e86def0b861a4e21, type: 3}
   upgradeTarget: 4
 --- !u!61 &284153122962580812
 BoxCollider2D:

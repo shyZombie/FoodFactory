@@ -14,7 +14,8 @@ public class Machine : GridObject
     }
 
     //[SerializeField] protected float processingTime = 1f;
-    [SerializeField] protected Recipe recipe;
+    [SerializeField] protected Recipe[] recipes;
+    protected Recipe currentRecipe;
     [SerializeField]
     protected GameObject foodItemPrefab;
     protected List<FoodItem> storedIngredients =
@@ -23,7 +24,7 @@ public class Machine : GridObject
         new Queue<FoodItemData>();
 
 
-    public Recipe Recipe => recipe;
+    public Recipe Recipe => currentRecipe;
 
     [SerializeField]
     private Direction direction =
@@ -32,6 +33,8 @@ public class Machine : GridObject
     private UpgradeManager upgradeManager;
     [SerializeField]
     private UpgradeTarget upgradeTarget;
+    [SerializeField]
+    private RecipeDiscoveryManager recipeDiscoveryManager;
 
     protected GridManager gridManager;
 
@@ -76,19 +79,110 @@ public class Machine : GridObject
         if (isProcessing)
             return false;
 
-        if (Recipe == null)
-            return false;
+        // First ingredient
+        if (storedIngredients.Count == 0)
+        {
+            List<Recipe> matchingRecipes =
+                FindMatchingRecipes(foodItem);
 
-        return Recipe.HasIngredient(
+            if (matchingRecipes.Count == 0)
+                return false;
+
+            // One possible recipe:
+            // select it immediately.
+            if (matchingRecipes.Count == 1)
+            {
+                currentRecipe = matchingRecipes[0];
+
+                if (recipeDiscoveryManager != null &&
+                    !recipeDiscoveryManager.IsDiscovered(currentRecipe))
+                {
+                    recipeDiscoveryManager.DiscoverRecipe(currentRecipe);
+                }
+            }
+            else
+            {
+                // Multiple possible recipes:
+                // accept the ingredient but wait for the
+                // next ingredient before selecting a recipe.
+                currentRecipe = null;
+            }
+
+            return true;
+        }
+
+        // We already have one ingredient, but no recipe
+        // has been selected yet.
+        if (currentRecipe == null)
+        {
+            List<FoodItem> ingredientsToCheck =
+                new List<FoodItem>(storedIngredients);
+
+            ingredientsToCheck.Add(foodItem);
+
+            foreach (Recipe candidateRecipe in recipes)
+            {
+                if (candidateRecipe == null)
+                    continue;
+
+                if (candidateRecipe.MatchesIngredients(
+                    ingredientsToCheck))
+                {
+                    currentRecipe = candidateRecipe;
+
+                    if (recipeDiscoveryManager != null &&
+                        !recipeDiscoveryManager.IsDiscovered(currentRecipe))
+                    {
+                        recipeDiscoveryManager.DiscoverRecipe(currentRecipe);
+                    }
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // A recipe has already been selected.
+        // The new ingredient must belong to that recipe.
+        return currentRecipe.HasIngredient(
             foodItem.ItemData,
             storedIngredients
         );
+    }
+    protected virtual List<Recipe> FindMatchingRecipes(FoodItem foodItem)
+    {
+        List<Recipe> matchingRecipes = new List<Recipe>();
+
+        if (foodItem == null)
+            return matchingRecipes;
+
+        if (recipes == null || recipes.Length == 0)
+            return matchingRecipes;
+
+        foreach (Recipe candidateRecipe in recipes)
+        {
+            if (candidateRecipe == null)
+                continue;
+
+            if (candidateRecipe.HasIngredient(
+                foodItem.ItemData,
+                storedIngredients))
+            {
+                matchingRecipes.Add(candidateRecipe);
+            }
+        }
+
+        return matchingRecipes;
     }
 
     public virtual bool TryAcceptIngredient(
     FoodItem foodItem)
     {
         if (!CanProcess(foodItem))
+            return false;
+
+        if (storedIngredients.Count >= 2)
             return false;
 
         if (storedIngredients.Contains(foodItem))
@@ -112,7 +206,17 @@ public class Machine : GridObject
         if (!TryAcceptIngredient(foodItem))
             return;
 
-        if (!Recipe.HasEnoughIngredients(
+        if (currentRecipe == null)
+        {
+            Debug.Log(
+                $"{name} accepted ingredient but recipe is not " +
+                $"resolved yet. Waiting for another ingredient."
+            );
+
+            return;
+        }
+
+        if (!currentRecipe.HasEnoughIngredients(
             storedIngredients))
         {
             Debug.Log(
@@ -198,6 +302,15 @@ public class Machine : GridObject
         {
             speedMultiplier = 1f;
         }
+
+        float effectiveTime = Recipe.ProcessingTime /
+       speedMultiplier;
+        Debug.Log(
+            $"[{name}] Recipe: {Recipe.name} | " +
+            $"Base Time: {Recipe.ProcessingTime:F2}s | " +
+            $"Speed Multiplier: {speedMultiplier:F2} | " +
+            $"Effective Time: {effectiveTime:F2}s"
+        );
 
         return Recipe.ProcessingTime /
                speedMultiplier;
@@ -595,20 +708,10 @@ public class Machine : GridObject
 
     protected virtual void Start()
     {
-        if (Recipe == null)
+        if (recipes == null || recipes.Length == 0)
         {
             Debug.LogError(
-                $"{name} ERROR: Recipe is NULL!"
-            );
-
-            return;
-        }
-
-        if (!Recipe.IsValid())
-        {
-            Debug.LogError(
-                $"{name} ERROR: Assigned Recipe is invalid. " +
-                $"Reason: {Recipe.GetValidationError()}"
+                $"{name} ERROR: No Recipes assigned!"
             );
 
             return;

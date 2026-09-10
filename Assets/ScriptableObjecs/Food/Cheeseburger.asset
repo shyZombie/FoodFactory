@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dab5a729741e0944fb6b6432bab4103f, type: 3}
-  m_Name: PotatoTomatoTestMix
+  m_Name: Cheeseburger
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
-  itemId: potato_tomato_mix
-  itemName: Potato Tomato MIx
-  icon: {fileID: -8350468868886379192, guid: 2cefc1b25d6dfb64d9c2d27925d53c1e, type: 3}
-  categories: 02000000
+  itemId: 
+  itemName: 
+  icon: {fileID: 0}
+  categories: 
