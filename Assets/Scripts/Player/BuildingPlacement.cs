@@ -109,9 +109,27 @@ public class BuildingPlacement : MonoBehaviour
 
     private void Update()
     {
+        HandleCancel();
         HandleRotation();
         HandlePreview();
         HandlePlacement();
+    }
+
+    private void HandleCancel()
+    {
+        if (!Keyboard.current.escapeKey.wasPressedThisFrame)
+            return;
+
+        if (previewBuilding != null)
+        {
+            Destroy(previewBuilding);
+            previewBuilding = null;
+        }
+
+        selectedBuildingPrefab = null;
+        rotationSteps = 0;
+
+        Debug.Log("Building placement cancelled.");
     }
 
     private void HandlePreview()
