@@ -1,29 +1,203 @@
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class BuildingPlacement : MonoBehaviour
 {
     [SerializeField] private GridManager gridManager;
     [SerializeField] private GameObject selectedBuildingPrefab;
+    
+    private GameObject previewBuilding;
+    private GridPosition previewGridPosition;
 
     private int rotationSteps = 0;
+    private Dictionary<SpriteRenderer, Color> previewOriginalColors =
+    new Dictionary<SpriteRenderer, Color>();
 
     public void SelectBuilding(GameObject buildingPrefab)
     {
         selectedBuildingPrefab = buildingPrefab;
         rotationSteps = 0;
 
+        CreatePreview();
+
         Debug.Log(
             $"Selected Building: {selectedBuildingPrefab.name}"
         );
     }
 
+    private void CreatePreview()
+    {
+        if (previewBuilding != null)
+        {
+            Destroy(previewBuilding);
+            previewBuilding = null;
+        }
+
+        if (selectedBuildingPrefab == null)
+            return;
+
+        previewBuilding = Instantiate(
+            selectedBuildingPrefab
+        );
+
+        previewBuilding.name =
+            selectedBuildingPrefab.name + "_Preview";
+
+        //previewOriginalColors.Clear();
+
+        SpriteRenderer[] spriteRenderers =
+            previewBuilding.GetComponentsInChildren<SpriteRenderer>();
+
+        foreach (SpriteRenderer spriteRenderer in spriteRenderers)
+        {
+            previewOriginalColors[spriteRenderer] =
+                spriteRenderer.color;
+        }
+
+        DisablePreviewComponents();
+        SetPreviewTransparency();
+        SetPreviewSortingOrder();
+    }
+
+    private void SetPreviewSortingOrder()
+    {
+        if (previewBuilding == null)
+            return;
+
+        SpriteRenderer[] spriteRenderers =
+            previewBuilding.GetComponentsInChildren<SpriteRenderer>();
+
+        foreach (SpriteRenderer spriteRenderer in spriteRenderers)
+        {
+            spriteRenderer.sortingOrder = 100;
+        }
+    }
+
+    private void DisablePreviewComponents()
+    {
+        MonoBehaviour[] behaviours =
+            previewBuilding.GetComponentsInChildren<MonoBehaviour>();
+
+        foreach (MonoBehaviour behaviour in behaviours)
+        {
+            behaviour.enabled = false;
+        }
+
+        Collider2D[] colliders =
+            previewBuilding.GetComponentsInChildren<Collider2D>();
+
+        foreach (Collider2D collider in colliders)
+        {
+            collider.enabled = false;
+        }
+    }
+
+    private void SetPreviewTransparency()
+    {
+        SpriteRenderer[] spriteRenderers =
+            previewBuilding.GetComponentsInChildren<SpriteRenderer>();
+
+        foreach (SpriteRenderer spriteRenderer in spriteRenderers)
+        {
+            Color color = spriteRenderer.color;
+            color.a = 0.5f;
+            spriteRenderer.color = color;
+        }
+    }
+
     private void Update()
     {
         HandleRotation();
+        HandlePreview();
         HandlePlacement();
     }
+
+    private void HandlePreview()
+    {
+        if (previewBuilding == null)
+            return;
+
+        Vector2 mouseScreenPosition =
+            Mouse.current.position.ReadValue();
+
+        Vector3 mouseWorldPosition =
+            Camera.main.ScreenToWorldPoint(
+                new Vector3(
+                    mouseScreenPosition.x,
+                    mouseScreenPosition.y,
+                    -Camera.main.transform.position.z
+                )
+            );
+
+        GridPosition gridPosition =
+            gridManager.WorldToGridPosition(
+                mouseWorldPosition
+            );
+
+        previewGridPosition = gridPosition;
+
+        Vector3 worldPosition =
+            gridManager.GridToWorldPosition(
+                gridPosition
+            );
+
+        previewBuilding.transform.position =
+            worldPosition;
+
+        UpdatePreviewValidity(gridPosition);
+    }
+
+    private void UpdatePreviewRotation()
+    {
+        if (previewBuilding == null)
+            return;
+
+        previewBuilding.transform.rotation =
+            Quaternion.Euler(
+                0f,
+                0f,
+                -rotationSteps * 90f
+            );
+    }
+
+private void UpdatePreviewValidity(GridPosition gridPosition)
+{
+    if (previewBuilding == null)
+        return;
+
+    bool isOccupied =
+        gridManager.IsCellOccupied(gridPosition);
+
+    SpriteRenderer[] spriteRenderers =
+        previewBuilding.GetComponentsInChildren<SpriteRenderer>();
+
+    foreach (SpriteRenderer spriteRenderer in spriteRenderers)
+    {
+        Color color;
+
+        if (previewOriginalColors.ContainsKey(spriteRenderer))
+        {
+            color = previewOriginalColors[spriteRenderer];
+        }
+        else
+        {
+            color = Color.white;
+        }
+
+        if (isOccupied)
+        {
+            color.r = 1f;
+            color.g = 0.3f;
+            color.b = 0.3f;
+        }
+
+        color.a = 0.5f;
+
+        spriteRenderer.color = color;
+    }
+}
 
     private void HandleRotation()
     {
@@ -59,6 +233,8 @@ public class BuildingPlacement : MonoBehaviour
         {
             rotationSteps = 0;
         }
+
+        UpdatePreviewRotation();
 
         Debug.Log(
             $"Next Building Rotation: " +
@@ -106,70 +282,60 @@ public class BuildingPlacement : MonoBehaviour
 
     private void PlaceBuilding()
     {
-        Vector2 mouseScreenPosition =
-            Mouse.current.position.ReadValue();
+        if (selectedBuildingPrefab == null)
+            return;
 
-        Vector3 mouseWorldPosition =
-            Camera.main.ScreenToWorldPoint(
-                new Vector3(
-                    mouseScreenPosition.x,
-                    mouseScreenPosition.y,
-                    -Camera.main.transform.position.z
-                )
-            );
-
-        GridPosition gridPosition =
-            gridManager.WorldToGridPosition(
-                mouseWorldPosition
-            );
-
-        if (gridManager.IsCellOccupied(gridPosition))
+        if (gridManager.IsCellOccupied(previewGridPosition))
         {
-            Debug.Log("Cell is already occupied!");
+            Debug.Log(
+                $"Cannot place {selectedBuildingPrefab.name}. " +
+                $"Grid cell {previewGridPosition} is occupied."
+            );
+
             return;
         }
 
         Vector3 worldPosition =
             gridManager.GridToWorldPosition(
-                gridPosition
+                previewGridPosition
             );
 
-        if (selectedBuildingPrefab == null)
-        {
-            Debug.Log("No building selected!");
-            return;
-        }
-
-        GameObject building = Instantiate(
-            selectedBuildingPrefab,
-            worldPosition,
-            Quaternion.identity
-        );
+        GameObject newBuilding =
+            Instantiate(
+                selectedBuildingPrefab,
+                worldPosition,
+                Quaternion.identity
+            );
 
         GridObject gridObject =
-            building.GetComponent<GridObject>();
+            newBuilding.GetComponent<GridObject>();
 
         if (gridObject == null)
         {
             Debug.LogError(
-                "Building prefab does not contain " +
-                "a GridObject component!"
+                $"Placed object {newBuilding.name} " +
+                $"does not have a GridObject component."
             );
 
-            Destroy(building);
+            Destroy(newBuilding);
             return;
         }
 
         if (!gridManager.TryAddGridObject(
-                gridPosition,
-                gridObject))
+            previewGridPosition,
+            gridObject))
         {
-            Destroy(building);
+            Debug.LogWarning(
+                $"Failed to register {newBuilding.name} " +
+                $"at {previewGridPosition}."
+            );
+
+            Destroy(newBuilding);
             return;
         }
 
         ConveyorBelt conveyorBelt =
-            building.GetComponent<ConveyorBelt>();
+            newBuilding.GetComponent<ConveyorBelt>();
 
         if (conveyorBelt != null)
         {
@@ -180,7 +346,7 @@ public class BuildingPlacement : MonoBehaviour
         }
 
         Machine machine =
-            building.GetComponent<Machine>();
+            newBuilding.GetComponent<Machine>();
 
         if (machine != null)
         {
@@ -189,5 +355,10 @@ public class BuildingPlacement : MonoBehaviour
                 machine.RotateClockwise();
             }
         }
+
+        Debug.Log(
+            $"Placed {selectedBuildingPrefab.name} " +
+            $"at {previewGridPosition}."
+        );
     }
 }
