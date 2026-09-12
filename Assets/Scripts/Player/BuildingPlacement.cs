@@ -137,6 +137,15 @@ public class BuildingPlacement : MonoBehaviour
         if (previewBuilding == null)
             return;
 
+        if (EventSystem.current != null &&
+            EventSystem.current.IsPointerOverGameObject())
+        {
+            previewBuilding.SetActive(false);
+            return;
+        }
+
+        previewBuilding.SetActive(true);
+
         Vector2 mouseScreenPosition =
             Mouse.current.position.ReadValue();
 
