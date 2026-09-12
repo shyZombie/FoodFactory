@@ -45,7 +45,7 @@ public class BuildingPlacement : MonoBehaviour
         previewBuilding.name =
             selectedBuildingPrefab.name + "_Preview";
 
-        //previewOriginalColors.Clear();
+        previewOriginalColors.Clear();
 
         SpriteRenderer[] spriteRenderers =
             previewBuilding.GetComponentsInChildren<SpriteRenderer>();
