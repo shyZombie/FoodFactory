@@ -84,7 +84,7 @@ SpriteRenderer:
   m_SortingOrder: 20
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.16037738, g: 0.15230067, b: 0.13541298, a: 1}
+  m_Color: {r: 0.36862743, g: 0.6323746, b: 0.8980392, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -112,6 +112,7 @@ MonoBehaviour:
   direction: 1
   upgradeManager: {fileID: 9188748472319351492, guid: 2868315de2b32ea4e86def0b861a4e21, type: 3}
   upgradeTarget: 4
+  recipeDiscoveryManager: {fileID: 0}
 --- !u!61 &284153122962580812
 BoxCollider2D:
   m_ObjectHideFlags: 0

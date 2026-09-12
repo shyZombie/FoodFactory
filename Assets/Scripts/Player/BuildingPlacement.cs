@@ -1,12 +1,23 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class BuildingPlacement : MonoBehaviour
 {
     [SerializeField] private GridManager gridManager;
-    [SerializeField] private GameObject buildingPrefab;
+    [SerializeField] private GameObject selectedBuildingPrefab;
 
     private int rotationSteps = 0;
+
+    public void SelectBuilding(GameObject buildingPrefab)
+    {
+        selectedBuildingPrefab = buildingPrefab;
+        rotationSteps = 0;
+
+        Debug.Log(
+            $"Selected Building: {selectedBuildingPrefab.name}"
+        );
+    }
 
     private void Update()
     {
@@ -81,10 +92,16 @@ public class BuildingPlacement : MonoBehaviour
 
     private void HandlePlacement()
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        if (!Mouse.current.leftButton.wasPressedThisFrame)
+            return;
+
+        if (EventSystem.current != null &&
+            EventSystem.current.IsPointerOverGameObject())
         {
-            PlaceBuilding();
+            return;
         }
+
+        PlaceBuilding();
     }
 
     private void PlaceBuilding()
@@ -117,8 +134,14 @@ public class BuildingPlacement : MonoBehaviour
                 gridPosition
             );
 
+        if (selectedBuildingPrefab == null)
+        {
+            Debug.Log("No building selected!");
+            return;
+        }
+
         GameObject building = Instantiate(
-            buildingPrefab,
+            selectedBuildingPrefab,
             worldPosition,
             Quaternion.identity
         );
