@@ -117,7 +117,8 @@ public class BuildingPlacement : MonoBehaviour
 
     private void HandleCancel()
     {
-        if (!Keyboard.current.escapeKey.wasPressedThisFrame)
+        if (!Keyboard.current.escapeKey.wasPressedThisFrame &&
+            !Mouse.current.rightButton.wasPressedThisFrame)
             return;
 
         if (previewBuilding != null)
