@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FoodSpawner : MonoBehaviour
+public class FoodSpawner : GridObject
 {
     [SerializeField] private GameObject foodItemPrefab;
     [SerializeField] private FoodItemData foodItemData;
@@ -119,5 +119,9 @@ public class FoodSpawner : MonoBehaviour
             gridManager,
             upgradeManager
         );
+    }
+    public void SetExtractor(Extractor extractor)
+    {
+        this.extractor = extractor;
     }
 }

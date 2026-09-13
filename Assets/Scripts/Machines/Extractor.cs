@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Extractor : MonoBehaviour
+public class Extractor : GridObject
 {
     [SerializeField] private GridManager gridManager;
     [SerializeField] private FoodSpawner foodSpawner;
@@ -109,6 +109,11 @@ public class Extractor : MonoBehaviour
             }
         }
 
+        Debug.Log(
+            $"Extractor active extraction slots: " +
+            $"{activeSlots.Count}"
+        );
+
         return activeSlots;
     }
 
@@ -156,6 +161,11 @@ public class Extractor : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void Initialize(GridManager manager)
+    {
+        gridManager = manager;
     }
 
     public List<GridPosition> GetActiveSlots()

@@ -8,6 +8,9 @@ public class GridManager : MonoBehaviour
     private Dictionary<GridPosition, GridObject> gridObjects =
         new Dictionary<GridPosition, GridObject>();
 
+    private Dictionary<GridPosition, Extractor> extractors =
+        new Dictionary<GridPosition, Extractor>();
+
     private void Awake()
     {
         RegisterExistingGridObjects();
@@ -25,28 +28,14 @@ public class GridManager : MonoBehaviour
             GridPosition gridPosition =
                 WorldToGridPosition(gridObject.transform.position);
 
-            if (gridObjects.ContainsKey(gridPosition))
+            if (!TryAddGridObject(
+                    gridPosition,
+                    gridObject))
             {
                 Debug.LogWarning(
-                    $"Multiple GridObjects found at {gridPosition}."
+                    $"Could not register {gridObject.name} " +
+                    $"at {gridPosition}."
                 );
-
-                continue;
-            }
-
-            gridObjects.Add(
-                gridPosition,
-                gridObject
-            );
-
-            gridObject.SetGridPosition(gridPosition);
-
-            Machine machine =
-                gridObject.GetComponent<Machine>();
-
-            if (machine != null)
-            {
-                machine.Initialize(this);
             }
         }
     }
@@ -90,23 +79,171 @@ public class GridManager : MonoBehaviour
         );
     }
 
-    public bool TryAddGridObject(
-        GridPosition gridPosition,
+    private GridPosition GetFootprintCell(
+    GridPosition origin,
+    GridObject gridObject,
+    int x,
+    int y)
+    {
+        int offsetX =
+            x - gridObject.Width / 2;
+
+        int offsetY =
+            y - gridObject.Height / 2;
+
+        return new GridPosition(
+            origin.x + offsetX,
+            origin.y + offsetY
+        );
+    }
+
+    private bool CanExtractorOverlapSpawner(
+        GridPosition origin,
         GridObject gridObject)
     {
-        if (IsCellOccupied(gridPosition))
+        Extractor extractor =
+            gridObject.GetComponent<Extractor>();
+
+        if (extractor == null)
+            return false;
+
+        if (gridObject.Width != 3 ||
+            gridObject.Height != 3)
+            return false;
+
+        GridObject centerObject =
+            GetGridObject(origin);
+
+        if (centerObject == null)
+            return false;
+
+        FoodSpawner foodSpawner =
+            centerObject.GetComponent<FoodSpawner>();
+
+        if (foodSpawner == null)
+            return false;
+
+        if (foodSpawner.Width != 3 ||
+            foodSpawner.Height != 3)
+            return false;
+
+        return true;
+    }
+
+    public bool CanPlaceGridObject(
+        GridPosition origin,
+        GridObject gridObject)
+    {
+        if (gridObject == null)
+            return false;
+
+        bool extractorCanOverlapSpawner =
+            CanExtractorOverlapSpawner(
+                origin,
+                gridObject
+            );
+
+        for (int x = 0; x < gridObject.Width; x++)
+        {
+            for (int y = 0; y < gridObject.Height; y++)
+            {
+                GridPosition cellPosition =
+                    GetFootprintCell(
+                        origin,
+                        gridObject,
+                        x,
+                        y
+                    );
+
+                if (!IsCellOccupied(cellPosition))
+                    continue;
+
+                if (extractorCanOverlapSpawner)
+                    continue;
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void RegisterExtractor(
+        GridPosition origin,
+        Extractor extractor)
+    {
+        for (int x = 0; x < extractor.Width; x++)
+        {
+            for (int y = 0; y < extractor.Height; y++)
+            {
+                GridPosition cellPosition =
+                    GetFootprintCell(
+                        origin,
+                        extractor,
+                        x,
+                        y
+                    );
+
+                extractors[cellPosition] = extractor;
+            }
+        }
+
+        extractor.SetGridPosition(origin);
+    }
+
+    public bool TryAddGridObject(
+        GridPosition origin,
+        GridObject gridObject)
+    {
+        if (!CanPlaceGridObject(
+                origin,
+                gridObject))
         {
             return false;
         }
 
-        gridObjects.Add(
-            gridPosition,
-            gridObject
-        );
+        Extractor extractor =
+            FindFirstObjectByType<Extractor>(
+                FindObjectsInactive.Include
+            );
+        if (extractor != null)
+        {
+            extractor.Initialize(this);
+        }
 
-        gridObject.SetGridPosition(
-            gridPosition
-        );
+        if (extractor != null &&
+            CanExtractorOverlapSpawner(
+                origin,
+                gridObject))
+        {
+            RegisterExtractor(
+                origin,
+                extractor
+            );
+
+            return true;
+        }
+
+        for (int x = 0; x < gridObject.Width; x++)
+        {
+            for (int y = 0; y < gridObject.Height; y++)
+            {
+                GridPosition cellPosition =
+                    GetFootprintCell(
+                        origin,
+                        gridObject,
+                        x,
+                        y
+                    );
+
+                gridObjects.Add(
+                    cellPosition,
+                    gridObject
+                );
+            }
+        }
+
+        gridObject.SetGridPosition(origin);
 
         Machine machine =
             gridObject.GetComponent<Machine>();
@@ -117,6 +254,7 @@ public class GridManager : MonoBehaviour
         }
 
         return true;
+
     }
 
     public GridObject GetGridObject(
@@ -133,10 +271,28 @@ public class GridManager : MonoBehaviour
     }
 
     public void RemoveGridObject(
-        GridPosition gridPosition)
+        GridPosition origin)
     {
-        gridObjects.Remove(
-            gridPosition
-        );
+        GridObject gridObject =
+            GetGridObject(origin);
+
+        if (gridObject == null)
+            return;
+
+        for (int x = 0; x < gridObject.Width; x++)
+        {
+            for (int y = 0; y < gridObject.Height; y++)
+            {
+                GridPosition cellPosition =
+                    GetFootprintCell(
+                        origin,
+                        gridObject,
+                        x,
+                        y
+                    );
+
+                gridObjects.Remove(cellPosition);
+            }
+        }
     }
 }

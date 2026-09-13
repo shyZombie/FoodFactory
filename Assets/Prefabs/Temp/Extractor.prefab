@@ -45,8 +45,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b72dec17bceabdd4195e00113d6f56b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Extractor
-  gridManager: {fileID: 0}
-  foodSpawner: {fileID: 0}
+  width: 3
+  height: 3
+  gridManager: {fileID: 7022940970996590386, guid: 556ac0ae5f2332841873cc81999b0bcf, type: 3}
+  foodSpawner: {fileID: 2400101155034943039, guid: 6a14f5bfe40da4c4d98c116ec48cec0c, type: 3}
 --- !u!1 &4857382174538873488
 GameObject:
   m_ObjectHideFlags: 0

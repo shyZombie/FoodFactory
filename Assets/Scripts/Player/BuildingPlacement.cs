@@ -190,42 +190,71 @@ public class BuildingPlacement : MonoBehaviour
             );
     }
 
-private void UpdatePreviewValidity(GridPosition gridPosition)
-{
-    if (previewBuilding == null)
-        return;
-
-    bool isOccupied =
-        gridManager.IsCellOccupied(gridPosition);
-
-    SpriteRenderer[] spriteRenderers =
-        previewBuilding.GetComponentsInChildren<SpriteRenderer>();
-
-    foreach (SpriteRenderer spriteRenderer in spriteRenderers)
+    private bool CanPlacePreview()
     {
-        Color color;
+        if (previewBuilding == null)
+            return false;
 
-        if (previewOriginalColors.ContainsKey(spriteRenderer))
-        {
-            color = previewOriginalColors[spriteRenderer];
-        }
-        else
-        {
-            color = Color.white;
-        }
+        GridObject gridObject =
+            previewBuilding.GetComponent<GridObject>();
 
-        if (isOccupied)
-        {
-            color.r = 1f;
-            color.g = 0.3f;
-            color.b = 0.3f;
-        }
+        if (gridObject == null)
+            return false;
 
-        color.a = 0.5f;
-
-        spriteRenderer.color = color;
+        return gridManager.CanPlaceGridObject(
+            previewGridPosition,
+            gridObject
+        );
     }
-}
+
+    private void UpdatePreviewValidity(
+        GridPosition gridPosition)
+    {
+        if (previewBuilding == null)
+            return;
+
+        GridObject gridObject =
+            previewBuilding.GetComponent<GridObject>();
+
+        if (gridObject == null)
+            return;
+
+        bool canPlace =
+            gridManager.CanPlaceGridObject(
+                gridPosition,
+                gridObject
+            );
+
+        SpriteRenderer[] spriteRenderers =
+            previewBuilding.GetComponentsInChildren<SpriteRenderer>();
+
+        foreach (SpriteRenderer spriteRenderer in spriteRenderers)
+        {
+            Color color;
+
+            if (previewOriginalColors.ContainsKey(
+                    spriteRenderer))
+            {
+                color =
+                    previewOriginalColors[spriteRenderer];
+            }
+            else
+            {
+                color = Color.white;
+            }
+
+            if (!canPlace)
+            {
+                color.r = 1f;
+                color.g = 0.3f;
+                color.b = 0.3f;
+            }
+
+            color.a = 0.5f;
+
+            spriteRenderer.color = color;
+        }
+    }
 
     private void HandleRotation()
     {
@@ -355,13 +384,26 @@ private void UpdatePreviewValidity(GridPosition gridPosition)
         if (selectedBuildingPrefab == null)
             return;
 
-        if (gridManager.IsCellOccupied(previewGridPosition))
+        GridObject previewGridObject =
+            selectedBuildingPrefab.GetComponent<GridObject>();
+
+        if (previewGridObject == null)
+        {
+            Debug.LogError(
+                $"Selected building {selectedBuildingPrefab.name} " +
+                $"does not have a GridObject component."
+            );
+            return;
+        }
+
+        if (!gridManager.CanPlaceGridObject(
+                previewGridPosition,
+                previewGridObject))
         {
             Debug.Log(
-                $"Cannot place {selectedBuildingPrefab.name}. " +
-                $"Grid cell {previewGridPosition} is occupied."
+                $"Cannot place {selectedBuildingPrefab.name} " +
+                $"at {previewGridPosition}."
             );
-
             return;
         }
 
@@ -402,6 +444,34 @@ private void UpdatePreviewValidity(GridPosition gridPosition)
 
             Destroy(newBuilding);
             return;
+        }
+
+        Extractor extractor =
+            newBuilding.GetComponent<Extractor>();
+
+        if (extractor != null)
+        {
+            GridObject gridObjectUnderExtractor =
+                gridManager.GetGridObject(
+                    previewGridPosition
+                );
+
+            if (gridObjectUnderExtractor != null)
+            {
+                FoodSpawner foodSpawner =
+                    gridObjectUnderExtractor
+                        .GetComponent<FoodSpawner>();
+
+                if (foodSpawner != null)
+                {
+                    foodSpawner.SetExtractor(extractor);
+
+                    Debug.Log(
+                        $"{foodSpawner.name} linked to " +
+                        $"Extractor {extractor.name}."
+                    );
+                }
+            }
         }
 
         ConveyorBelt conveyorBelt =

@@ -107,6 +107,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f961d8221543bc64b9301810b8fe62a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fryer
+  width: 1
+  height: 1
   recipes:
   - {fileID: 11400000, guid: d7640490f5125214c882872c2cb74dcb, type: 2}
   foodItemPrefab: {fileID: 3738253683363426217, guid: 28ee4dd59771da2458ec6ff886153c30, type: 3}
