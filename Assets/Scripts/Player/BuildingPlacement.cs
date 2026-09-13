@@ -272,6 +272,27 @@ private void UpdatePreviewValidity(GridPosition gridPosition)
             if (machine != null)
             {
                 machine.RotateClockwise();
+
+                switch (machine.GetDirection())
+                {
+                    case Machine.Direction.Right:
+                        rotationSteps = 0;
+                        break;
+
+                    case Machine.Direction.Down:
+                        rotationSteps = 1;
+                        break;
+
+                    case Machine.Direction.Left:
+                        rotationSteps = 2;
+                        break;
+
+                    case Machine.Direction.Up:
+                        rotationSteps = 3;
+                        break;
+                }
+
+                UpdatePreviewRotation();
                 return;
             }
         }
