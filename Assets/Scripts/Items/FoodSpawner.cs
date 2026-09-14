@@ -38,15 +38,15 @@ public class FoodSpawner : GridObject
         List<GridPosition> activeSlots =
             extractor.GetActiveExtractionSlots();
 
-        foreach (GridPosition spawnPosition in activeSlots)
+        foreach (GridPosition slot in activeSlots)
         {
             if (spawnedFoodObjects.Count >= maxItems)
                 break;
 
-            if (IsSpawnCellOccupied(spawnPosition))
+            if (IsSpawnCellOccupied(slot))
                 continue;
 
-            SpawnFood(spawnPosition);
+            SpawnFood(slot);
         }
     }
 
@@ -147,6 +147,8 @@ public class FoodSpawner : GridObject
         );
 
         spawnedFoodObjects.Add(currentFoodObject);
+
+        Debug.Log($"{name} | SpawnFood END | Tracked Food: {spawnedFoodObjects.Count}");
     }
     public void SetExtractor(Extractor extractor)
     {

@@ -53,7 +53,7 @@ MonoBehaviour:
   extractor: {fileID: 2360205898055401907, guid: 99b2bc247d4290e408d84bd9af90371f, type: 3}
   upgradeManager: {fileID: 9188748472319351492, guid: 2868315de2b32ea4e86def0b861a4e21, type: 3}
   spawnInterval: 3
-  maxItems: 5
+  maxItems: 12
 --- !u!212 &3767084323913655739
 SpriteRenderer:
   serializedVersion: 3

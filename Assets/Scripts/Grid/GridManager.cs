@@ -203,9 +203,8 @@ public class GridManager : MonoBehaviour
         }
 
         Extractor extractor =
-            FindFirstObjectByType<Extractor>(
-                FindObjectsInactive.Include
-            );
+            gridObject.GetComponent<Extractor>();
+
         if (extractor != null)
         {
             extractor.Initialize(this);
@@ -269,10 +268,46 @@ public class GridManager : MonoBehaviour
 
         return null;
     }
+    public Extractor GetExtractor(
+        GridPosition gridPosition)
+    {
+        if (extractors.TryGetValue(
+                gridPosition,
+                out Extractor extractor))
+        {
+            return extractor;
+        }
+
+        return null;
+    }
 
     public void RemoveGridObject(
         GridPosition origin)
     {
+        Extractor extractor =
+            GetExtractor(origin);
+
+        if (extractor != null)
+        {
+            for (int x = 0; x < extractor.Width; x++)
+            {
+                for (int y = 0; y < extractor.Height; y++)
+                {
+                    GridPosition cellPosition =
+                        GetFootprintCell(
+                            origin,
+                            extractor,
+                            x,
+                            y
+                        );
+
+                    extractors.Remove(cellPosition);
+                }
+            }
+
+            return;
+        }
+
         GridObject gridObject =
             GetGridObject(origin);
 

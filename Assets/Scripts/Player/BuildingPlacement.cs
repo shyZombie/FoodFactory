@@ -10,9 +10,12 @@ public class BuildingPlacement : MonoBehaviour
     
     private GameObject previewBuilding;
     private GridPosition previewGridPosition;
+    private GridObject selectedGridObject;
 
     private int rotationSteps = 0;
     private Dictionary<SpriteRenderer, Color> previewOriginalColors =
+    new Dictionary<SpriteRenderer, Color>();
+    private Dictionary<SpriteRenderer, Color> selectedOriginalColors =
     new Dictionary<SpriteRenderer, Color>();
 
     public void SelectBuilding(GameObject buildingPrefab)
@@ -113,6 +116,73 @@ public class BuildingPlacement : MonoBehaviour
         HandleRotation();
         HandlePreview();
         HandlePlacement();
+        HandleSelection();
+        HandleDelete();
+    }
+
+    private void HandleSelection()
+    {
+        if (!Mouse.current.leftButton.wasPressedThisFrame)
+            return;
+
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
+        GridObject gridObject =
+            GetGridObjectUnderMouse();
+
+        if (gridObject == null)
+        {
+            ClearSelection();
+            return;
+        }
+
+        ApplySelectionVisual(gridObject);
+
+        Debug.Log(
+            $"Selected GridObject: {gridObject.name}"
+        );
+    }
+
+    private void ClearSelection()
+    {
+        foreach (
+            KeyValuePair<SpriteRenderer, Color> pair
+            in selectedOriginalColors)
+        {
+            if (pair.Key != null)
+                pair.Key.color = pair.Value;
+        }
+
+        selectedOriginalColors.Clear();
+        selectedGridObject = null;
+    }
+
+    private void ApplySelectionVisual(
+        GridObject gridObject)
+    {
+        ClearSelection();
+
+        selectedGridObject = gridObject;
+
+        SpriteRenderer[] spriteRenderers =
+            gridObject.GetComponentsInChildren<SpriteRenderer>();
+
+        foreach (SpriteRenderer spriteRenderer in spriteRenderers)
+        {
+            selectedOriginalColors[spriteRenderer] =
+                spriteRenderer.color;
+
+            Color selectedColor =
+                spriteRenderer.color;
+
+            selectedColor.r = 1f;
+            selectedColor.g = 0.85f;
+            selectedColor.b = 0.2f;
+            selectedColor.a = 0.5f;
+
+            spriteRenderer.color = selectedColor;
+        }
     }
 
     private void HandleCancel()
@@ -130,7 +200,32 @@ public class BuildingPlacement : MonoBehaviour
         selectedBuildingPrefab = null;
         rotationSteps = 0;
 
+        ClearSelection();
+
         Debug.Log("Building placement cancelled.");
+    }
+
+    private void HandleDelete()
+    {
+        if (!Keyboard.current.deleteKey.wasPressedThisFrame)
+            return;
+
+        if (selectedGridObject == null)
+            return;
+
+        GridPosition gridPosition =
+            selectedGridObject.GridPosition;
+
+        gridManager.RemoveGridObject(gridPosition);
+
+        Destroy(selectedGridObject.gameObject);
+
+        selectedOriginalColors.Clear();
+        selectedGridObject = null;
+
+        Debug.Log(
+            $"Deleted GridObject at {gridPosition}."
+        );
     }
 
     private void HandlePreview()
@@ -372,6 +467,14 @@ public class BuildingPlacement : MonoBehaviour
                 mouseWorldPosition
             );
 
+        Extractor extractor =
+            gridManager.GetExtractor(
+                gridPosition
+            );
+
+        if (extractor != null)
+            return extractor;
+
         return gridManager.GetGridObject(
             gridPosition
         );
@@ -380,6 +483,9 @@ public class BuildingPlacement : MonoBehaviour
     private void HandlePlacement()
     {
         if (!Mouse.current.leftButton.wasPressedThisFrame)
+            return;
+
+        if (selectedBuildingPrefab == null)
             return;
 
         if (EventSystem.current != null &&
@@ -394,6 +500,9 @@ public class BuildingPlacement : MonoBehaviour
     private void PlaceBuilding()
     {
         if (selectedBuildingPrefab == null)
+            return;
+
+        if (previewBuilding == null)
             return;
 
         GridObject previewGridObject =
