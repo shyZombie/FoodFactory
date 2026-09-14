@@ -225,6 +225,18 @@ public class BuildingPlacement : MonoBehaviour
                 gridObject
             );
 
+        Extractor extractor =
+            previewBuilding.GetComponent<Extractor>();
+
+        if (extractor != null)
+        {
+            canPlace =
+                gridManager.CanPlaceExtractorOnSpawner(
+                    gridPosition,
+                    gridObject
+                );
+        }
+
         SpriteRenderer[] spriteRenderers =
             previewBuilding.GetComponentsInChildren<SpriteRenderer>();
 
@@ -396,9 +408,29 @@ public class BuildingPlacement : MonoBehaviour
             return;
         }
 
-        if (!gridManager.CanPlaceGridObject(
-                previewGridPosition,
-                previewGridObject))
+        Extractor extractorPreview =
+            previewBuilding.GetComponent<Extractor>();
+
+        bool canPlace;
+
+        if (extractorPreview != null)
+        {
+            canPlace =
+                gridManager.CanPlaceExtractorOnSpawner(
+                    previewGridPosition,
+                    previewGridObject
+                );
+        }
+        else
+        {
+            canPlace =
+                gridManager.CanPlaceGridObject(
+                    previewGridPosition,
+                    previewGridObject
+                );
+        }
+
+        if (!canPlace)
         {
             Debug.Log(
                 $"Cannot place {selectedBuildingPrefab.name} " +

@@ -28,31 +28,26 @@ public class FoodSpawner : GridObject
     private void TrySpawnFood()
     {
         if (extractor == null)
-        {
             return;
-        }
-
-        GridPosition spawnPosition;
-
-        if (!extractor.TryGetAvailableExtractionSlot(
-            out spawnPosition))
-        {
-            return;
-        }
 
         RemoveInactiveFoodObjects();
 
         if (spawnedFoodObjects.Count >= maxItems)
-        {
             return;
-        }
 
-        if (IsSpawnCellOccupied(spawnPosition))
+        List<GridPosition> activeSlots =
+            extractor.GetActiveExtractionSlots();
+
+        foreach (GridPosition spawnPosition in activeSlots)
         {
-            return;
-        }
+            if (spawnedFoodObjects.Count >= maxItems)
+                break;
 
-        SpawnFood(spawnPosition);
+            if (IsSpawnCellOccupied(spawnPosition))
+                continue;
+
+            SpawnFood(spawnPosition);
+        }
     }
 
     private void RemoveInactiveFoodObjects()
@@ -60,8 +55,39 @@ public class FoodSpawner : GridObject
         spawnedFoodObjects.RemoveAll(
             foodObject =>
                 foodObject == null ||
-                !foodObject.activeSelf
+                !foodObject.activeSelf ||
+                !IsFoodItemOnExtractionSlot(foodObject)
         );
+    }
+
+    private bool IsFoodItemOnExtractionSlot(
+        GameObject foodObject
+    )
+    {
+        if (foodObject == null)
+            return false;
+
+        Vector3 worldPosition =
+            foodObject.transform.position;
+
+        GridPosition gridPosition =
+            gridManager.WorldToGridPosition(
+                worldPosition
+            );
+
+        List<GridPosition> activeSlots =
+            extractor.GetActiveExtractionSlots();
+
+        foreach (GridPosition slot in activeSlots)
+        {
+            if (slot.x == gridPosition.x &&
+                slot.y == gridPosition.y)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private bool IsSpawnCellOccupied(
@@ -119,6 +145,8 @@ public class FoodSpawner : GridObject
             gridManager,
             upgradeManager
         );
+
+        spawnedFoodObjects.Add(currentFoodObject);
     }
     public void SetExtractor(Extractor extractor)
     {

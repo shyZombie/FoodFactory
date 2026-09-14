@@ -295,4 +295,53 @@ public class GridManager : MonoBehaviour
             }
         }
     }
+    public bool CanPlaceExtractorOnSpawner(
+        GridPosition origin,
+        GridObject extractor)
+    {
+        if (extractor == null)
+            return false;
+
+        if (extractor.GetComponent<Extractor>() == null)
+            return false;
+
+        if (extractor.Width != 3 || extractor.Height != 3)
+            return false;
+
+        GridObject centerObject =
+            GetGridObject(origin);
+
+        if (centerObject == null)
+            return false;
+
+        FoodSpawner spawner =
+            centerObject.GetComponent<FoodSpawner>();
+
+        if (spawner == null)
+            return false;
+
+        if (spawner.Width != 3 || spawner.Height != 3)
+            return false;
+
+        if (spawner.GridPosition.x != origin.x ||
+            spawner.GridPosition.y != origin.y)
+            return false;
+
+        Extractor[] existingExtractors =
+            FindObjectsByType<Extractor>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None
+            );
+
+        foreach (Extractor existingExtractor in existingExtractors)
+        {
+            if (existingExtractor.GridPosition.x == origin.x &&
+                existingExtractor.GridPosition.y == origin.y)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
