@@ -83,14 +83,6 @@ public class Extractor : GridObject
                 )
             );
         }
-
-        //Temporary for testing
-        foreach (GridPosition slot in extractionSlots)
-        {
-            Debug.Log(
-                $"Extractor slot: ({slot.x}, {slot.y})"
-            );
-        }
     }
 
     public List<GridPosition> GetActiveExtractionSlots()
@@ -108,11 +100,6 @@ public class Extractor : GridObject
                 activeSlots.Add(slot);
             }
         }
-
-        Debug.Log(
-            $"Extractor active extraction slots: " +
-            $"{activeSlots.Count}"
-        );
 
         return activeSlots;
     }
