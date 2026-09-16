@@ -177,7 +177,7 @@ SpriteRenderer:
   m_SortingOrder: 20
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.6415094, g: 0.6000227, b: 0.51139194, a: 1}
+  m_Color: {r: 0.5377358, g: 0.5287089, b: 0.5098344, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -199,6 +199,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7efd8efdb9e51f74c97fe2b84b6ad0ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cutter
+  width: 1
+  height: 1
   recipes:
   - {fileID: 11400000, guid: e264743061041c546afd2fb23fa2f194, type: 2}
   - {fileID: 11400000, guid: c4748f7032b2f12488e53e4af46fa5fd, type: 2}

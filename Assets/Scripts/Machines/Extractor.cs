@@ -154,6 +154,14 @@ public class Extractor : GridObject
     {
         gridManager = manager;
     }
+    public void UpdateGridPosition(GridPosition position)
+    {
+        extractorCenterPosition = position;
+
+        GenerateExtractionSlots();
+
+        SetGridPosition(position);
+    }
 
     public List<GridPosition> GetActiveSlots()
     {

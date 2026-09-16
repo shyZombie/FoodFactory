@@ -11,6 +11,8 @@ public class BuildingPlacement : MonoBehaviour
     private GameObject previewBuilding;
     private GridPosition previewGridPosition;
     private GridObject selectedGridObject;
+    private bool isMovingSelectedObject = false;
+    private Vector3 selectedOriginalPosition;
 
     private int rotationSteps = 0;
     private Dictionary<SpriteRenderer, Color> previewOriginalColors =
@@ -117,6 +119,8 @@ public class BuildingPlacement : MonoBehaviour
         HandlePreview();
         HandlePlacement();
         HandleSelection();
+        HandleMove();
+        HandleMovePreview();
         HandleDelete();
     }
 
@@ -137,10 +141,197 @@ public class BuildingPlacement : MonoBehaviour
             return;
         }
 
+        FoodSpawner spawner =
+            gridObject.GetComponent<FoodSpawner>();
+
+        if (spawner != null)
+        {
+            ClearSelection();
+            return;
+        }
+
         ApplySelectionVisual(gridObject);
 
         Debug.Log(
             $"Selected GridObject: {gridObject.name}"
+        );
+    }
+
+    private void HandleMove()
+    {
+        if (!Keyboard.current.mKey.wasPressedThisFrame)
+            return;
+
+        if (selectedGridObject == null)
+            return;
+
+        selectedOriginalPosition = selectedGridObject.transform.position;
+        isMovingSelectedObject = true;
+
+        Debug.Log(
+            $"Started moving {selectedGridObject.name} " +
+            $"from {selectedGridObject.GridPosition}."
+        );
+    }
+
+    private void HandleMovePreview()
+    {
+        if (!isMovingSelectedObject)
+            return;
+
+        Vector2 mouseScreenPosition = Mouse.current.position.ReadValue();
+
+        Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(
+            new Vector3(
+                mouseScreenPosition.x,
+                mouseScreenPosition.y,
+                -Camera.main.transform.position.z
+            )
+        );
+
+        previewGridPosition = gridManager.WorldToGridPosition(mouseWorldPosition);
+
+        Vector3 previewWorldPosition =
+            gridManager.GridToWorldPosition(previewGridPosition);
+
+        selectedGridObject.transform.position = previewWorldPosition;
+
+        bool canMove = CanMoveSelectedObject(previewGridPosition);
+
+        foreach (SpriteRenderer spriteRenderer in
+                 selectedGridObject.GetComponentsInChildren<SpriteRenderer>())
+        {
+            Color color = spriteRenderer.color;
+
+            if (canMove)
+            {
+                color.r = 1f;
+                color.g = 1f;
+                color.b = 1f;
+            }
+            else
+            {
+                color.r = 1f;
+                color.g = 0.25f;
+                color.b = 0.25f;
+            }
+
+            spriteRenderer.color = color;
+        }
+    }
+    private void ConfirmMove()
+    {
+        if (selectedGridObject == null)
+            return;
+
+        GridPosition targetGridPosition = previewGridPosition;
+
+        if (!CanMoveSelectedObject(targetGridPosition))
+        {
+            Debug.Log(
+                $"Cannot move {selectedGridObject.name} " +
+                $"to {targetGridPosition}."
+            );
+
+            return;
+        }
+
+        GridPosition originalGridPosition = selectedGridObject.GridPosition;
+
+        Extractor extractor =
+            selectedGridObject.GetComponent<Extractor>();
+
+        FoodSpawner oldSpawner = null;
+        FoodSpawner newSpawner = null;
+
+        if (extractor != null)
+        {
+            GridObject oldGridObject =
+                gridManager.GetGridObject(originalGridPosition);
+
+            if (oldGridObject != null)
+            {
+                oldSpawner =
+                    oldGridObject.GetComponent<FoodSpawner>();
+            }
+
+            GridObject newGridObject =
+                gridManager.GetGridObject(targetGridPosition);
+
+            if (newGridObject != null)
+            {
+                newSpawner =
+                    newGridObject.GetComponent<FoodSpawner>();
+            }
+        }
+
+        bool moved = gridManager.MoveGridObject(
+            originalGridPosition,
+            targetGridPosition,
+            selectedGridObject
+        );
+
+        if (!moved)
+        {
+            Debug.Log(
+                $"Failed to move {selectedGridObject.name} " +
+                $"to {targetGridPosition}."
+            );
+
+            return;
+        }
+
+        if (extractor != null)
+        {
+            if (oldSpawner != null)
+            {
+                oldSpawner.SetExtractor(null);
+            }
+
+            if (newSpawner != null)
+            {
+                newSpawner.SetExtractor(extractor);
+            }
+        }
+
+        selectedGridObject.transform.position =
+            gridManager.GridToWorldPosition(targetGridPosition);
+
+        isMovingSelectedObject = false;
+
+        Debug.Log(
+            $"Moved {selectedGridObject.name} " +
+            $"from {originalGridPosition} " +
+            $"to {targetGridPosition}."
+        );
+    }
+    private bool CanMoveSelectedObject(GridPosition targetGridPosition)
+    {
+        if (selectedGridObject == null)
+            return false;
+
+        GridPosition currentGridPosition = selectedGridObject.GridPosition;
+
+        if (targetGridPosition.x == currentGridPosition.x &&
+            targetGridPosition.y == currentGridPosition.y)
+        {
+            return true;
+        }
+
+        Extractor extractor =
+            selectedGridObject.GetComponent<Extractor>();
+
+        if (extractor != null)
+        {
+            return gridManager.CanPlaceExtractorOnSpawner(
+                targetGridPosition,
+                selectedGridObject
+            );
+        }
+
+        return gridManager.CanPlaceGridObject(
+            targetGridPosition,
+            selectedGridObject
         );
     }
 
@@ -187,6 +378,20 @@ public class BuildingPlacement : MonoBehaviour
 
     private void HandleCancel()
     {
+        if (Mouse.current.rightButton.wasPressedThisFrame &&
+            isMovingSelectedObject)
+        {
+            selectedGridObject.transform.position = selectedOriginalPosition;
+            isMovingSelectedObject = false;
+
+            Debug.Log(
+                $"Cancelled moving {selectedGridObject.name}. " +
+                $"Returned to original position."
+            );
+
+            return;
+        }
+
         if (!Keyboard.current.escapeKey.wasPressedThisFrame &&
             !Mouse.current.rightButton.wasPressedThisFrame)
             return;
@@ -491,6 +696,12 @@ public class BuildingPlacement : MonoBehaviour
         if (EventSystem.current != null &&
             EventSystem.current.IsPointerOverGameObject())
         {
+            return;
+        }
+
+        if (isMovingSelectedObject)
+        {
+            ConfirmMove();
             return;
         }
 

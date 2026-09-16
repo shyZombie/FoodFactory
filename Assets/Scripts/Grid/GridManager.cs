@@ -330,6 +330,44 @@ public class GridManager : MonoBehaviour
             }
         }
     }
+
+    public bool MoveGridObject(
+        GridPosition fromPosition,
+        GridPosition toPosition,
+        GridObject gridObject)
+    {
+        if (gridObject == null)
+            return false;
+
+        if (fromPosition.x == toPosition.x &&
+            fromPosition.y == toPosition.y)
+        {
+            return true;
+        }
+
+        RemoveGridObject(fromPosition);
+
+        if (!TryAddGridObject(toPosition, gridObject))
+        {
+            TryAddGridObject(fromPosition, gridObject);
+            return false;
+        }
+
+        Extractor extractor =
+            gridObject.GetComponent<Extractor>();
+
+        if (extractor != null)
+        {
+            extractor.UpdateGridPosition(toPosition);
+        }
+        else
+        {
+            gridObject.SetGridPosition(toPosition);
+        }
+
+        return true;
+    }
+
     public bool CanPlaceExtractorOnSpawner(
         GridPosition origin,
         GridObject extractor)
