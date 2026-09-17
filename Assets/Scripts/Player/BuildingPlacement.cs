@@ -132,6 +132,9 @@ public class BuildingPlacement : MonoBehaviour
         if (EventSystem.current.IsPointerOverGameObject())
             return;
 
+        if (isMovingSelectedObject)
+            return;
+
         GridObject gridObject =
             GetGridObjectUnderMouse();
 
@@ -165,6 +168,18 @@ public class BuildingPlacement : MonoBehaviour
         if (selectedGridObject == null)
             return;
 
+        if (isMovingSelectedObject)
+            return;
+
+        if (previewBuilding != null)
+        {
+            Destroy(previewBuilding);
+            previewBuilding = null;
+        }
+
+        selectedBuildingPrefab = null;
+        rotationSteps = 0;
+
         selectedOriginalPosition = selectedGridObject.transform.position;
         isMovingSelectedObject = true;
 
@@ -176,8 +191,11 @@ public class BuildingPlacement : MonoBehaviour
 
     private void HandleMovePreview()
     {
-        if (!isMovingSelectedObject)
+        if (!isMovingSelectedObject ||
+            selectedGridObject == null)
+        {
             return;
+        }
 
         Vector2 mouseScreenPosition = Mouse.current.position.ReadValue();
 
@@ -221,6 +239,15 @@ public class BuildingPlacement : MonoBehaviour
     }
     private void ConfirmMove()
     {
+        Debug.Log(
+            $"MOVE DEBUG | " +
+            $"Selected: {selectedGridObject.name} | " +
+            $"Selected GridPosition: {selectedGridObject.GridPosition} | " +
+            $"Preview: {previewGridPosition} | " +
+            $"GridManager at Preview: " +
+            $"{gridManager.GetGridObject(previewGridPosition)?.name}"
+        );
+
         if (selectedGridObject == null)
             return;
 
@@ -424,6 +451,8 @@ public class BuildingPlacement : MonoBehaviour
         gridManager.RemoveGridObject(gridPosition);
 
         Destroy(selectedGridObject.gameObject);
+
+        isMovingSelectedObject = false;
 
         selectedOriginalColors.Clear();
         selectedGridObject = null;
@@ -690,9 +719,6 @@ public class BuildingPlacement : MonoBehaviour
         if (!Mouse.current.leftButton.wasPressedThisFrame)
             return;
 
-        if (selectedBuildingPrefab == null)
-            return;
-
         if (EventSystem.current != null &&
             EventSystem.current.IsPointerOverGameObject())
         {
@@ -704,6 +730,9 @@ public class BuildingPlacement : MonoBehaviour
             ConfirmMove();
             return;
         }
+
+        if (selectedBuildingPrefab == null)
+            return;
 
         PlaceBuilding();
     }
