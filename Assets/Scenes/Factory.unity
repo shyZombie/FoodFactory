@@ -668,7 +668,7 @@ GameObject:
   - component: {fileID: 152076238}
   - component: {fileID: 152076237}
   m_Layer: 5
-  m_Name: Extractor
+  m_Name: ExtractorButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4674,6 +4674,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BuildingPlacement
   gridManager: {fileID: 459680811}
   selectedBuildingPrefab: {fileID: 2167049299986331372, guid: 2403d90f0ca4dee42a277c461e6d0f0a, type: 3}
+  buildingButtons:
+  - {fileID: 573595182}
+  - {fileID: 317483758}
+  - {fileID: 1236110687}
+  - {fileID: 1526660350}
+  - {fileID: 2086714373}
+  - {fileID: 152076237}
+  selectedButtonColor: {r: 0.003921569, g: 0.003921569, b: 0, a: 0.003921569}
 --- !u!4 &1922262588
 Transform:
   m_ObjectHideFlags: 0

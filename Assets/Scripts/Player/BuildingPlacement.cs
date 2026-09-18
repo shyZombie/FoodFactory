@@ -17,7 +17,9 @@ public class BuildingPlacement : MonoBehaviour
 
     private Button selectedBuildingButton;
     private bool isDraggingConveyor = false;
+    private ConveyorBelt lastDragConveyor;
     private GridPosition lastDragGridPosition;
+
 
     private int rotationSteps = 0;
     private Dictionary<SpriteRenderer, Color> previewOriginalColors =
@@ -168,17 +170,90 @@ public class BuildingPlacement : MonoBehaviour
 
         return selectedBuildingPrefab.GetComponent<ConveyorBelt>() != null;
     }
+
+    private void UpdateConveyorDragRotation(
+        GridPosition currentGridPosition)
+    {
+        int deltaX =
+            currentGridPosition.x - lastDragGridPosition.x;
+
+        int deltaY =
+            currentGridPosition.y - lastDragGridPosition.y;
+
+        if (Mathf.Abs(deltaX) > Mathf.Abs(deltaY))
+        {
+            if (deltaX > 0)
+            {
+                rotationSteps = 0; // Right
+            }
+            else
+            {
+                rotationSteps = 2; // Left
+            }
+        }
+        else
+        {
+            if (deltaY > 0)
+            {
+                rotationSteps = 3; // Up
+            }
+            else
+            {
+                rotationSteps = 1; // Down
+            }
+        }
+
+        UpdatePreviewRotation();
+    }
+    private void SetConveyorRotation(
+        ConveyorBelt conveyor,
+        int targetRotationSteps)
+    {
+        if (conveyor == null)
+            return;
+
+        int currentRotationSteps = 0;
+
+        switch (conveyor.GetDirection())
+        {
+            case ConveyorBelt.Direction.Right:
+                currentRotationSteps = 0;
+                break;
+
+            case ConveyorBelt.Direction.Down:
+                currentRotationSteps = 1;
+                break;
+
+            case ConveyorBelt.Direction.Left:
+                currentRotationSteps = 2;
+                break;
+
+            case ConveyorBelt.Direction.Up:
+                currentRotationSteps = 3;
+                break;
+        }
+
+        int rotationDifference =
+            (targetRotationSteps - currentRotationSteps + 4) % 4;
+
+        for (int i = 0; i < rotationDifference; i++)
+        {
+            conveyor.RotateClockwise();
+        }
+    }
     private void HandleConveyorDrag()
     {
         if (!IsSelectedConveyor())
         {
             isDraggingConveyor = false;
+            lastDragConveyor = null;
             return;
         }
 
         if (isMovingSelectedObject)
         {
             isDraggingConveyor = false;
+            lastDragConveyor = null;
             return;
         }
 
@@ -197,12 +272,17 @@ public class BuildingPlacement : MonoBehaviour
             if (placed)
             {
                 lastDragGridPosition = previewGridPosition;
+
+                lastDragConveyor =
+                    GetGridObjectUnderMouse()
+                        ?.GetComponent<ConveyorBelt>();
             }
         }
 
         if (!Mouse.current.leftButton.isPressed)
         {
             isDraggingConveyor = false;
+            lastDragConveyor = null;
             return;
         }
 
@@ -215,15 +295,32 @@ public class BuildingPlacement : MonoBehaviour
             return;
         }
 
+        UpdateConveyorDragRotation(
+            previewGridPosition
+        );
+
+        ConveyorBelt previousConveyor =
+            lastDragConveyor;
+
         bool placedNext = PlaceBuilding();
 
         if (placedNext)
         {
+            SetConveyorRotation(
+                previousConveyor,
+                rotationSteps
+            );
+
             lastDragGridPosition = previewGridPosition;
+
+            lastDragConveyor =
+                GetGridObjectUnderMouse()
+                    ?.GetComponent<ConveyorBelt>();
         }
         else
         {
             isDraggingConveyor = false;
+            lastDragConveyor = null;
         }
     }
     private void HandleSelection()
