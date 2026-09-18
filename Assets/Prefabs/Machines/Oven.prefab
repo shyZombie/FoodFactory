@@ -153,7 +153,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09028866eaf96264081bbd441fd861c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Oven
-  recipes: []
+  width: 1
+  height: 1
+  recipes:
+  - {fileID: 11400000, guid: 91fcd04bfe32e6946be279ad0c214f62, type: 2}
   foodItemPrefab: {fileID: 7036323676616385693, guid: dd1baedc1f0679749907b67dec7ecba3, type: 3}
   direction: 1
   upgradeManager: {fileID: 9188748472319351492, guid: 2868315de2b32ea4e86def0b861a4e21, type: 3}

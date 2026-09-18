@@ -88,6 +88,18 @@ public class Machine : GridObject
             if (matchingRecipes.Count == 0)
                 return false;
 
+            Debug.Log(
+                $"{name} received {foodItem.ItemData.ItemName}. " +
+                $"Matching recipes: {matchingRecipes.Count}"
+            );
+
+            foreach (Recipe matchingRecipe in matchingRecipes)
+            {
+                Debug.Log(
+                    $"{name} matching recipe: {matchingRecipe.name}"
+                );
+            }
+
             // One possible recipe:
             // select it immediately.
             if (matchingRecipes.Count == 1)
@@ -179,10 +191,12 @@ public class Machine : GridObject
     public virtual bool TryAcceptIngredient(
     FoodItem foodItem)
     {
-        if (!CanProcess(foodItem))
+        if (isProcessing)
+        {
             return false;
+        }
 
-        if (storedIngredients.Count >= 2)
+        if (!CanProcess(foodItem))
             return false;
 
         if (storedIngredients.Contains(foodItem))
@@ -402,11 +416,10 @@ public class Machine : GridObject
                 outputGridPosition
             );
 
-        if (outputGridObject != null &&
-            outputGridObject is not ConveyorBelt)
+        if (outputGridObject is not ConveyorBelt)
         {
             Debug.Log(
-                $"{name} output blocked at " +
+                $"{name} output waiting for conveyor at " +
                 $"{outputGridPosition}"
             );
 
