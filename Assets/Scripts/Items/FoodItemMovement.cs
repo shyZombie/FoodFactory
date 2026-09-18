@@ -113,6 +113,27 @@ public class FoodItemMovement : MonoBehaviour
             $"{machine.name}"
         );
 
+        Vector2 outputDirection = machine.GetOutputDirectionVector();
+
+        GridPosition outputPosition = new GridPosition(
+            machine.GridPosition.x +
+                Mathf.RoundToInt(outputDirection.x),
+
+            machine.GridPosition.y +
+                Mathf.RoundToInt(outputDirection.y)
+        );
+
+        if (currentGridPosition.x == outputPosition.x &&
+            currentGridPosition.y == outputPosition.y)
+        {
+            Debug.Log(
+                $"{foodItem.ItemData.ItemName} cannot enter {machine.name}: " +
+                "this is the machine output side."
+            );
+
+            return;
+        }
+
         if (!machine.CanProcess(foodItem))
         {
             Debug.Log(
