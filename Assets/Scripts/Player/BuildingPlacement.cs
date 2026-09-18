@@ -16,6 +16,8 @@ public class BuildingPlacement : MonoBehaviour
     private Vector3 selectedOriginalPosition;
 
     private Button selectedBuildingButton;
+    private bool isDraggingConveyor = false;
+    private GridPosition lastDragGridPosition;
 
     private int rotationSteps = 0;
     private Dictionary<SpriteRenderer, Color> previewOriginalColors =
@@ -152,13 +154,78 @@ public class BuildingPlacement : MonoBehaviour
         HandleCancel();
         HandleRotation();
         HandlePreview();
+        HandleConveyorDrag();
         HandlePlacement();
         HandleSelection();
         HandleMove();
         HandleMovePreview();
         HandleDelete();
     }
+    private bool IsSelectedConveyor()
+    {
+        if (selectedBuildingPrefab == null)
+            return false;
 
+        return selectedBuildingPrefab.GetComponent<ConveyorBelt>() != null;
+    }
+    private void HandleConveyorDrag()
+    {
+        if (!IsSelectedConveyor())
+        {
+            isDraggingConveyor = false;
+            return;
+        }
+
+        if (isMovingSelectedObject)
+        {
+            isDraggingConveyor = false;
+            return;
+        }
+
+        if (EventSystem.current != null &&
+            EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            isDraggingConveyor = true;
+
+            bool placed = PlaceBuilding();
+
+            if (placed)
+            {
+                lastDragGridPosition = previewGridPosition;
+            }
+        }
+
+        if (!Mouse.current.leftButton.isPressed)
+        {
+            isDraggingConveyor = false;
+            return;
+        }
+
+        if (!isDraggingConveyor)
+            return;
+
+        if (previewGridPosition.x == lastDragGridPosition.x &&
+            previewGridPosition.y == lastDragGridPosition.y)
+        {
+            return;
+        }
+
+        bool placedNext = PlaceBuilding();
+
+        if (placedNext)
+        {
+            lastDragGridPosition = previewGridPosition;
+        }
+        else
+        {
+            isDraggingConveyor = false;
+        }
+    }
     private void HandleSelection()
     {
         if (!Mouse.current.leftButton.wasPressedThisFrame)
@@ -213,6 +280,14 @@ public class BuildingPlacement : MonoBehaviour
         }
 
         selectedBuildingPrefab = null;
+
+        if (EventSystem.current != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+
+        UpdateSelectedBuildingButton();
+
         rotationSteps = 0;
 
         selectedOriginalPosition = selectedGridObject.transform.position;
@@ -440,7 +515,8 @@ public class BuildingPlacement : MonoBehaviour
 
     private void HandleCancel()
     {
-        if (Mouse.current.rightButton.wasPressedThisFrame &&
+        if ((Mouse.current.rightButton.wasPressedThisFrame ||
+             Keyboard.current.escapeKey.wasPressedThisFrame) &&
             isMovingSelectedObject)
         {
             selectedGridObject.transform.position = selectedOriginalPosition;
@@ -768,6 +844,12 @@ public class BuildingPlacement : MonoBehaviour
             return;
         }
 
+        if (IsSelectedConveyor() &&
+            Mouse.current.leftButton.isPressed)
+        {
+            return;
+        }
+
         if (isMovingSelectedObject)
         {
             ConfirmMove();
@@ -780,13 +862,13 @@ public class BuildingPlacement : MonoBehaviour
         PlaceBuilding();
     }
 
-    private void PlaceBuilding()
+    private bool PlaceBuilding()
     {
         if (selectedBuildingPrefab == null)
-            return;
+            return false;
 
         if (previewBuilding == null)
-            return;
+            return false;
 
         GridObject previewGridObject =
             selectedBuildingPrefab.GetComponent<GridObject>();
@@ -797,7 +879,7 @@ public class BuildingPlacement : MonoBehaviour
                 $"Selected building {selectedBuildingPrefab.name} " +
                 $"does not have a GridObject component."
             );
-            return;
+            return false;
         }
 
         Extractor extractorPreview =
@@ -828,7 +910,7 @@ public class BuildingPlacement : MonoBehaviour
                 $"Cannot place {selectedBuildingPrefab.name} " +
                 $"at {previewGridPosition}."
             );
-            return;
+            return false;
         }
 
         Vector3 worldPosition =
@@ -854,7 +936,7 @@ public class BuildingPlacement : MonoBehaviour
             );
 
             Destroy(newBuilding);
-            return;
+            return false;
         }
 
         if (!gridManager.TryAddGridObject(
@@ -867,7 +949,7 @@ public class BuildingPlacement : MonoBehaviour
             );
 
             Destroy(newBuilding);
-            return;
+            return false;
         }
 
         Extractor extractor =
@@ -924,5 +1006,7 @@ public class BuildingPlacement : MonoBehaviour
             $"Placed {selectedBuildingPrefab.name} " +
             $"at {previewGridPosition}."
         );
+
+        return true;
     }
 }
