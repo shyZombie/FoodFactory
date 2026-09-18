@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class BuildingPlacement : MonoBehaviour
 {
@@ -14,22 +15,56 @@ public class BuildingPlacement : MonoBehaviour
     private bool isMovingSelectedObject = false;
     private Vector3 selectedOriginalPosition;
 
+    private Button selectedBuildingButton;
+
     private int rotationSteps = 0;
     private Dictionary<SpriteRenderer, Color> previewOriginalColors =
     new Dictionary<SpriteRenderer, Color>();
     private Dictionary<SpriteRenderer, Color> selectedOriginalColors =
     new Dictionary<SpriteRenderer, Color>();
+    [SerializeField] private Button[] buildingButtons;
+    [SerializeField] private Color selectedButtonColor = new Color(1f, 0.85f, 0.2f);
 
     public void SelectBuilding(GameObject buildingPrefab)
     {
         selectedBuildingPrefab = buildingPrefab;
         rotationSteps = 0;
 
+        UpdateSelectedBuildingButton();
+
         CreatePreview();
 
         Debug.Log(
             $"Selected Building: {selectedBuildingPrefab.name}"
         );
+    }
+    private void UpdateSelectedBuildingButton()
+    {
+        if (EventSystem.current == null)
+            return;
+
+        GameObject selectedObject =
+            EventSystem.current.currentSelectedGameObject;
+
+        foreach (Button button in buildingButtons)
+        {
+            if (button == null)
+                continue;
+
+            Image image = button.GetComponent<Image>();
+
+            if (image == null)
+                continue;
+
+            if (button.gameObject == selectedObject)
+            {
+                image.color = selectedButtonColor;
+            }
+            else
+            {
+                image.color = Color.white;
+            }
+        }
     }
 
     private void CreatePreview()
@@ -430,6 +465,14 @@ public class BuildingPlacement : MonoBehaviour
         }
 
         selectedBuildingPrefab = null;
+
+        if (EventSystem.current != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+
+        UpdateSelectedBuildingButton();
+
         rotationSteps = 0;
 
         ClearSelection();
