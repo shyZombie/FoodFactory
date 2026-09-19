@@ -343,6 +343,12 @@ public class BuildingPlacement : MonoBehaviour
             return;
         }
 
+        if (!gridObject.PlayerMovable)
+        {
+            ClearSelection();
+            return;
+        }
+
         FoodSpawner spawner =
             gridObject.GetComponent<FoodSpawner>();
 
@@ -365,6 +371,9 @@ public class BuildingPlacement : MonoBehaviour
             return;
 
         if (selectedGridObject == null)
+            return;
+
+        if (!selectedGridObject.PlayerMovable)
             return;
 
         if (isMovingSelectedObject)
@@ -659,6 +668,9 @@ public class BuildingPlacement : MonoBehaviour
             return;
 
         if (selectedGridObject == null)
+            return;
+
+        if (!selectedGridObject.PlayerMovable)
             return;
 
         GridPosition gridPosition =
