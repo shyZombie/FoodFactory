@@ -664,6 +664,29 @@ public class BuildingPlacement : MonoBehaviour
         GridPosition gridPosition =
             selectedGridObject.GridPosition;
 
+        ConveyorBelt conveyorBelt =
+            selectedGridObject.GetComponent<ConveyorBelt>();
+
+        if (conveyorBelt != null)
+        {
+            FoodItem[] foodItems =
+                FindObjectsByType<FoodItem>(FindObjectsSortMode.None);
+
+            foreach (FoodItem foodItem in foodItems)
+            {
+                GridPosition foodPosition =
+                    gridManager.WorldToGridPosition(
+                        foodItem.transform.position
+                    );
+
+                if (foodPosition.x == gridPosition.x &&
+                    foodPosition.y == gridPosition.y)
+                {
+                    Destroy(foodItem.gameObject);
+                }
+            }
+        }
+
         gridManager.RemoveGridObject(gridPosition);
 
         Destroy(selectedGridObject.gameObject);
