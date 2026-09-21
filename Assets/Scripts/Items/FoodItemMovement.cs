@@ -101,6 +101,11 @@ public class FoodItemMovement : MonoBehaviour
         {
             TryEnterMachine(machine);
         }
+        else if (nextGridObject is DeliveryStation)
+        {
+            targetGridPosition = nextPosition;
+            isMoving = true;
+        }
     }
 
     private void TryEnterMachine(Machine machine)
@@ -183,16 +188,23 @@ public class FoodItemMovement : MonoBehaviour
             GetEffectiveMovementSpeed() * Time.deltaTime
         );
 
-        if (Vector3.Distance(
-                transform.position,
-                targetWorldPosition) < 0.001f)
+        if (Vector3.Distance(transform.position, targetWorldPosition) < 0.01f)
         {
             transform.position = targetWorldPosition;
-
-            currentGridPosition =
-                targetGridPosition;
-
+            currentGridPosition = targetGridPosition;
             isMoving = false;
+
+            GridObject targetGridObject =
+                gridManager.GetGridObject(currentGridPosition);
+
+            if (targetGridObject is DeliveryStation deliveryStation)
+            {
+                FoodItem foodItem = GetComponent<FoodItem>();
+
+                deliveryStation.ReceiveFood(foodItem);
+
+                return;
+            }
 
             FindCurrentBelt();
         }

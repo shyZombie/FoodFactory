@@ -107,3 +107,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DeliveryStation
   width: 1
   height: 1
+  playerMovable: 1
+  deliveryTracker: {fileID: 6439303376432171564, guid: 1188db675d99a614187675de7265703d, type: 3}
