@@ -11,6 +11,8 @@ public class ProductionObjective : MonoBehaviour
 
     private Dictionary<FoodCategory, int> startingProductionCounts =
         new Dictionary<FoodCategory, int>();
+    private Dictionary<FoodCategory, int> startingDeliveryCounts =
+        new Dictionary<FoodCategory, int>();
 
     private Dictionary<FoodCategory, int> currentProgress =
         new Dictionary<FoodCategory, int>();
@@ -118,16 +120,44 @@ public class ProductionObjective : MonoBehaviour
     private void OnEnable()
     {
         ProductionTracker.OnCategoryCountChanged +=
-            HandleCategoryCountChanged;
+            HandleProductionCategoryCountChanged;
+
+        DeliveryTracker.OnCategoryCountChanged +=
+            HandleDeliveryCategoryCountChanged;
     }
 
     private void OnDisable()
     {
         ProductionTracker.OnCategoryCountChanged -=
-            HandleCategoryCountChanged;
+            HandleProductionCategoryCountChanged;
+
+        DeliveryTracker.OnCategoryCountChanged -=
+            HandleDeliveryCategoryCountChanged;
+    }
+    private void HandleProductionCategoryCountChanged(
+        FoodCategory category,
+        int count)
+    {
+        HandleCategoryCountChanged(
+            ObjectiveRequirementSource.Production,
+            category,
+            count
+        );
+    }
+
+    private void HandleDeliveryCategoryCountChanged(
+        FoodCategory category,
+        int count)
+    {
+        HandleCategoryCountChanged(
+            ObjectiveRequirementSource.Delivery,
+            category,
+            count
+        );
     }
 
     private void HandleCategoryCountChanged(
+        ObjectiveRequirementSource source,
         FoodCategory category,
         int count)
     {
@@ -147,13 +177,27 @@ public class ProductionObjective : MonoBehaviour
         {
             if (requirement.Category != category)
                 continue;
+            if (requirement.Source != source)
+                continue;
 
             isRequiredCategory = true;
 
-            int baseline =
-                startingProductionCounts.ContainsKey(category)
-                    ? startingProductionCounts[category]
-                    : 0;
+            int baseline = 0;
+
+            if (source == ObjectiveRequirementSource.Production)
+            {
+                baseline =
+                    startingProductionCounts.ContainsKey(category)
+                        ? startingProductionCounts[category]
+                        : 0;
+            }
+            else if (source == ObjectiveRequirementSource.Delivery)
+            {
+                baseline =
+                    startingDeliveryCounts.ContainsKey(category)
+                        ? startingDeliveryCounts[category]
+                        : 0;
+            }
 
             int progress = Mathf.Clamp(
                 count - baseline,
@@ -242,18 +286,24 @@ public class ProductionObjective : MonoBehaviour
 
             state = ProductionObjectiveState.Active;
 
-            ProductionTracker tracker =
-                FindFirstObjectByType<ProductionTracker>();
+        ProductionTracker productionTracker =
+            FindFirstObjectByType<ProductionTracker>();
 
-            foreach (ProductionObjectiveRequirement requirement
-                     in objectiveData.Requirements)
+        DeliveryTracker deliveryTracker =
+            FindFirstObjectByType<DeliveryTracker>();
+
+        foreach (ProductionObjectiveRequirement requirement
+                 in objectiveData.Requirements)
+        {
+            int startingCount = 0;
+
+            if (requirement.Source ==
+                ObjectiveRequirementSource.Production)
             {
-                int startingCount = 0;
-
-                if (tracker != null)
+                if (productionTracker != null)
                 {
                     startingCount =
-                        tracker.GetCategoryCount(
+                        productionTracker.GetCategoryCount(
                             requirement.Category
                         );
                 }
@@ -261,11 +311,27 @@ public class ProductionObjective : MonoBehaviour
                 startingProductionCounts[
                     requirement.Category
                 ] = startingCount;
-
-                currentProgress[
-                    requirement.Category
-                ] = 0;
             }
+            else if (requirement.Source ==
+                     ObjectiveRequirementSource.Delivery)
+            {
+                if (deliveryTracker != null)
+                {
+                    startingCount =
+                        deliveryTracker.GetDeliveredCount(
+                            requirement.Category
+                        );
+                }
+
+                startingDeliveryCounts[
+                    requirement.Category
+                ] = startingCount;
+            }
+
+            currentProgress[
+                requirement.Category
+            ] = 0;
         }
+    }
 
  }    

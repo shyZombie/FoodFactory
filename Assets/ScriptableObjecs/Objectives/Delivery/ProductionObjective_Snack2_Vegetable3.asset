@@ -10,11 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e36a50f039377684785e0c5e6fe9cb54, type: 3}
-  m_Name: Objective_Bread_5
+  m_Name: ProductionObjective_Snack2_Vegetable3
   m_EditorClassIdentifier: Assembly-CSharp::ProductionObjectiveData
   requirements:
-  - category: 2
+  - category: 0
     source: 0
-    requiredQuantity: 5
-  title: Produce Bread
-  description: Produce 5 bread items.
+    requiredQuantity: 2
+  - category: 1
+    source: 1
+    requiredQuantity: 3
+  title: 2 Snack / 3 Vegetable
+  description: Produce 2 Snacks and 3 Vegetables.
