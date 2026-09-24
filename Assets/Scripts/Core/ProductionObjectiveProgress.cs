@@ -4,6 +4,7 @@ using System;
 public class ProductionObjectiveProgress
 {
     public FoodCategory Category { get; }
+    public ObjectiveRequirementSource Source { get; }
     public int Current { get; }
     public int Required { get; }
 
@@ -12,10 +13,12 @@ public class ProductionObjectiveProgress
 
     public ProductionObjectiveProgress(
         FoodCategory category,
+        ObjectiveRequirementSource source,
         int current,
         int required)
     {
         Category = category;
+        Source = source;
         Current = current;
         Required = required;
     }

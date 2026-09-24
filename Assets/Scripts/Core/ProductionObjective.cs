@@ -9,13 +9,14 @@ public class ProductionObjective : MonoBehaviour
     [SerializeField]
     private ProductionObjectiveData objectiveData;
 
-    private Dictionary<FoodCategory, int> startingProductionCounts =
-        new Dictionary<FoodCategory, int>();
-    private Dictionary<FoodCategory, int> startingDeliveryCounts =
-        new Dictionary<FoodCategory, int>();
+    private Dictionary<string, int> startingProductionCounts =
+        new Dictionary<string, int>();
 
-    private Dictionary<FoodCategory, int> currentProgress =
-        new Dictionary<FoodCategory, int>();
+    private Dictionary<string, int> startingDeliveryCounts =
+        new Dictionary<string, int>();
+
+    private Dictionary<string, int> currentProgress =
+        new Dictionary<string, int>();
 
     private bool completionEventRaised;
 
@@ -27,6 +28,13 @@ public class ProductionObjective : MonoBehaviour
 
     public ProductionObjectiveData ObjectiveData =>
         objectiveData;
+
+    private string GetRequirementKey(
+    FoodCategory category,
+    ObjectiveRequirementSource source)
+    {
+        return category + "_" + source;
+    }
 
     public bool IsCompleted
     {
@@ -42,10 +50,16 @@ public class ProductionObjective : MonoBehaviour
             foreach (ProductionObjectiveRequirement requirement
                      in objectiveData.Requirements)
             {
-                if (!currentProgress.ContainsKey(requirement.Category))
+                string requirementKey =
+                    GetRequirementKey(
+                        requirement.Category,
+                        requirement.Source
+                    );
+
+                if (!currentProgress.ContainsKey(requirementKey))
                     return false;
 
-                if (currentProgress[requirement.Category] <
+                if (currentProgress[requirementKey] <
                     requirement.RequiredQuantity)
                 {
                     return false;
@@ -57,10 +71,17 @@ public class ProductionObjective : MonoBehaviour
     }
 
     public int GetCurrentProgress(
-        FoodCategory category)
+        FoodCategory category,
+        ObjectiveRequirementSource source)
     {
-        if (currentProgress.TryGetValue(
+        string requirementKey =
+            GetRequirementKey(
                 category,
+                source
+            );
+
+        if (currentProgress.TryGetValue(
+                requirementKey,
                 out int progress))
         {
             return progress;
@@ -103,11 +124,15 @@ public class ProductionObjective : MonoBehaviour
                  in objectiveData.Requirements)
         {
             int current =
-                GetCurrentProgress(requirement.Category);
+                GetCurrentProgress(
+                    requirement.Category,
+                    requirement.Source
+                );
 
             progress.Add(
                 new ProductionObjectiveProgress(
                     requirement.Category,
+                    requirement.Source,
                     current,
                     requirement.RequiredQuantity
                 )
@@ -180,6 +205,12 @@ public class ProductionObjective : MonoBehaviour
             if (requirement.Source != source)
                 continue;
 
+            string requirementKey =
+                GetRequirementKey(
+                    category,
+                    source
+                );
+
             isRequiredCategory = true;
 
             int baseline = 0;
@@ -187,15 +218,15 @@ public class ProductionObjective : MonoBehaviour
             if (source == ObjectiveRequirementSource.Production)
             {
                 baseline =
-                    startingProductionCounts.ContainsKey(category)
-                        ? startingProductionCounts[category]
+                    startingProductionCounts.ContainsKey(requirementKey)
+                        ? startingProductionCounts[requirementKey]
                         : 0;
             }
             else if (source == ObjectiveRequirementSource.Delivery)
             {
                 baseline =
-                    startingDeliveryCounts.ContainsKey(category)
-                        ? startingDeliveryCounts[category]
+                    startingDeliveryCounts.ContainsKey(requirementKey)
+                        ? startingDeliveryCounts[requirementKey]
                         : 0;
             }
 
@@ -206,13 +237,13 @@ public class ProductionObjective : MonoBehaviour
             );
 
             int previousProgress =
-                currentProgress.ContainsKey(category)
-                    ? currentProgress[category]
+                currentProgress.ContainsKey(requirementKey)
+                    ? currentProgress[requirementKey]
                     : 0;
 
-            currentProgress[category] = progress;
+            currentProgress[requirementKey] = progress;
 
-            if (currentProgress[category] != previousProgress)
+            if (currentProgress[requirementKey] != previousProgress)
             {
                 OnProgressChanged?.Invoke(this);
             }
@@ -296,6 +327,11 @@ public class ProductionObjective : MonoBehaviour
                  in objectiveData.Requirements)
         {
             int startingCount = 0;
+            string requirementKey =
+                GetRequirementKey(
+                    requirement.Category,
+                    requirement.Source
+                );
 
             if (requirement.Source ==
                 ObjectiveRequirementSource.Production)
@@ -309,7 +345,7 @@ public class ProductionObjective : MonoBehaviour
                 }
 
                 startingProductionCounts[
-                    requirement.Category
+                    requirementKey
                 ] = startingCount;
             }
             else if (requirement.Source ==
@@ -324,12 +360,12 @@ public class ProductionObjective : MonoBehaviour
                 }
 
                 startingDeliveryCounts[
-                    requirement.Category
+                    requirementKey
                 ] = startingCount;
             }
 
             currentProgress[
-                requirement.Category
+                requirementKey
             ] = 0;
         }
     }

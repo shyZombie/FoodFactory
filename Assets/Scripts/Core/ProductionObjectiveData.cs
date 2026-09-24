@@ -38,8 +38,8 @@ public class ProductionObjectiveData : ScriptableObject
             return;
         }
 
-        HashSet<FoodCategory> usedCategories =
-            new HashSet<FoodCategory>();
+        HashSet<string> usedRequirements =
+            new HashSet<string>();
 
         for (int i = 0; i < requirements.Length; i++)
         {
@@ -65,13 +65,19 @@ public class ProductionObjectiveData : ScriptableObject
                 );
             }
 
-            if (!usedCategories.Add(
-                    requirements[i].Category))
+            string requirementKey =
+                requirements[i].Category.ToString() +
+                "_" +
+                requirements[i].Source.ToString();
+
+            if (!usedRequirements.Add(requirementKey))
             {
                 Debug.LogError(
                     $"Objective '{name}' is invalid. " +
                     $"Reason: Requirement {i} uses the same " +
-                    $"FoodCategory: {requirements[i].Category}.",
+                    $"FoodCategory and Source: " +
+                    $"{requirements[i].Category} / " +
+                    $"{requirements[i].Source}.",
                     this
                 );
             }
