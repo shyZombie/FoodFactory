@@ -21,6 +21,11 @@ public class FoodItemMovement : MonoBehaviour
         GridManager manager,
         UpgradeManager managerUpgrade)
     {
+        Debug.Log(
+            $"{name} | FoodItemMovement.Initialize | " +
+            $"GridManager: {(manager == null ? "NULL" : manager.name)}"
+        );
+
         gridManager = manager;
         upgradeManager = managerUpgrade;
 
@@ -28,10 +33,30 @@ public class FoodItemMovement : MonoBehaviour
             gridManager.WorldToGridPosition(transform.position);
 
         FindCurrentBelt();
+
+        GridObject gridObject =
+            gridManager.GetGridObject(currentGridPosition);
+
+        Debug.Log(
+            $"{name} | Initialize GridPosition: " +
+            $"({currentGridPosition.x}, {currentGridPosition.y}) | " +
+            $"GridObject: " +
+            $"{(gridObject == null ? "NULL" : gridObject.GetType().Name)} | " +
+            $"CurrentBelt: " +
+            $"{(currentBelt == null ? "NULL" : currentBelt.name)}"
+        );
     }
 
     private void Update()
     {
+        Debug.Log(
+            $"{name} | Update | " +
+            $"GridManager: {(gridManager == null ? "NULL" : gridManager.name)} | " +
+            $"isMoving: {isMoving} | " +
+            $"GridPosition: ({currentGridPosition.x}, {currentGridPosition.y}) | " +
+            $"CurrentBelt: {(currentBelt == null ? "NULL" : currentBelt.name)}"
+        );
+
         if (gridManager == null)
             return;
 
@@ -82,6 +107,17 @@ public class FoodItemMovement : MonoBehaviour
         GridObject nextGridObject =
             gridManager.GetGridObject(nextPosition);
 
+        FoodItem foodItem =
+            GetComponent<FoodItem>();
+
+        Debug.Log(
+            $"{foodItem.ItemData.ItemName} | " +
+            $"Current: {currentGridPosition.x},{currentGridPosition.y} | " +
+            $"Direction: {direction} | " +
+            $"Next: {nextPosition.x},{nextPosition.y} | " +
+            $"Next Object: {(nextGridObject == null ? "NULL" : nextGridObject.GetType().Name)}"
+        );
+
         if (nextGridObject == null)
         {
             return;
@@ -89,7 +125,15 @@ public class FoodItemMovement : MonoBehaviour
 
         if (nextGridObject is ConveyorBelt)
         {
-            if (IsCellOccupiedByFoodItem(nextPosition))
+            bool occupied = IsCellOccupiedByFoodItem(nextPosition);
+
+            Debug.Log(
+                $"{foodItem.ItemData.ItemName} | " +
+                $"Next cell is Conveyor | " +
+                $"Occupied: {occupied}"
+            );
+
+            if (occupied)
             {
                 return;
             }

@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProductionObjectiveData
   requirements:
   - category: 1
+    source: 0
     requiredQuantity: 3
   - category: 2
+    source: 0
     requiredQuantity: 5
   title: Produce Vege/Bread
   description: 'Produce 3 vegetable  items.

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dab5a729741e0944fb6b6432bab4103f, type: 3}
-  m_Name: SlicedPotato
+  m_Name: Carrot
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
-  itemId: sliced_potato
-  itemName: Sliced Potato
-  icon: {fileID: 21300000, guid: 8983fa62065bb1a488ed3ef8519150e4, type: 3}
-  categories: 00000000
+  itemId: carrot
+  itemName: Carrot
+  icon: {fileID: -2977244083611402389, guid: 8148e641ea9edfb468b9350c2c1d2a97, type: 3}
+  categories: 01000000

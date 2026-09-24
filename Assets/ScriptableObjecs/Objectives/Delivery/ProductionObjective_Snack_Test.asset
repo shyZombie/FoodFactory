@@ -12,6 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e36a50f039377684785e0c5e6fe9cb54, type: 3}
   m_Name: ProductionObjective_Snack_Test
   m_EditorClassIdentifier: Assembly-CSharp::ProductionObjectiveData
-  requirements: []
-  title: 
-  description: 
+  requirements:
+  - category: 0
+    source: 0
+    requiredQuantity: 5
+  - category: 0
+    source: 1
+    requiredQuantity: 3
+  title: Test Objective
+  description: Produce 5 / Deliver 3 Snack.

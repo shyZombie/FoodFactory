@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProductionObjectiveData
   requirements:
   - category: 0
-    requiredQuantity: 10
+    source: 0
+    requiredQuantity: 6
   title: Procude Snack
-  description: Produce 10 Snack items.
+  description: Produce 6 Snack items.
