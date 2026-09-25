@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4122444394405340330
+--- !u!1 &2465955621507813719
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,38 +8,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3758839079241151400}
-  - component: {fileID: 2400101155034943039}
-  - component: {fileID: 3767084323913655739}
+  - component: {fileID: 7487611237631988541}
+  - component: {fileID: 520128933425439834}
+  - component: {fileID: 8631180623984010803}
   m_Layer: 0
-  m_Name: PotatoSpawner
+  m_Name: StrawberrySpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3758839079241151400
+--- !u!4 &7487611237631988541
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4122444394405340330}
+  m_GameObject: {fileID: 2465955621507813719}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5, y: 1.5, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -3.5, y: -3.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2400101155034943039
+--- !u!114 &520128933425439834
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4122444394405340330}
+  m_GameObject: {fileID: 2465955621507813719}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd60174ae577466459d6fec17b2e8fbf, type: 3}
@@ -48,21 +48,21 @@ MonoBehaviour:
   width: 3
   height: 3
   playerMovable: 0
-  foodItemPrefab: {fileID: 3738253683363426217, guid: 28ee4dd59771da2458ec6ff886153c30, type: 3}
-  foodItemData: {fileID: 11400000, guid: a59cb77da5f6066418e8418fb93b2f15, type: 2}
-  gridManager: {fileID: 7022940970996590386, guid: 556ac0ae5f2332841873cc81999b0bcf, type: 3}
+  foodItemPrefab: {fileID: 3738253683363426217, guid: 270dd9edbd24a26478f8696c31f782a0, type: 3}
+  foodItemData: {fileID: 11400000, guid: bce4a2c6efa2c6a4b9e3d3f290a77ed2, type: 2}
+  gridManager: {fileID: 0}
   extractor: {fileID: 0}
-  upgradeManager: {fileID: 9188748472319351492, guid: 2868315de2b32ea4e86def0b861a4e21, type: 3}
+  upgradeManager: {fileID: 0}
   spawnInterval: 3
   maxItems: 12
---- !u!212 &3767084323913655739
+--- !u!212 &8631180623984010803
 SpriteRenderer:
   serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4122444394405340330}
+  m_GameObject: {fileID: 2465955621507813719}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -104,7 +104,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 5178742685547743279, guid: ee6b856d34e09914a9931313df78f992, type: 3}
+  m_Sprite: {fileID: -33259680943746413, guid: 62799106aba3e774bb40e971e216c347, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

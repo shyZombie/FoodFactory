@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dab5a729741e0944fb6b6432bab4103f, type: 3}
-  m_Name: Oil
+  m_Name: Rice
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
-  itemId: oil
-  itemName: Oil
-  icon: {fileID: -2532300078724254681, guid: 244f70d09c26e07489ad7714a8ef693d, type: 3}
-  categories: 
+  itemId: rice
+  itemName: Rice
+  icon: {fileID: 4950872730631817123, guid: 6d34b065dbda70a42a5da61d66eb463f, type: 3}
+  categories: 03000000
