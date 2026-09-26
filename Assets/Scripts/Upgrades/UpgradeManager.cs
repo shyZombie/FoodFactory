@@ -186,6 +186,29 @@ public class UpgradeManager : MonoBehaviour
             $"{GetSpeedMultiplier(UpgradeTarget.Fryer)}",
             this
             );
+        Debug.Log(
+            $"Pot: " +
+            $"{GetSpeedMultiplier(UpgradeTarget.Pot)}",
+            this
+        );
+
+        Debug.Log(
+            $"Grill: " +
+            $"{GetSpeedMultiplier(UpgradeTarget.Grill)}",
+            this
+        );
+
+        Debug.Log(
+            $"Mixer: " +
+            $"{GetSpeedMultiplier(UpgradeTarget.Mixer)}",
+            this
+        );
+
+        Debug.Log(
+            $"SauceMaker: " +
+            $"{GetSpeedMultiplier(UpgradeTarget.SauceMaker)}",
+            this
+        );
     }
 
     [ContextMenu("Test All Upgrade Targets")]
@@ -197,5 +220,9 @@ public class UpgradeManager : MonoBehaviour
         Debug.Log($"Oven | Speed Multiplier: {GetSpeedMultiplier(UpgradeTarget.Oven):F2}");
         Debug.Log($"Fryer | Speed Multiplier: {GetSpeedMultiplier(UpgradeTarget.Fryer):F2}");
         Debug.Log($"Assembler | Speed Multiplier: {GetSpeedMultiplier(UpgradeTarget.Assembler):F2}");
+        Debug.Log($"Pot | Speed Multiplier: {GetSpeedMultiplier(UpgradeTarget.Pot):F2}");
+        Debug.Log($"Grill | Speed Multiplier: {GetSpeedMultiplier(UpgradeTarget.Grill):F2}");
+        Debug.Log($"Mixer | Speed Multiplier: {GetSpeedMultiplier(UpgradeTarget.Mixer):F2}");
+        Debug.Log($"SauceMaker | Speed Multiplier: {GetSpeedMultiplier(UpgradeTarget.SauceMaker):F2}");
     }
 }

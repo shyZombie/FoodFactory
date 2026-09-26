@@ -5,5 +5,9 @@ public enum UpgradeTarget
     Oven,
     Fryer,
     Assembler,
-    Extractor
+    Extractor,
+    Pot,
+    Grill,
+    Mixer,
+    SauceMaker
 }
