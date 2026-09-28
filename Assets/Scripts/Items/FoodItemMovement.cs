@@ -309,6 +309,14 @@ public class FoodItemMovement : MonoBehaviour
 
         return true;
     }
+    public bool IsMovingToGridPosition(GridPosition position)
+    {
+        if (!isMoving)
+            return false;
+
+        return targetGridPosition.x == position.x &&
+               targetGridPosition.y == position.y;
+    }
 
     private bool IsCellOccupiedByFoodItem(GridPosition position)
     {
@@ -327,6 +335,15 @@ public class FoodItemMovement : MonoBehaviour
 
             if (foodPosition.x == position.x &&
                 foodPosition.y == position.y)
+            {
+                return true;
+            }
+
+            FoodItemMovement movement =
+                foodItem.GetComponent<FoodItemMovement>();
+
+            if (movement != null &&
+                movement.IsMovingToGridPosition(position))
             {
                 return true;
             }

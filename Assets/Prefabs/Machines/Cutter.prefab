@@ -176,8 +176,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 20
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.5377358, g: 0.5287089, b: 0.5098344, a: 1}
+  m_Sprite: {fileID: -3595814782366951102, guid: d5ab4c66d7f273f40812c2e0b7093392, type: 3}
+  m_Color: {r: 0.9716981, g: 0.9651503, b: 0.9487807, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -201,9 +201,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cutter
   width: 1
   height: 1
+  playerMovable: 1
   recipes:
   - {fileID: 11400000, guid: e264743061041c546afd2fb23fa2f194, type: 2}
   - {fileID: 11400000, guid: c4748f7032b2f12488e53e4af46fa5fd, type: 2}
+  - {fileID: 11400000, guid: 3f88c90593df49240a8221c8e7ccffe2, type: 2}
+  - {fileID: 11400000, guid: a5fd0939f751fef448a9f2b8a89b77a7, type: 2}
+  - {fileID: 11400000, guid: ff97b8a962b36534ca2186a39bcbf83f, type: 2}
+  - {fileID: 11400000, guid: a0a53b633736dc0498445246073867c0, type: 2}
   foodItemPrefab: {fileID: 3738253683363426217, guid: 28ee4dd59771da2458ec6ff886153c30, type: 3}
   direction: 1
   upgradeManager: {fileID: 9188748472319351492, guid: 2868315de2b32ea4e86def0b861a4e21, type: 3}
@@ -247,7 +252,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 0.61, y: 1.28}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

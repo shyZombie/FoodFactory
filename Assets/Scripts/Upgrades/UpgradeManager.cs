@@ -186,6 +186,13 @@ public class UpgradeManager : MonoBehaviour
             $"{GetSpeedMultiplier(UpgradeTarget.Fryer)}",
             this
             );
+
+        Debug.Log(
+            $"Assembler: " +
+            $"{GetSpeedMultiplier(UpgradeTarget.Assembler)}",
+            this
+            );
+
         Debug.Log(
             $"Pot: " +
             $"{GetSpeedMultiplier(UpgradeTarget.Pot)}",

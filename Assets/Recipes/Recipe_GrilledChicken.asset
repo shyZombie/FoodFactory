@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f94a7262be396354394358f8b9e56bb1, type: 3}
+  m_Name: Recipe_GrilledChicken
+  m_EditorClassIdentifier: Assembly-CSharp::Recipe
+  recipeId: recipe_grilled_chicken
+  inputs:
+  - foodItem: {fileID: 11400000, guid: c64f60cf6ff7c2c46a4cc053e95bf166, type: 2}
+    quantity: 1
+  outputs:
+  - foodItem: {fileID: 11400000, guid: 4788a67f12cdfb941a8d96069f27f07f, type: 2}
+    quantity: 1
+  processingTime: 6

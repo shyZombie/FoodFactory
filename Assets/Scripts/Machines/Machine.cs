@@ -22,6 +22,8 @@ public class Machine : GridObject
     new List<FoodItem>();
     protected Queue<FoodItemData> pendingOutputs =
         new Queue<FoodItemData>();
+    protected Queue<Recipe> pendingOutputRecipes =
+        new Queue<Recipe>();
 
 
     public Recipe Recipe => currentRecipe;
@@ -79,88 +81,32 @@ public class Machine : GridObject
         if (isProcessing)
             return false;
 
-        // First ingredient
-        if (storedIngredients.Count == 0)
+        if (recipes == null || recipes.Length == 0)
+            return false;
+
+        foreach (Recipe candidateRecipe in recipes)
         {
-            List<Recipe> matchingRecipes =
-                FindMatchingRecipes(foodItem);
-
-            if (matchingRecipes.Count == 0)
-                return false;
-
-            Debug.Log(
-                $"{name} received {foodItem.ItemData.ItemName}. " +
-                $"Matching recipes: {matchingRecipes.Count}"
-            );
-
-            foreach (Recipe matchingRecipe in matchingRecipes)
+            if (candidateRecipe == null ||
+                candidateRecipe.Inputs == null)
             {
-                Debug.Log(
-                    $"{name} matching recipe: {matchingRecipe.name}"
-                );
+                continue;
             }
 
-            // One possible recipe:
-            // select it immediately.
-            if (matchingRecipes.Count == 1)
+            foreach (Recipe.Ingredient ingredient
+                     in candidateRecipe.Inputs)
             {
-                currentRecipe = matchingRecipes[0];
-
-                if (recipeDiscoveryManager != null &&
-                    !recipeDiscoveryManager.IsDiscovered(currentRecipe))
-                {
-                    recipeDiscoveryManager.DiscoverRecipe(currentRecipe);
-                }
-            }
-            else
-            {
-                // Multiple possible recipes:
-                // accept the ingredient but wait for the
-                // next ingredient before selecting a recipe.
-                currentRecipe = null;
-            }
-
-            return true;
-        }
-
-        // We already have one ingredient, but no recipe
-        // has been selected yet.
-        if (currentRecipe == null)
-        {
-            List<FoodItem> ingredientsToCheck =
-                new List<FoodItem>(storedIngredients);
-
-            ingredientsToCheck.Add(foodItem);
-
-            foreach (Recipe candidateRecipe in recipes)
-            {
-                if (candidateRecipe == null)
+                if (ingredient == null)
                     continue;
 
-                if (candidateRecipe.MatchesIngredients(
-                    ingredientsToCheck))
+                if (ingredient.foodItem ==
+                    foodItem.ItemData)
                 {
-                    currentRecipe = candidateRecipe;
-
-                    if (recipeDiscoveryManager != null &&
-                        !recipeDiscoveryManager.IsDiscovered(currentRecipe))
-                    {
-                        recipeDiscoveryManager.DiscoverRecipe(currentRecipe);
-                    }
-
                     return true;
                 }
             }
-
-            return false;
         }
 
-        // A recipe has already been selected.
-        // The new ingredient must belong to that recipe.
-        return currentRecipe.HasIngredient(
-            foodItem.ItemData,
-            storedIngredients
-        );
+        return false;
     }
     protected virtual List<Recipe> FindMatchingRecipes(FoodItem foodItem)
     {
@@ -220,18 +166,7 @@ public class Machine : GridObject
         if (!TryAcceptIngredient(foodItem))
             return;
 
-        if (currentRecipe == null)
-        {
-            Debug.Log(
-                $"{name} accepted ingredient but recipe is not " +
-                $"resolved yet. Waiting for another ingredient."
-            );
-
-            return;
-        }
-
-        if (!currentRecipe.HasEnoughIngredients(
-            storedIngredients))
+        if (!TryResolveRecipe())
         {
             Debug.Log(
                 $"{name} is waiting for more ingredients."
@@ -241,6 +176,44 @@ public class Machine : GridObject
         }
 
         StartProcessing();
+    }
+
+    protected virtual bool TryResolveRecipe()
+    {
+        if (recipes == null || recipes.Length == 0)
+            return false;
+
+        foreach (Recipe candidateRecipe in recipes)
+        {
+            if (candidateRecipe == null)
+                continue;
+
+            if (!candidateRecipe.HasEnoughIngredients(
+                    storedIngredients))
+            {
+                continue;
+            }
+
+            currentRecipe = candidateRecipe;
+
+            if (recipeDiscoveryManager != null &&
+                !recipeDiscoveryManager.IsDiscovered(currentRecipe))
+            {
+                recipeDiscoveryManager.DiscoverRecipe(
+                    currentRecipe
+                );
+            }
+
+            Debug.Log(
+                $"{name} resolved recipe: " +
+                $"{currentRecipe.name}"
+            );
+
+            return true;
+        }
+
+        currentRecipe = null;
+        return false;
     }
 
     protected virtual void StartProcessing()
@@ -261,16 +234,62 @@ public class Machine : GridObject
 
     protected virtual void ConsumeIngredients()
     {
-        foreach (FoodItem ingredient
-                 in storedIngredients)
+        if (currentRecipe == null ||
+            currentRecipe.Inputs == null)
         {
-            if (ingredient != null)
+            return;
+        }
+
+        List<FoodItem> consumedIngredients =
+            new List<FoodItem>();
+
+        foreach (Recipe.Ingredient recipeIngredient
+                 in currentRecipe.Inputs)
+        {
+            if (recipeIngredient == null ||
+                recipeIngredient.foodItem == null)
             {
-                Destroy(ingredient.gameObject);
+                continue;
+            }
+
+            int requiredQuantity =
+                recipeIngredient.quantity;
+
+            foreach (FoodItem storedItem in storedIngredients)
+            {
+                if (requiredQuantity <= 0)
+                    break;
+
+                if (storedItem == null ||
+                    consumedIngredients.Contains(storedItem))
+                {
+                    continue;
+                }
+
+                if (storedItem.ItemData !=
+                    recipeIngredient.foodItem)
+                {
+                    continue;
+                }
+
+                consumedIngredients.Add(storedItem);
+                requiredQuantity--;
             }
         }
 
-        storedIngredients.Clear();
+        foreach (FoodItem consumedItem in consumedIngredients)
+        {
+            if (consumedItem != null)
+            {
+                Destroy(consumedItem.gameObject);
+            }
+        }
+
+        storedIngredients.RemoveAll(
+            ingredient =>
+                ingredient == null ||
+                consumedIngredients.Contains(ingredient)
+        );
 
         currentFoodItem = null;
     }
@@ -349,6 +368,8 @@ public class Machine : GridObject
 
         isProcessing = false;
 
+        currentRecipe = null;
+
         TryCreateNextOutput();
     }
 
@@ -381,6 +402,10 @@ public class Machine : GridObject
                 pendingOutputs.Enqueue(
                     result.foodItem
                 );
+
+                pendingOutputRecipes.Enqueue(
+                    currentRecipe
+                );
             }
         }
     }
@@ -389,6 +414,15 @@ public class Machine : GridObject
     {
         if (pendingOutputs.Count == 0)
             return;
+
+        if (pendingOutputRecipes.Count == 0)
+        {
+            Debug.LogError(
+                $"{name} ERROR: Pending output recipe queue is empty."
+            );
+
+            return;
+        }
 
         if (gridManager == null)
             return;
@@ -438,7 +472,10 @@ public class Machine : GridObject
         }
 
         FoodItemData outputItem =
-            pendingOutputs.Dequeue();
+            pendingOutputs.Peek();
+
+        Recipe outputRecipe =
+            pendingOutputRecipes.Peek();
 
         Vector3 outputPosition =
             gridManager.GridToWorldPosition(
@@ -472,7 +509,7 @@ public class Machine : GridObject
         );
 
         OnFoodItemProduced?.Invoke(
-            Recipe,
+            outputRecipe,
             outputItem
         );
 
@@ -495,6 +532,9 @@ public class Machine : GridObject
             gridManager,
             upgradeManager
         );
+
+        pendingOutputs.Dequeue();
+        pendingOutputRecipes.Dequeue();
 
         Debug.Log(
             $"{name} created output: " +
