@@ -156,7 +156,8 @@ MonoBehaviour:
   width: 1
   height: 1
   playerMovable: 1
-  recipes: []
+  recipes:
+  - {fileID: 11400000, guid: 159e2ac5d5d7833439410645a5d4a57d, type: 2}
   foodItemPrefab: {fileID: 7036323676616385693, guid: dd1baedc1f0679749907b67dec7ecba3, type: 3}
   direction: 1
   upgradeManager: {fileID: 9188748472319351492, guid: 2868315de2b32ea4e86def0b861a4e21, type: 3}
