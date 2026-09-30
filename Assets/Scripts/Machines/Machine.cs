@@ -43,6 +43,7 @@ public class Machine : GridObject
     protected FoodItem currentFoodItem;
     protected float processingTimer;
     protected bool isProcessing;
+    private bool shouldResolveRecipe;
 
 
 
@@ -166,22 +167,20 @@ public class Machine : GridObject
         if (!TryAcceptIngredient(foodItem))
             return;
 
-        if (!TryResolveRecipe())
-        {
-            Debug.Log(
-                $"{name} is waiting for more ingredients."
-            );
+        shouldResolveRecipe = true;
 
-            return;
-        }
-
-        StartProcessing();
+        Debug.Log(
+            $"{name} accepted ingredient and will resolve recipe."
+        );
     }
 
     protected virtual bool TryResolveRecipe()
     {
         if (recipes == null || recipes.Length == 0)
             return false;
+
+        Recipe bestRecipe = null;
+        int bestIngredientCount = 0;
 
         foreach (Recipe candidateRecipe in recipes)
         {
@@ -194,26 +193,50 @@ public class Machine : GridObject
                 continue;
             }
 
-            currentRecipe = candidateRecipe;
+            int ingredientCount = 0;
 
-            if (recipeDiscoveryManager != null &&
-                !recipeDiscoveryManager.IsDiscovered(currentRecipe))
+            if (candidateRecipe.Inputs != null)
             {
-                recipeDiscoveryManager.DiscoverRecipe(
-                    currentRecipe
-                );
+                foreach (Recipe.Ingredient ingredient
+                         in candidateRecipe.Inputs)
+                {
+                    if (ingredient == null)
+                        continue;
+
+                    ingredientCount += ingredient.quantity;
+                }
             }
 
-            Debug.Log(
-                $"{name} resolved recipe: " +
-                $"{currentRecipe.name}"
-            );
-
-            return true;
+            if (bestRecipe == null ||
+                ingredientCount > bestIngredientCount)
+            {
+                bestRecipe = candidateRecipe;
+                bestIngredientCount = ingredientCount;
+            }
         }
 
-        currentRecipe = null;
-        return false;
+        if (bestRecipe == null)
+        {
+            currentRecipe = null;
+            return false;
+        }
+
+        currentRecipe = bestRecipe;
+
+        if (recipeDiscoveryManager != null &&
+            !recipeDiscoveryManager.IsDiscovered(currentRecipe))
+        {
+            recipeDiscoveryManager.DiscoverRecipe(
+                currentRecipe
+            );
+        }
+
+        Debug.Log(
+            $"{name} resolved recipe: " +
+            $"{currentRecipe.name}"
+        );
+
+        return true;
     }
 
     protected virtual void StartProcessing()
@@ -309,6 +332,21 @@ public class Machine : GridObject
             }
 
             return;
+        }
+
+        if (shouldResolveRecipe)
+        {
+            shouldResolveRecipe = false;
+
+            if (TryResolveRecipe())
+            {
+                StartProcessing();
+                return;
+            }
+
+            Debug.Log(
+                $"{name} is waiting for more ingredients."
+            );
         }
 
         TryCreateNextOutput();

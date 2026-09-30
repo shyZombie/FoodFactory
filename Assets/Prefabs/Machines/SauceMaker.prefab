@@ -158,6 +158,9 @@ MonoBehaviour:
   playerMovable: 1
   recipes:
   - {fileID: 11400000, guid: 63c1337dda12f874e87352b504983211, type: 2}
+  - {fileID: 11400000, guid: 78416fc57c250f94e98afc08cb03cf9f, type: 2}
+  - {fileID: 11400000, guid: 5bfcf574c173093478abaece6fcb2eea, type: 2}
+  - {fileID: 11400000, guid: 6f5ebb37b5a5be94b9bceb0426327207, type: 2}
   foodItemPrefab: {fileID: 7036323676616385693, guid: dd1baedc1f0679749907b67dec7ecba3, type: 3}
   direction: 1
   upgradeManager: {fileID: 9188748472319351492, guid: 2868315de2b32ea4e86def0b861a4e21, type: 3}

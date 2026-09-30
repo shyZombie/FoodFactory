@@ -10,13 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f94a7262be396354394358f8b9e56bb1, type: 3}
-  m_Name: Recipe_GrilledChicken
+  m_Name: Recipe_EggSandwich
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
-  recipeId: recipe_grilled_chicken
+  recipeId: recipe_egg_sandwich
   inputs:
-  - foodItem: {fileID: 11400000, guid: c64f60cf6ff7c2c46a4cc053e95bf166, type: 2}
+  - foodItem: {fileID: 11400000, guid: 767846d66195fb840a60be522e4e5119, type: 2}
+    quantity: 1
+  - foodItem: {fileID: 11400000, guid: a16c9fb1bce62bc40b4679a01f381a74, type: 2}
+    quantity: 1
+  - foodItem: {fileID: 11400000, guid: 99abd19acc5240243a00b36cf91399ed, type: 2}
     quantity: 1
   outputs:
-  - foodItem: {fileID: 11400000, guid: 4788a67f12cdfb941a8d96069f27f07f, type: 2}
+  - foodItem: {fileID: 11400000, guid: cec09cd94dd663f49b7ab88e2b5a9930, type: 2}
     quantity: 1
   processingTime: 5

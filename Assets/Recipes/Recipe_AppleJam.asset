@@ -10,13 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f94a7262be396354394358f8b9e56bb1, type: 3}
-  m_Name: Recipe_GrilledChicken
+  m_Name: Recipe_AppleJam
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
-  recipeId: recipe_grilled_chicken
+  recipeId: recipe_apple_jam
   inputs:
-  - foodItem: {fileID: 11400000, guid: c64f60cf6ff7c2c46a4cc053e95bf166, type: 2}
+  - foodItem: {fileID: 11400000, guid: f4a98b20ff6a3ab45850e7b6827a129b, type: 2}
+    quantity: 1
+  - foodItem: {fileID: 11400000, guid: 56bb417cc939d8f4d9502a415e006db4, type: 2}
     quantity: 1
   outputs:
-  - foodItem: {fileID: 11400000, guid: 4788a67f12cdfb941a8d96069f27f07f, type: 2}
+  - foodItem: {fileID: 11400000, guid: ab7f92d30e3d0e14092af23a3eb0d7af, type: 2}
     quantity: 1
   processingTime: 5
