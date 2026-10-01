@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
   itemId: milk
   itemName: Milk
-  icon: {fileID: 2763825676015317919, guid: 28330d320ce412e408f974629e5ecc87, type: 3}
-  categories: 0a000000
+  icon: {fileID: 721916557748493168, guid: 3d1c4125875abde4ba3c261dae7f0eef, type: 3}
+  categories: 0a00000005000000

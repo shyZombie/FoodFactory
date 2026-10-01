@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dab5a729741e0944fb6b6432bab4103f, type: 3}
-  m_Name: Wheat
+  m_Name: Cheese
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
-  itemId: wheat
-  itemName: Wheat
-  icon: {fileID: -5254638832282465559, guid: c1d0b44ca41554643a43424fae52f291, type: 3}
-  categories: 02000000
+  itemId: cheese
+  itemName: Cheese
+  icon: {fileID: -5893660210697652791, guid: d46106c41b534344caacfba15f8ef5c9, type: 3}
+  categories: 050000000a000000

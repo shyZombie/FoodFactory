@@ -9,5 +9,6 @@ public enum UpgradeTarget
     Pot,
     Grill,
     Mixer,
-    SauceMaker
+    SauceMaker,
+    Processor
 }
