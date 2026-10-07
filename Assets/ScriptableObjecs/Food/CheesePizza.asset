@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab5a729741e0944fb6b6432bab4103f, type: 3}
+  m_Name: CheesePizza
+  m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
+  itemId: cheese_pizza
+  itemName: Cheese Pizza
+  icon: {fileID: -5102826838455599187, guid: 65bcb45d190eb7b4bae423966249c6f8, type: 3}
+  categories: 0a00000000000000

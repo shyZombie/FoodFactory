@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
   itemId: strawberry
   itemName: Strawberry
-  icon: {fileID: -33259680943746413, guid: 62799106aba3e774bb40e971e216c347, type: 3}
+  icon: {fileID: -6039192099429604801, guid: bcc0f66488106bf46a2247dbedcb2cd5, type: 3}
   categories: 02000000

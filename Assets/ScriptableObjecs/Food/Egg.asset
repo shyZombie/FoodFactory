@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
   itemId: egg
   itemName: Egg
-  icon: {fileID: -2765783017417090484, guid: 62e88e83841622748a1623b82e10f83d, type: 3}
+  icon: {fileID: 7638707811351265267, guid: e61626a06746f414189cb74232c0b5ed, type: 3}
   categories: 05000000

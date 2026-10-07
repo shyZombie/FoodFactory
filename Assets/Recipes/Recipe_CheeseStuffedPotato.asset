@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f94a7262be396354394358f8b9e56bb1, type: 3}
+  m_Name: Recipe_CheeseStuffedPotato
+  m_EditorClassIdentifier: Assembly-CSharp::Recipe
+  recipeId: recipe_cheese_stuffed_potato
+  inputs:
+  - foodItem: {fileID: 11400000, guid: 9c4c6b3c4a564e94ca4103e2883e5e12, type: 2}
+    quantity: 1
+  - foodItem: {fileID: 11400000, guid: c98c63ac8f8805e49bbdfe150a53ecb0, type: 2}
+    quantity: 1
+  outputs:
+  - foodItem: {fileID: 11400000, guid: 38867fa291f963a4092b7e153eb072e9, type: 2}
+    quantity: 1
+  processingTime: 5

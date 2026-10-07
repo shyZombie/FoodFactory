@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
   itemId: rice
   itemName: Rice
-  icon: {fileID: 4950872730631817123, guid: 6d34b065dbda70a42a5da61d66eb463f, type: 3}
+  icon: {fileID: -2947792898806997905, guid: 85aea6bc25b55284d9a28a454aa882bd, type: 3}
   categories: 03000000

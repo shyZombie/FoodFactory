@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f94a7262be396354394358f8b9e56bb1, type: 3}
+  m_Name: Recipe_CheeseVegetableBake
+  m_EditorClassIdentifier: Assembly-CSharp::Recipe
+  recipeId: recipe_cheese_vegetable_bake
+  inputs:
+  - foodItem: {fileID: 11400000, guid: d88dea0e67eb2374488ccb10254dd2d8, type: 2}
+    quantity: 1
+  - foodItem: {fileID: 11400000, guid: 432eff3f2d9811744b8afb6ac56e297a, type: 2}
+    quantity: 1
+  - foodItem: {fileID: 11400000, guid: c98c63ac8f8805e49bbdfe150a53ecb0, type: 2}
+    quantity: 1
+  outputs:
+  - foodItem: {fileID: 11400000, guid: 94a739421d77cc546811d3ecd74d49c6, type: 2}
+    quantity: 1
+  processingTime: 5

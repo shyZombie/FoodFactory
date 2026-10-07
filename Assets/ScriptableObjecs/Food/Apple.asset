@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
   itemId: apple
   itemName: Apple
-  icon: {fileID: 3065087004037094576, guid: a2190c42be2da4e40ad4467dfae530ae, type: 3}
+  icon: {fileID: 6690265813777508166, guid: c3e3fa13f2f6e4e47982f8a2c442a6e6, type: 3}
   categories: 02000000

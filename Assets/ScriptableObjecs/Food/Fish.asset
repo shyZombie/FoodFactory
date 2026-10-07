@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
   itemId: fish
   itemName: Fish
-  icon: {fileID: -6688328114565086316, guid: 25c88e333bbf192488a1d075ed46db20, type: 3}
+  icon: {fileID: 1366198776198432552, guid: 8c8629e8dd2c8f845bb1769bdf681e00, type: 3}
   categories: 06000000

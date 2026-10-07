@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dab5a729741e0944fb6b6432bab4103f, type: 3}
   m_Name: Cheeseburger
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
-  itemId: 
-  itemName: 
-  icon: {fileID: 0}
-  categories: 
+  itemId: cheeseburger
+  itemName: Cheeseburger
+  icon: {fileID: 4007745951809051329, guid: 998832622cd4fc44c9d25c2df0e9e7c1, type: 3}
+  categories: 04000000080000000a00000000000000

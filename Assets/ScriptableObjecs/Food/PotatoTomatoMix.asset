@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
   itemId: potato_tomato_mix
   itemName: Potato Tomato MIx
-  icon: {fileID: -8350468868886379192, guid: 2cefc1b25d6dfb64d9c2d27925d53c1e, type: 3}
+  icon: {fileID: -7168574853167505791, guid: 17338480c0e7b3c4f9cec986d692006f, type: 3}
   categories: 02000000

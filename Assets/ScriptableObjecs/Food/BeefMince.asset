@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab5a729741e0944fb6b6432bab4103f, type: 3}
+  m_Name: BeefMince
+  m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
+  itemId: beef_mince
+  itemName: Beef Mince
+  icon: {fileID: -3221257848597123170, guid: 702b1aab34c07dc4389aa3d05389f29d, type: 3}
+  categories: 08000000

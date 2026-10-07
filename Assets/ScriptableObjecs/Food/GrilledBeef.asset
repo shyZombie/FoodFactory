@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
   itemId: grilled_beef
   itemName: Grilled Beef
-  icon: {fileID: 2389802359644939536, guid: 9793ecc5833f9d24abc5498ed3d444b7, type: 3}
+  icon: {fileID: 8074291539248608084, guid: 5494b0e955cdde6418d4bf83611694c1, type: 3}
   categories: 08000000

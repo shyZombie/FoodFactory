@@ -159,6 +159,7 @@ MonoBehaviour:
   recipes:
   - {fileID: 11400000, guid: 9626aca4cffd7e04ab23c632895c6452, type: 2}
   - {fileID: 11400000, guid: c1f058ca3357fd64684a1df6077c093e, type: 2}
+  - {fileID: 11400000, guid: 30155c2eac2f6994e9251aed2c75eaca, type: 2}
   foodItemPrefab: {fileID: 3738253683363426217, guid: 28ee4dd59771da2458ec6ff886153c30, type: 3}
   direction: 1
   upgradeManager: {fileID: 9188748472319351492, guid: 2868315de2b32ea4e86def0b861a4e21, type: 3}

@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
   itemId: boiled_potato
   itemName: Boiled Potato
-  icon: {fileID: -5547114616335463859, guid: 11c4a17791c21f4449dae3c4f8b8534a, type: 3}
+  icon: {fileID: 4217074681931596952, guid: c0db8849ff92c4a4f9a6286477cce5ca, type: 3}
   categories: 01000000

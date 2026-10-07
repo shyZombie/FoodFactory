@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
   itemId: apple_jam
   itemName: Aplle Jam
-  icon: {fileID: 8228201171340115501, guid: 6a255933fcc04094dbc310396fbbd1ba, type: 3}
+  icon: {fileID: 8857878372012066019, guid: 024f1678436089049b3376f5168cbdaf, type: 3}
   categories: 0b00000002000000

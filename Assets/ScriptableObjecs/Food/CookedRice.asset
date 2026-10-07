@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
   itemId: cooked_rice
   itemName: Cooked Rice
-  icon: {fileID: 3397716673426320368, guid: c4da01744a2e6244282c1d81ef439dfc, type: 3}
+  icon: {fileID: 726714054921714091, guid: 891e2ce1bcb2bc042b5f4b0a3845e911, type: 3}
   categories: 03000000

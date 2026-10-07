@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
   itemId: lemon
   itemName: Lemon
-  icon: {fileID: -7092868150244913784, guid: 44956530426b89d47bda86bd6df8db75, type: 3}
+  icon: {fileID: -8431329870971714362, guid: 331203de98cf31943b811010ba46cb0a, type: 3}
   categories: 02000000

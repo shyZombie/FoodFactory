@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
   itemId: sugar
   itemName: Sugar
-  icon: {fileID: -3835964987360961443, guid: cbfae3f89595d394cbac48c1a488c98a, type: 3}
+  icon: {fileID: -7859299246685096181, guid: 28e2fc53cb79e0c4eb1035f335bd845c, type: 3}
   categories: 0b000000

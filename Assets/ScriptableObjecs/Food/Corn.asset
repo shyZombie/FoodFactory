@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
   itemId: corn
   itemName: Corn
-  icon: {fileID: -1366535904204564647, guid: 1b243434d45746b418a868181d794e70, type: 3}
+  icon: {fileID: -4250791449341174124, guid: 674fbce963000974781b73299a65bbe5, type: 3}
   categories: 01000000

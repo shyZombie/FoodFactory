@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
   itemId: beef
   itemName: Beef
-  icon: {fileID: 2716660806637101553, guid: 9bc589d0d6c6b1f4fa0a30e1173a8762, type: 3}
+  icon: {fileID: 6064018972527278697, guid: 999c9bffd8efaa44aa2e56427c5f48b1, type: 3}
   categories: 08000000

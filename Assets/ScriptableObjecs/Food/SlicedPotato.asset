@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
   itemId: sliced_potato
   itemName: Sliced Potato
-  icon: {fileID: -1476614568061897389, guid: 8168b96db531e294cbca20994defe144, type: 3}
-  categories: 00000000
+  icon: {fileID: 4721926647441943699, guid: de155639dcb89254b9743100bd014986, type: 3}
+  categories: 01000000
