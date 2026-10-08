@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
   itemId: pasta
   itemName: Pasta
-  icon: {fileID: 1972966863958895214, guid: 3d666d0b040a21f40a0487fc4311e938, type: 3}
-  categories: 04000000
+  icon: {fileID: 6847091598962182603, guid: ac5b8a6df9a7a2141b8ed73ca1fe45c4, type: 3}
+  categories: 09000000

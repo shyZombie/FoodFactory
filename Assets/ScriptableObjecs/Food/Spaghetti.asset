@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dab5a729741e0944fb6b6432bab4103f, type: 3}
-  m_Name: MacaroniAndCheese
+  m_Name: Spaghetti
   m_EditorClassIdentifier: Assembly-CSharp::FoodItemData
-  itemId: macaroni_and_cheese
-  itemName: Macaroni and Cheese
-  icon: {fileID: 21300000, guid: 4a36e88c5a0e4604d9761cb78bd9ab11, type: 3}
-  categories: 090000000a000000
+  itemId: spaghetti
+  itemName: Spaghetti
+  icon: {fileID: 5785531136332419647, guid: 283ef8e8335d92140988b9b455229cd2, type: 3}
+  categories: 09000000

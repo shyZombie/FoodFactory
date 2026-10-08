@@ -161,6 +161,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7fb5c1596d68f294a8be30033f6c4287, type: 2}
   - {fileID: 11400000, guid: 8193966c68ff3c442b043557d43bb2a4, type: 2}
   - {fileID: 11400000, guid: 1fbffc2fbe954664c8c0f7a8be27d8be, type: 2}
+  - {fileID: 11400000, guid: f0b70a09a3466fc4da978b1d13b02752, type: 2}
   foodItemPrefab: {fileID: 7036323676616385693, guid: dd1baedc1f0679749907b67dec7ecba3, type: 3}
   direction: 1
   upgradeManager: {fileID: 9188748472319351492, guid: 2868315de2b32ea4e86def0b861a4e21, type: 3}
